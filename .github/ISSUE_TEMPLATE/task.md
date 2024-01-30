@@ -1,7 +1,7 @@
 ---
 name: Task
 about: A task is an actionable item that gets implemented in code.
-title: ''
+title: "[TASK] "
 labels: task
 assignees: ''
 
@@ -9,6 +9,4 @@ assignees: ''
 
 ## Description
 
-- [ ] Task 1
-- [ ] Task 2
-- [ ] Task 3
+This task be taskin

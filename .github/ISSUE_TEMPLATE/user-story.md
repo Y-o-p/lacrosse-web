@@ -1,7 +1,7 @@
 ---
 name: User Story
 about: A user story is a requirement written from the perspective of the user.
-title: ''
+title: "[USER STORY]"
 labels: user story
 assignees: ''
 
@@ -9,6 +9,8 @@ assignees: ''
 
 ## Description
 
-- [ ] User Story 1
-- [ ] User Story 2
-- [ ] User Story 3
+As a [User], I want [Feature] so that I [Purpose]
+
+- [ ] # Task 1
+- [ ] # Task 2
+- [ ] # Task 3
