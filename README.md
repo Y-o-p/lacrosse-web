@@ -1,5 +1,6 @@
 # lacrosse-web
 
+
 ## Update PostgreSQL for Restoring a Schema
 
 1. In pgAdmin 4, navigate to `Servers > [Server Name] > Databases` and left click `Databases`.
