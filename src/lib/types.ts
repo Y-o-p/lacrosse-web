@@ -6,8 +6,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 interface Coach {
-    ID: bigint,
-    teamID: bigint,
+    id: bigint,
+    teamId: bigint,
     lastName: string,
     firstName: string,
     birthdate: Date,
@@ -15,15 +15,15 @@ interface Coach {
 };
 
 interface Team {
-    ID: bigint,
-    coachID: bigint,
+    id: bigint,
+    coachId: bigint,
     name: string
 };
 
 interface TeamStats {
-    ID: bigint,
-    teamID: bigint,
-    gameID: bigint,
+    id: bigint,
+    teamId: bigint,
+    gameId: bigint,
     goals: number,
     assists: number,
     shots: number,
@@ -32,11 +32,11 @@ interface TeamStats {
 }
 
 interface Game {
-    ID: bigint,
-    homeTeamID: bigint,
-    awayTeamID: bigint,
-    homeStatsID: bigint,
-    awayStatsID: bigint,
+    id: bigint,
+    homeTeamId: bigint,
+    awayTeamId: bigint,
+    homeStatsId: bigint,
+    awayStatsId: bigint,
     date: Date    
 }
 
@@ -54,9 +54,9 @@ enum Position {
 }
 
 interface Player {
-    ID: bigint,
-    teamID: bigint,
-    playerStatsID: bigint,
+    id: bigint,
+    teamId: bigint,
+    playerStatsId: bigint,
     lastName: string,
     firstName: string,
     position: Position,
@@ -66,9 +66,9 @@ interface Player {
 }
 
 interface PlayerStats {
-    ID: bigint,
-    playerID: bigint,
-    gameID: bigint,
+    id: bigint,
+    playerId: bigint,
+    gameId: bigint,
     goals: number,
     assists: number,
     shots: number,
@@ -83,9 +83,9 @@ interface PlayerStats {
 ///////////////////////////////////////////////////////////////////////////////
 
 interface User {
-    ID: bigint,
+    id: bigint,
     username: string,
     // TODO: figure out how to securely store passwords
-    roleID: bigint,
-    coachID: bigint
+    roleId: bigint,
+    coachId: bigint
 }

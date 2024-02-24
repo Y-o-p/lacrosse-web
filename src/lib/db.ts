@@ -1,6 +1,6 @@
 import pg from 'pg';
 
-const pool = new pg.Pool({
+export const pool = new pg.Pool({
     database: import.meta.env.VITE_PGDATABASE || "postgres",
     user: import.meta.env.VITE_PGUSER || "postgres",
     host: import.meta.env.VITE_PGHOST || "localhost",
@@ -11,18 +11,28 @@ const pool = new pg.Pool({
 
 export const connectToDB = async () => await pool.connect();
 
-export const queryDB = async() => await pool.query('SELECT NOW()'); // just a test
-
-export async function getCoach(id: number): Promise<Coach> {
+// To avoid SQL injection, don't allow user input to go into the first 2 parameters
+// tableName and tableIdName should always be programmer defined
+export async function getRow(tableName: string, tableIdName: string, id: number): Promise<any> {
     return new Promise<any>((resolve, reject) => {
-        const result = pool.query('SELECT * FROM coaches WHERE coach_id = $1', [id]);
-
+        const result = pool.query(`SELECT * FROM ${tableName} WHERE ${tableIdName} = $1`, [id]);
         result.then((innerResult) => {
             const data = innerResult.rows[0];
-            
             resolve(data);
         }).catch((error) => {
             reject(error);
         });
     });
+}
+
+export async function getCoach(id: number): Promise<any> {
+    return getRow("coaches", "coach_id", id);
+}
+
+export async function getGame(id: number): Promise<any> {
+    return getRow("games", "game_id", id);
+}
+
+export async function getTeamStats(id: number): Promise<any> {
+    return getRow("team_stats", "teamstats_id", id);
 }

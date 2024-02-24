@@ -1,6 +1,5 @@
 <script lang="ts">
     import { getCoach } from "$lib/api";
-
     //import { getCoach } from "$lib/db";
     // let coach: Coach = {
     //     ID: 0n,
@@ -13,7 +12,7 @@
     let firstName = "Unknown";
 
     async function test() {
-        getCoach(2)
+        getCoach(2, page.user)
         .then((coach) => {
             firstName = coach.firstName;
         })
