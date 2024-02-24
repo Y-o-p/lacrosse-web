@@ -1,4 +1,4 @@
-import { getRandomCode } from '$lib/api.js';
+import { getRandomCode } from '$lib/util.js';
 import { pool } from '$lib/db.js';
 import { json } from '@sveltejs/kit'
 

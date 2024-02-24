@@ -1,18 +1,20 @@
-export function toJson(object: any) {
-    return JSON.stringify(object, (key, value) =>
-        typeof value === 'bigint'
-            ? value.toString()
-            : value
-    );
-}
+import { toJson } from "./util";
 
-export async function getCoach(id: number, user: string): Promise<Coach> {
+///////////////////////////////////////////////////////////////////////////////
+// GET Helper Functions
+///////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Will GET coach using the API
+ * @param id The UID of the row
+ * @returns `Coach`
+ */
+export async function getCoach(id: number): Promise<Coach> {
     return new Promise<Coach>((resolve, reject) => {
         fetch(`/api/coaches/${id}`, {
             method: 'GET',
             headers: {
-                'content-type': 'application/json',
-                'user': user
+                'content-type': 'application/json'
             }
         })
         .then((response) => response.json())
@@ -31,14 +33,21 @@ export async function getCoach(id: number, user: string): Promise<Coach> {
     });
 }
 
-export async function postTeamStats(teamStats: TeamStats, user: string): Promise<BigInt> {
+///////////////////////////////////////////////////////////////////////////////
+// POST Helper Functions
+///////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Will POST team stats using the API
+ * @param teamStats Should at least contain `teamId`
+ * @returns team stats ID
+ */
+export async function postTeamStats(teamStats: TeamStats | any): Promise<BigInt> {
     return new Promise<BigInt>((resolve, reject) => {
-        console.log(toJson(teamStats));
         fetch(`/api/team-stats`, {
             method: 'POST',
             headers: {
-                'content-type': 'application/json',
-                'user': user
+                'content-type': 'application/json'
             },
             body: toJson(teamStats)
         })
@@ -50,21 +59,18 @@ export async function postTeamStats(teamStats: TeamStats, user: string): Promise
     });
 }
 
-export function getRandomCode(length: number) {
-    return Array.from(
-      { length: length },
-      () => String.fromCharCode(Math.floor(Math.random() * 26) + 65)
-    ).join('');
-  }
-
-export async function postScorebookSession(session: ScorebookSession, user: string): Promise<string> {
+/**
+ * Will POST scorebook session using the API
+ * @param session Should at least contain `coachId`
+ * @returns room code string
+ */
+export async function postScorebookSession(session: ScorebookSession | any): Promise<string> {
     return new Promise<string>((resolve, reject) => {
-        console.log(toJson(session));
+        console.log(session);
         fetch(`/api/sessions`, {
             method: 'POST',
             headers: {
-                'content-type': 'application/json',
-                'user': user
+                'content-type': 'application/json'
             },
             body: toJson(session)
         })

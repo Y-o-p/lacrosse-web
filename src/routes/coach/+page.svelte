@@ -1,8 +1,9 @@
 <script lang="ts">
-    import { getRandomCode, postScorebookSession, postTeamStats } from "$lib/api";
+    import { postScorebookSession, postTeamStats } from "$lib/api";
     let id = 0;
     let room_code = "Unknown";
-
+    import type { PageServerData } from "./$types";
+	export let data: PageServerData;
     async function newScorebook() {
         const stats: TeamStats = {
             id: null,
@@ -14,22 +15,19 @@
             timeouts: 0,
             field: ""
         };
-        id = Number(await postTeamStats(stats, "coach"));
+        id = Number(await postTeamStats(stats));
     }
 
     async function newSession() {
-        const session: ScorebookSession = {
-            id: null,
-            gameId: 69n,
-            expirationTime: BigInt(Math.floor(Date.now() / 1000) + 60 * 60),
-            roomCode: getRandomCode(6),
-            coachId: 0n
+        const session: any = {
+            coachId: data.id
         };
-        room_code = await postScorebookSession(session, "coach")
+        room_code = await postScorebookSession(session);
     }
+
 </script>
 
-<h1>Sup, Coach</h1>
+<h1>Hello, {data.coach.firstName} {data.coach.lastName}</h1>
 <button on:click={newScorebook}>
     New Game
 </button>
