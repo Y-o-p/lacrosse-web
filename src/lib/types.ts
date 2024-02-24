@@ -43,7 +43,9 @@ interface Game {
 interface ScorebookSession {
     id: bigint,
     gameId: bigint,
-    expirationTime: bigint
+    expirationTime: bigint,
+    roomCode: string,
+    coachId: bigint
 }
 
 ///////////////////////////////////////////////////////////////////////////////

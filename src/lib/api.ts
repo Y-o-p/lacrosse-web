@@ -50,8 +50,15 @@ export async function postTeamStats(teamStats: TeamStats, user: string): Promise
     });
 }
 
-export async function postScorebookSession(session: ScorebookSession, user: string): Promise<BigInt> {
-    return new Promise<BigInt>((resolve, reject) => {
+export function getRandomCode(length: number) {
+    return Array.from(
+      { length: length },
+      () => String.fromCharCode(Math.floor(Math.random() * 26) + 65)
+    ).join('');
+  }
+
+export async function postScorebookSession(session: ScorebookSession, user: string): Promise<string> {
+    return new Promise<string>((resolve, reject) => {
         console.log(toJson(session));
         fetch(`/api/sessions`, {
             method: 'POST',
@@ -63,7 +70,7 @@ export async function postScorebookSession(session: ScorebookSession, user: stri
         })
         .then((response) => response.json())
         .then((row) => {
-            resolve(BigInt(row["session_id"]));
+            resolve(row["room_code"]);
         })
         .catch((err) => reject(err));
     });

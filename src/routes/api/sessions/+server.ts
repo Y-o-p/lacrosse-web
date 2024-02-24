@@ -1,3 +1,4 @@
+import { getRandomCode } from '$lib/api.js';
 import { pool } from '$lib/db.js';
 import { json } from '@sveltejs/kit'
 
@@ -7,15 +8,17 @@ export async function POST({ request }) {
     const data = await request.json();
     const session: ScorebookSession = {
         id: null,
-        gameId: BigInt(data.gameId),
-        expirationTime: BigInt(data.expirationTime || Math.floor(Date.now() / 1000) + 60 * 60)
+        gameId: data.gameId ? BigInt(data.gameId) : null,
+        expirationTime: BigInt(data.expirationTime || Math.floor(Date.now() / 1000) + 60 * 60),
+        roomCode: data.roomCode || getRandomCode(6),
+        coachId: BigInt(data.coachId)
     }
     const result = await pool.query(
         'INSERT INTO\
-        scorebook_sessions(game_id, expire_time)\
-        VALUES ($1, $2)\
-        RETURNING (session_id)',
-        [session.gameId, session.expirationTime]
+        scorebook_sessions(game_id, expire_time, coach_id, room_code)\
+        VALUES ($1, $2, $3, $4)\
+        RETURNING (room_code)',
+        [session.gameId, session.expirationTime, session.coachId, session.roomCode]
     );
     return json(result.rows[0]);
 }

@@ -1,7 +1,7 @@
 <script lang="ts">
-    import { postScorebookSession, postTeamStats } from "$lib/api";
+    import { getRandomCode, postScorebookSession, postTeamStats } from "$lib/api";
     let id = 0;
-    let temp_id = 0;
+    let room_code = "Unknown";
 
     async function newScorebook() {
         const stats: TeamStats = {
@@ -22,8 +22,10 @@
             id: null,
             gameId: 69n,
             expirationTime: BigInt(Math.floor(Date.now() / 1000) + 60 * 60),
+            roomCode: getRandomCode(6),
+            coachId: 0n
         };
-        temp_id = Number(await postScorebookSession(session, "coach"))
+        room_code = await postScorebookSession(session, "coach")
     }
 </script>
 
@@ -38,5 +40,5 @@
     New Editing Session
 </button>
 <p>
-    Editing Session: {temp_id}
+    Editing Session: {room_code}
 </p>
