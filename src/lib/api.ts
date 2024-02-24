@@ -49,3 +49,22 @@ export async function postTeamStats(teamStats: TeamStats, user: string): Promise
         .catch((err) => reject(err));
     });
 }
+
+export async function postScorebookSession(session: ScorebookSession, user: string): Promise<BigInt> {
+    return new Promise<BigInt>((resolve, reject) => {
+        console.log(toJson(session));
+        fetch(`/api/sessions`, {
+            method: 'POST',
+            headers: {
+                'content-type': 'application/json',
+                'user': user
+            },
+            body: toJson(session)
+        })
+        .then((response) => response.json())
+        .then((row) => {
+            resolve(BigInt(row["session_id"]));
+        })
+        .catch((err) => reject(err));
+    });
+}

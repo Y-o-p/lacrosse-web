@@ -36,3 +36,7 @@ export async function getGame(id: number): Promise<any> {
 export async function getTeamStats(id: number): Promise<any> {
     return getRow("team_stats", "teamstats_id", id);
 }
+
+export async function getSession(id: number): Promise<any> {
+    return getRow("scorebook_sessions", "session_id", id);
+}
