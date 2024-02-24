@@ -45,7 +45,7 @@ interface ScorebookSession {
     gameId: bigint,
     expirationTime: bigint,
     roomCode: string,
-    coachId: b
+    coachId: bigint
 }
 
 ///////////////////////////////////////////////////////////////////////////////
