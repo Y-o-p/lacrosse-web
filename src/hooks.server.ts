@@ -7,7 +7,7 @@ export async function handle({event, resolve}) {
         user: "coach",
         id: 1,
         coach: await (async () => {
-            const row = await getCoach(1);
+            const row = await getCoach(2);
             const coach: Coach = {
                 id: BigInt(row["coach_id"]),
                 teamId: BigInt(row["team_id"]),

@@ -54,7 +54,7 @@
     <div class="sinup-info" style="display: table;">
         <form method="POST" action="?/register">
             <div class="signup-row" style="display: table-row;">
-                <Radio {options} fontSize={16} legend='Select a Role' bind:userSelected={role}/>
+                <Radio name="role" value={role} {options} fontSize={16} legend='Select a Role' bind:userSelected={role}/>
             </div>
             <div class="signup-row" style="display: table-row;">
                 <label for=12 style="display: table-cell;">Username:</label>

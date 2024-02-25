@@ -91,9 +91,9 @@ interface PlayerStats {
 ///////////////////////////////////////////////////////////////////////////////
 
 interface User {
-    id: bigint,
-    username: string,
-    // TODO: figure out how to securely store passwords
-    roleId: bigint,
-    coachId: bigint
+    user_id?: bigint,
+    user_name: string,
+    pword: string,
+    role_id: bigint,
+    coach_id: bigint
 }
