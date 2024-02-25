@@ -155,7 +155,7 @@
                     playerData[key] = value;
                 });
 
-                // Log player data (you can replace this with sending data to your server)
+                // Log player data (replace with POST for database)
                 console.log("Player data:", playerData);
 
                 // Clear form fields
