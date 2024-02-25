@@ -1,3 +1,5 @@
+import {pool} from "$lib/db";
+
 /** @type {import('./$types').Actions} */
 export const actions = {
     login: async ({request}) => {
@@ -18,5 +20,7 @@ export const actions = {
         console.log(data.get('teamName'));
         console.log(data.get('birthday'));
         console.log(data.get('phone'))
+
+        pool.query('')
     }
 };
