@@ -19,7 +19,7 @@
             background-color: #f0f0f0;
         }
         .container {
-            max-width: 1080px ;
+            max-width: 8000px ;
             margin: 75px auto;
             padding: 20px;
             background-color: #f96d00;
@@ -150,30 +150,18 @@
             // Get form data if the form is valid
             if (event.defaultPrevented === false) {
                 const formData = new FormData(event.target);
-                 // Make a POST request to the addPlayer endpoint
-                fetch('/api/addPlayer', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(Object.fromEntries(formData)) // Convert FormData to JSON object
-                })
-                .then(response => {
-                    if (response.ok) {
-                        console.log("Player added successfully.");
-                        // Clear form fields if needed
-                        event.target.reset();
-                    } else {
-                        throw new Error('Failed to add player.');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error adding player:', error);
-                    // Handle error if needed
+                const playerData = {};
+                formData.forEach((value, key) => {
+                    playerData[key] = value;
                 });
+
+                // Log player data (you can replace this with sending data to your server)
+                console.log("Player data:", playerData);
+
                 // Clear form fields
                 event.target.reset();
-            });
+            }
+        });
 
         // Add event listener to position circles
         const positionCircles = document.querySelectorAll(".position-circle");
@@ -188,12 +176,10 @@
             circle.addEventListener("click", function() {
                 if (this.classList.contains("active")){
                     this.classList.remove("active")
-                    export const Added = console.log("Added");
                 }
                 else {
                     // Add active class to the clicked circle
                     this.classList.add("active");
-                    console.log("Added");
                 }
 
                 // Set the selected position in the hidden input field
