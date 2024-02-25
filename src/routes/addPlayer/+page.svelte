@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Coach Roster Input</title>
     <style>
+        /* Color Palette */
+        .first-color { background: #222831; color: #ffffff; }
+        .second-color { background: #393e46; }
+        .third-color { background: #f96d00; }
+        .fourth-color { background: #f2f2f2; }
+
         /* Basic styling */
         body {
             font-family: Arial, sans-serif;
@@ -13,43 +19,47 @@
             background-color: #f0f0f0;
         }
         .container {
-            max-width: 600px;
-            margin: 50px auto;
+            max-width: 1080px ;
+            margin: 75px auto;
             padding: 20px;
-            background-color: #fdf;
+            background-color: #f96d00;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
         h1 {
-            text-align: center;
+            text-align: left;
             margin-bottom: 20px;
         }
         form {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            width: 800px;
         }
         .position-selector {
             display: flex;
-            justify-content: space-between;
-            width: 240px;
+            align-items: center; /* Align items vertically */
+            margin-top: 16px;
             margin-bottom: 16px;
+        }
+        .position-circles {
+            display: flex; /* Make circles container a flex container */
         }
         .position-circle {
             width: 40px;
             height: 40px;
             border-radius: 50%;
-            background-color: #007bff;
-            color: #fff;
+            background-color: #f2f2f2;
+            color: #222831; /* Using the first color for text */
             display: flex;
             justify-content: center;
             align-items: center;
             cursor: pointer;
+            margin-right: 10px; /* Add margin between circles */
             transition: background-color 0.3s ease;
         }
         .position-circle.active {
-            background-color: #0056b3;
+            background-color: #393e46; /* Using the second color when active */
+            color: #ffffff; /* White text color when active */
         }
+
         input[type="number"]::-webkit-inner-spin-button,
         input[type="number"]::-webkit-outer-spin-button {
             -webkit-appearance: none;
@@ -65,7 +75,7 @@
         }
         input[type="submit"] {
             padding: 10px 20px;
-            background-color: #007bff;
+            background-color: #007bff; /* Blue color for the button */
             color: #fff;
             border: none;
             border-radius: 4px;
@@ -80,29 +90,35 @@
             margin-top: 5px;
             display: none;
         }
+
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Coach Roster Input</h1>
         <form id="rosterForm">
+            <!-- Input fields -->
             <label for="firstName">First Name:</label>
             <input type="text" id="firstName" name="firstName" required>
             
             <label for="lastName">Last Name:</label>
             <input type="text" id="lastName" name="lastName" required>
 
+            <!-- Position selector -->
             <div class="position-selector">
-                <div class="position-circle" data-position="GK">GK</div>
-                <div style="width: 10px;"></div>
-                <div class="position-circle" data-position="MF">MF</div>
-                <div style="width: 10px;"></div>
-                <div class="position-circle" data-position="A">A</div>
-                <div style="width: 10px;"></div>
-                <div class="position-circle" data-position="D">D</div>
+                <label for="position">Position:</label>
+                <div class="position-circles">
+                    <div class="position-circle" data-position="GK">GK</div>
+                    <div class="position-circle" data-position="MF">MF</div>
+                    <div class="position-circle" data-position="A">A</div>
+                    <div class="position-circle" data-position="D">D</div>
+                </div>
             </div>
+
+            <!-- Hidden input for position -->
             <input type="hidden" id="position" name="position" required>
 
+            <!-- Additional input fields -->
             <label for="height">Height (in inches):</label>
             <input type="number" id="height" name="height" min="0" max="100" step="1" required>
 
@@ -112,6 +128,7 @@
             <label for="birthdate">Birthdate:</label>
             <input type="date" id="birthdate" name="birthdate" required>
 
+            <!-- Submit button and error message -->
             <input type="submit" value="Add Player">
             <div class="error-message" id="position-error">Please select a position</div>
         </form>
@@ -133,30 +150,51 @@
             // Get form data if the form is valid
             if (event.defaultPrevented === false) {
                 const formData = new FormData(event.target);
-                const playerData = {};
-                formData.forEach((value, key) => {
-                    playerData[key] = value;
+                 // Make a POST request to the addPlayer endpoint
+                fetch('/api/addPlayer', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(Object.fromEntries(formData)) // Convert FormData to JSON object
+                })
+                .then(response => {
+                    if (response.ok) {
+                        console.log("Player added successfully.");
+                        // Clear form fields if needed
+                        event.target.reset();
+                    } else {
+                        throw new Error('Failed to add player.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error adding player:', error);
+                    // Handle error if needed
                 });
-
-                // Log player data (you can replace this with sending data to your server)
-                console.log("Player data:", playerData);
-
                 // Clear form fields
                 event.target.reset();
-            }
-        });
+            });
 
         // Add event listener to position circles
         const positionCircles = document.querySelectorAll(".position-circle");
+
+        // Remove active class from all circles
+        positionCircles.forEach(circle => {
+            circle.classList.remove("active");
+        });
+
+        // Add click event listener to each position circle
         positionCircles.forEach(circle => {
             circle.addEventListener("click", function() {
-                // Remove active class from all circles
-                positionCircles.forEach(circle => {
-                    circle.classList.remove("active");
-                });
-
-                // Add active class to the clicked circle
-                this.classList.add("active");
+                if (this.classList.contains("active")){
+                    this.classList.remove("active")
+                    export const Added = console.log("Added");
+                }
+                else {
+                    // Add active class to the clicked circle
+                    this.classList.add("active");
+                    console.log("Added");
+                }
 
                 // Set the selected position in the hidden input field
                 document.getElementById("position").value = this.dataset.position;
