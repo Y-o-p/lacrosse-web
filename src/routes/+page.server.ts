@@ -1,35 +1,57 @@
-import {pool} from "$lib/db";
+import { redirect } from "@sveltejs/kit";
+import { insertRow, pool, setCoach, setUser, getUser, getCoach } from "$lib/db";
 
 /** @type {import('./$types').Actions} */
 export const actions = {
-    login: async ({request}) => {
+    login: async ({cookies, request, locals}) => {
         // TODO log the user in
-        console.log("Login Ran");
-        const data = await request.formData();
-        console.log(data.get('uname'));
-        console.log(data.get('pword'));
+        console.log("Login Ran")
+        const data = await request.formData()
+
+        let vals: User = {
+            user_name: data.get('uname'),
+            pword: data.get('pword')
+        }
+        let userRow = await getUser(vals)
+        console.log(userRow)
+        
+        if (userRow == null){
+            console.log("LOGIN UNSUCCESSFUL")
+        }else {
+            console.log("LOGIN SUCCESSFUL")
+            cookies.set("auth", userRow["user_id"], {
+                path: "/",
+                httpOnly: true,
+                sameSite: "strict",
+                secure: false,
+                maxAge: 60 * 60 * 24 * 7, // 1 week
+            })
+            
+            throw redirect(303, "/")
+        }
+
     },
-    register: async ({request}) => {
-        // TODO log the user in
-        console.log("Register Ran");
-        const data = await request.formData();
-        /*
+    register: async ({request}) => { 
+        // Signs up the user with entered in credentials
+        console.log("Register Ran")
+        const data = await request.formData()
+
+        let coach: Coach = {
+            last_name: data.get('lName'),
+            first_name: data.get('fName'),
+            birth_date: data.get('birthday'),
+            phone: data.get('phone'),
+            date_created: new Date().toLocaleDateString("en-us")
+        }
+        let row = await setCoach(coach)
+
         let user: User = {
             user_name: data.get('uname'),
             pword: data.get('pword'),
-            role_id: data.get('role'),
-            coach_id: 0n
-        } */
-        console.log(data.get('uname'));
-        console.log(data.get('pword'));
-        console.log(data.get('role'));
-        console.log(data.get('fName'));
-        console.log(data.get('lName'));
-        console.log(data.get('teamName'));
-        console.log(data.get('birthday'));
-        console.log(data.get('phone'))
-
-
-        pool.query('')
+            role_id: 1n,
+            coach_id: BigInt(row["coach_id"])
+        }
+        let userID = await setUser(user);
+        
     }
 };

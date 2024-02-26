@@ -6,12 +6,13 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 interface Coach {
-    id: bigint,
-    teamId: bigint,
-    lastName: string,
-    firstName: string,
-    birthdate: Date,
-    createdDate: Date
+    coach_id?: bigint,
+    last_name: string,
+    first_name: string,
+    team_id?: bigint,
+    birth_date: string,
+    phone: string,
+    date_created: string
 };
 
 interface Team {
@@ -92,8 +93,8 @@ interface PlayerStats {
 
 interface User {
     user_id?: bigint,
-    user_name: string,
-    pword: string,
-    role_id: bigint,
-    coach_id: bigint
+    user_name?: string,
+    pword?: string,
+    role_id?: bigint,
+    coach_id?: bigint
 }

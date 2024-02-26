@@ -27,7 +27,7 @@
 
 </script>
 
-<h1>Hello, {data.coach.firstName} {data.coach.lastName}</h1>
+<h1>Hello, {data.coach.first_name} {data.coach.last_name}</h1>
 <button on:click={newScorebook}>
     New Game
 </button>

@@ -6,7 +6,11 @@
     let loginModal = false;
     let signupModal = false;
 
-    let role = '';
+    //export let role = '';
+
+    function saveRole() {
+        
+    }
 
     // Role Options
     const options = [{
@@ -54,9 +58,6 @@
     <div class="sinup-info" style="display: table;">
         <form method="POST" action="?/register">
             <div class="signup-row" style="display: table-row;">
-                <Radio name="role" value={role} {options} fontSize={16} legend='Select a Role' bind:userSelected={role}/>
-            </div>
-            <div class="signup-row" style="display: table-row;">
                 <label for=12 style="display: table-cell;">Username:</label>
                 <input name="uname" id=12 type="text">
             </div>
@@ -64,7 +65,6 @@
                 <label for=13 style="display: table-cell;">Password:</label>
                 <input name="pword" id=13 type="text">
             </div>
-            {#if role == 'coach'}
             <div class="signup-row" style="display: table-row;">
                 <label for=14 style="display: table-cell;">First Name:</label>
                 <input name="fName" id=14 type="text">
@@ -74,10 +74,6 @@
                 <input name="lName" id=15 type="text">
             </div>
             <div class="signup-row" style="display: table-row;">
-                <label for=16 style="display: table-cell;">Team Name:</label>
-                <input name="teamName" id=16 type="text">
-            </div>
-            <div class="signup-row" style="display: table-row;">
                 <label for=17 style="display: table-cell;">Date of Birth:</label>
                 <input name="birthday" id=17 type="text" value="mm/dd/yyyy">
             </div>
@@ -85,9 +81,8 @@
                 <label for=18 style="display: table-cell;">Phone Number:</label>
                 <input name="phone" id=18 type="text" value="xxx-xxx-xxxx">
             </div>
-            {/if}
             <div class="signup-row" style="display: table-row;">
-                    <button style="display: table-cell;">Sign Up</button>
+                    <button on:click={() => saveRole()} style="display: table-cell;">Sign Up</button>
             </div>
         </form>
     </div>
