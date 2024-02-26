@@ -9,12 +9,12 @@ export async function handle({event, resolve}) {
         coach: await (async () => {
             const row = await getCoach(1);
             const coach: Coach = {
-                id: BigInt(row["coach_id"]),
-                teamId: BigInt(row["team_id"]),
-                lastName: row["last_name"],
-                firstName: row["first_name"],
-                birthdate: new Date(),
-                createdDate: new Date()
+                coach_id: BigInt(row["coach_id"]),
+                team_id: BigInt(row["team_id"]),
+                last_name: row["last_name"],
+                first_name: row["first_name"],
+                birth_date: new Date(),
+                date_created: new Date()
             };
             return coach;
         })()

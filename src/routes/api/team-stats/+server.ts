@@ -6,9 +6,8 @@ import { json } from '@sveltejs/kit'
 export async function POST({ request }) {
     const data = await request.json();
     const stats: TeamStats = {
-        id: null,
-        teamId: BigInt(data.teamId),
-        gameId: BigInt(data.gameId || 0),
+        game_id: BigInt(data.game_id || 0),
+        team_id: BigInt(data.team_id),
         goals: Number(data.goals || 0),
         assists: Number(data.assists || 0),
         shots: Number(data.shots || 0),
@@ -20,7 +19,7 @@ export async function POST({ request }) {
         team_stats(game_id, team_id, goals, assists, shots, timeouts, field)\
         VALUES ($1, $2, $3, $4, $5, $6, $7)\
         RETURNING (teamstats_id)',
-        [stats.gameId, stats.teamId, stats.goals, stats.assists, stats.shots, stats.timeouts, stats.field]
+        [stats.game_id, stats.team_id, stats.goals, stats.assists, stats.shots, stats.timeouts, stats.field]
     );
     return json(result.rows[0]);
 }
