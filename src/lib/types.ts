@@ -9,8 +9,9 @@ interface Coach {
     coach_id?: bigint,
     last_name: string,
     first_name: string,
-    team_id: bigint,
+    team_id?: bigint,
     birth_date: Date,
+    phone: string,
     date_created: Date
 };
 

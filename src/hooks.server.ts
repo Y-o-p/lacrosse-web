@@ -1,23 +1,40 @@
-import { getCoach } from '$lib/db';
+import { getCoach, getUser} from '$lib/db';
 import { redirect } from '@sveltejs/kit';
+import { authenticateUser } from '$lib/auth';
 
 export async function handle({event, resolve}) {    
     // Authenticate the user here
-    event.locals = {
-        user: "coach",
-        id: 1,
-        coach: await (async () => {
-            const row = await getCoach(1);
-            const coach: Coach = {
-                coach_id: BigInt(row["coach_id"]),
-                team_id: BigInt(row["team_id"]),
-                last_name: row["last_name"],
-                first_name: row["first_name"],
-                birth_date: new Date(),
-                date_created: new Date()
-            };
-            return coach;
-        })()
+    let userId = authenticateUser(event);
+
+    let vals: Partial<User> = {
+        user_id: BigInt(userId),
+    }
+    let userRow = await getUser(vals)
+
+    if (userRow["role_id"] == '1') { // coach login
+        let coachRow = await getCoach((userRow["coach_id"]))
+        console.log(coachRow)
+
+        const coach: Coach = {
+            coach_id: BigInt(coachRow["coach_id"]),
+            last_name: coachRow["last_name"],
+            first_name: coachRow["first_name"],
+            birth_date: coachRow["last_name"],
+            date_created: coachRow["last_name"],
+            phone: coachRow["phone"]
+        };
+
+        event.locals = {
+            user: "coach",
+            id: 1,
+            coach: coach
+        }
+    } else if (userRow["role_id"] == '2') { // Temp Scorebook Keeper login
+
+    } else if (userRow["role_id"] == '3') { // Webmaster login
+
+    } else { //undefined role in user
+
     }
 
     // Block certain users from the sessions endpoint
@@ -27,5 +44,5 @@ export async function handle({event, resolve}) {
         }
     }
 
-    return await resolve(event);
+    return await resolve(event)
 }

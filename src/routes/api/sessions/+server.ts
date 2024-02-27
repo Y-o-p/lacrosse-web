@@ -7,7 +7,7 @@ import { json } from '@sveltejs/kit'
 export async function POST({ request }) {
     const data = await request.json();
     const session: ScorebookSession = {
-        game_id: data.game_id ? BigInt(data.game_id) : null,
+        game_id: BigInt(data.game_id),
         coach_id: BigInt(data.coach_id),
         room_code: data.room_code || getRandomCode(6),
         expire_time: BigInt(data.expire_time || Math.floor(Date.now() / 1000) + 60 * 60)
