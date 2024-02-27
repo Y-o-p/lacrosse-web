@@ -93,6 +93,10 @@ export async function getCoach(id: number): Promise<any> {
     return getRowFromID("coaches", "coach_id", id);
 }
 
+export async function getPlayer(id: number): Promise<any> {
+    return getRowFromID("players", "player_id", id);
+}
+
 export async function getGame(id: number): Promise<any> {
     return getRowFromID("games", "game_id", id);
 }
