@@ -75,17 +75,17 @@ export async function insertRow(tableName: string, object: any): Promise<any> {
     });
 }
 
-export async function setUser(user: User): Promise<any> {
+export async function insertUser(user: Partial<User>): Promise<any> {
     delete user.user_id;
     return insertRow("users", user);
 }
 
-export async function setCoach(coach: Coach): Promise<any> {
+export async function insertCoach(coach: Partial<Coach>): Promise<any> {
     delete coach.coach_id;
     return insertRow("coaches", coach);
 }
 
-export async function getUser(user: User): Promise<any> {
+export async function getUser(user: Partial<User>): Promise<any> {
     return getRowFromVals("users", user);
 }
 

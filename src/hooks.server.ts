@@ -6,7 +6,7 @@ export async function handle({event, resolve}) {
     // Authenticate the user here
     let userId = authenticateUser(event);
 
-    let vals: User = {
+    let vals: Partial<User> = {
         user_id: BigInt(userId),
     }
     let userRow = await getUser(vals)

@@ -6,9 +6,8 @@
 	export let data: PageServerData;
     async function newScorebook() {
         const stats: TeamStats = {
-            id: null,
-            teamId: 0n,
-            gameId: 0n,
+            game_id: 0n,
+            team_id: 0n,
             goals: 0,
             assists: 0,
             shots: 0,
@@ -20,7 +19,7 @@
 
     async function newSession() {
         const session: any = {
-            coachId: data.id
+            coach_id: data.id
         };
         room_code = await postScorebookSession(session);
     }

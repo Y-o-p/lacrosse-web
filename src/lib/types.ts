@@ -10,21 +10,21 @@ interface Coach {
     last_name: string,
     first_name: string,
     team_id?: bigint,
-    birth_date: string,
+    birth_date: Date,
     phone: string,
-    date_created: string
+    date_created: Date
 };
 
 interface Team {
-    id: bigint,
-    coachId: bigint,
-    name: string
+    team_id?: bigint,
+    team_name: string,
+    coach_id: bigint
 };
 
 interface TeamStats {
-    id: bigint,
-    teamId: bigint,
-    gameId: bigint,
+    teamstats_id?: bigint,
+    game_id: bigint,
+    team_id: bigint,
     goals: number,
     assists: number,
     shots: number,
@@ -33,20 +33,20 @@ interface TeamStats {
 }
 
 interface Game {
-    id: bigint,
-    homeTeamId: bigint,
-    awayTeamId: bigint,
-    homeStatsId: bigint,
-    awayStatsId: bigint,
-    date: Date    
+    game_id?: bigint,
+    hometeam_id: bigint,
+    awayteam_id: bigint,
+    homestats_id: bigint,
+    awaystats_id: bigint,
+    game_date: Date    
 }
 
 interface ScorebookSession {
-    id: bigint,
-    gameId: bigint,
-    expirationTime: bigint,
-    roomCode: string,
-    coachId: bigint
+    session_id?: bigint,
+    game_id: bigint,
+    coach_id: bigint
+    room_code: string,
+    expire_time: bigint,
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -63,26 +63,26 @@ enum Position {
 }
 
 interface Player {
-    id: bigint,
-    teamId: bigint,
-    playerStatsId: bigint,
-    lastName: string,
-    firstName: string,
-    position: Position,
+    player_id?: bigint,
+    team_id: bigint,
+    playerstats_id: bigint,
+    last_name: string,
+    first_name: string,
+    pos: Position,
     height: number,
     weight: number,
-    birthdate: Date
+    birth_date: Date
 }
 
 interface PlayerStats {
-    id: bigint,
-    playerId: bigint,
-    gameId: bigint,
+    playerstat_id?: bigint,
+    player_id: bigint,
+    game_id: bigint,
     goals: number,
     assists: number,
     shots: number,
-    faceoffsWon: number,
-    faceoffsLost: number,
+    faceoffs_won: number,
+    faceoffs_lost: number,
     saves: number,
     penalties: number
 }
@@ -93,8 +93,8 @@ interface PlayerStats {
 
 interface User {
     user_id?: bigint,
-    user_name?: string,
-    pword?: string,
-    role_id?: bigint,
-    coach_id?: bigint
+    user_name: string,
+    pword: string
+    role_id: bigint,
+    coach_id: bigint
 }

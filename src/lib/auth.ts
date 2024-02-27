@@ -7,5 +7,8 @@ export const authenticateUser = (event: RequestEvent) => {
 
     // get the user token from the cookie
     const userToken = cookies.get("auth")
+    if (userToken == undefined) {
+        return "undefined"
+    }
     return userToken
 }

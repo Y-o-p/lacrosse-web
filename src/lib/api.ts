@@ -20,12 +20,13 @@ export async function getCoach(id: number): Promise<Coach> {
         .then((response) => response.json())
         .then((row) => {
             const coach: Coach = {
-                id: BigInt(row["coach_id"]),
-                teamId: BigInt(row["team_id"]),
-                lastName: row["last_name"],
-                firstName: row["first_name"],
-                birthdate: new Date,
-                createdDate: new Date
+                coach_id: BigInt(row["coach_id"]),
+                team_id: BigInt(row["team_id"]),
+                last_name: row["last_name"],
+                first_name: row["first_name"],
+                birth_date: new Date,
+                date_created: new Date,
+                phone: row["phone"]
             };
             resolve(coach);
         })
