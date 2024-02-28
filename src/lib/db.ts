@@ -1,11 +1,11 @@
 import pg from 'pg';
 
 export const pool = new pg.Pool({
-    database: import.meta.env.VITE_PGDATABASE || "master",
+    database: import.meta.env.VITE_PGDATABASE || "postgres",
     user: import.meta.env.VITE_PGUSER || "postgres",
     host: import.meta.env.VITE_PGHOST || "localhost",
     port: (Number(import.meta.env.VITE_PGPORT || 5432 )),
-    password: import.meta.env.VITE_PGDATABASE || '25uPY996mWr#',
+    password: import.meta.env.VITE_PGDATABASE || "S9388420",
 })
 
 
@@ -107,6 +107,11 @@ export async function getTeamStats(id: number): Promise<any> {
 
 export async function getSession(id: number): Promise<any> {
     return getRowFromID("scorebook_sessions", "session_id", id);
+}
+
+export async function insertPlayer(player: Partial<Player>): Promise<any> {
+    delete player.player_id;
+    return insertRow("players", player);
 }
 
 // Cookie Queries

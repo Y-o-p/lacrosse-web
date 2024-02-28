@@ -6,23 +6,23 @@
     <title>Coach Roster Input</title>
     <style>
         /* Color Palette */
-        .first-color { background: #222831; color: #ffffff; }
-        .second-color { background: #393e46; }
-        .third-color { background: #f96d00; }
-        .fourth-color { background: #f2f2f2; }
+        .base-color { background: #081820; color: #ffffff; }
+        .dark-color { background: #393e46; }
+        .light-color { background: #f96d00; }
+        .fourth-color { background: #e0f8d0; }
 
         /* Basic styling */
         body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f0f0f0;
+            background-color: #081820;
         }
         .container {
             max-width: 8000px ;
             margin: 75px auto;
             padding: 20px;
-            background-color: #f96d00;
+            background-color: #88c070;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
@@ -56,7 +56,7 @@
             transition: background-color 0.3s ease;
         }
         .position-circle.active {
-            background-color: #393e46; /* Using the second color when active */
+            background-color: #081820; /* Using the second color when active */
             color: #ffffff; /* White text color when active */
         }
 
@@ -96,7 +96,7 @@
 <body>
     <div class="container">
         <h1>Coach Roster Input</h1>
-        <form id="rosterForm">
+        <form id="rosterForm" method="POST" action="?/addPlayer">
             <!-- Input fields -->
             <label for="firstName">First Name:</label>
             <input type="text" id="firstName" name="firstName" required>
@@ -130,7 +130,7 @@
 
             <!-- Submit button and error message -->
             <input type="submit" value="Add Player">
-            <div class="error-message" id="position-error">Please select a position</div>
+            <div class="error-message" id="position-error" style="display: none;">Please select a position</div>
         </form>
     </div>
 
@@ -146,42 +146,17 @@
             else {
                 document.getElementById("position-error").style.display = "none";
             }
-
-            // Get form data if the form is valid
-            if (event.defaultPrevented === false) {
-                const formData = new FormData(event.target);
-                const playerData = {};
-                formData.forEach((value, key) => {
-                    playerData[key] = value;
-                });
-
-                // Log player data (replace with POST for database)
-                console.log("Player data:", playerData);
-
-                // Clear form fields
-                event.target.reset();
-            }
         });
 
         // Add event listener to position circles
         const positionCircles = document.querySelectorAll(".position-circle");
 
-        // Remove active class from all circles
-        positionCircles.forEach(circle => {
-            circle.classList.remove("active");
-        });
-
         // Add click event listener to each position circle
         positionCircles.forEach(circle => {
             circle.addEventListener("click", function() {
-                if (this.classList.contains("active")){
-                    this.classList.remove("active")
-                }
-                else {
-                    // Add active class to the clicked circle
-                    this.classList.add("active");
-                }
-
+                // Toggle active class
+                this.classList.toggle("active");
+                
                 // Set the selected position in the hidden input field
                 document.getElementById("position").value = this.dataset.position;
             });

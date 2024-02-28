@@ -68,7 +68,7 @@ interface Player {
     playerstats_id: bigint,
     last_name: string,
     first_name: string,
-    pos: Position,
+    pos: string,
     height: number,
     weight: number,
     birth_date: Date

@@ -1,5 +1,5 @@
 import { redirect } from "@sveltejs/kit";
-import { insertRow, pool, setCoach, setUser, getUser, getCoach } from "$lib/db";
+import { insertRow, pool, insertCoach, insertUser, getUser, getCoach } from "$lib/db";
 
 /** @type {import('./$types').Actions} */
 export const actions = {
@@ -8,9 +8,9 @@ export const actions = {
         console.log("Login Ran")
         const data = await request.formData()
 
-        let vals: User = {
-            user_name: data.get('uname'),
-            pword: data.get('pword')
+        let vals: Partial<User> = {
+            user_name: data.get('uname').toString(),
+            pword: data.get('pword').toString()
         }
         let userRow = await getUser(vals)
         console.log(userRow)
@@ -37,21 +37,21 @@ export const actions = {
         const data = await request.formData()
 
         let coach: Coach = {
-            last_name: data.get('lName'),
-            first_name: data.get('fName'),
-            birth_date: data.get('birthday'),
-            phone: data.get('phone'),
-            date_created: new Date().toLocaleDateString("en-us")
+            last_name: data.get('lName').toString(),
+            first_name: data.get('fName').toString(),
+            birth_date: new Date(),
+            phone: data.get('phone').toString(),
+            date_created: new Date()
         }
-        let row = await setCoach(coach)
+        let row = await insertCoach(coach)
 
         let user: User = {
-            user_name: data.get('uname'),
-            pword: data.get('pword'),
+            user_name: data.get('uname').toString(),
+            pword: data.get('pword').toString(),
             role_id: 1n,
             coach_id: BigInt(row["coach_id"])
         }
-        let userID = await setUser(user);
+        let userID = await insertUser(user);
         
     }
 };
