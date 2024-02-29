@@ -1,9 +1,9 @@
-import { getRowFromID, pool } from '$lib/db.js';
+import { getGame } from '$lib/db.js';
 import { json } from '@sveltejs/kit'
 
 /** @type {import('./$types').RequestHandler} */
 export async function GET({ params }) {
-    const coach = await getRowFromID("games", "game_id", Number(params.id));
+    const coach = await getGame(Number(params.id));
     return json(coach);
 }
 

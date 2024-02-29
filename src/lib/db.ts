@@ -8,71 +8,32 @@ export const pool = new pg.Pool({
     password: import.meta.env.VITE_PGDATABASE || "ident",
 })
 
-
-export const connectToDB = async () => await pool.connect();
-
-// To avoid SQL injection, don't allow user input to go into the first 2 parameters
-// tableName and tableIdName should always be programmer defined
-export async function getRowFromID(tableName: string, tableIdName: string, id: number): Promise<any> {
-    return new Promise<any>((resolve, reject) => {
-        const result = pool.query(`SELECT * FROM ${tableName} WHERE ${tableIdName} = $1`, [id]);
-        result.then((innerResult) => {
-            const data = innerResult.rows[0];
-            resolve(data);
-        }).catch((error) => {
-            reject(error);
-        });
-    });
-}
-
-export async function getRowFromVals(tableName: string, vals: any): Promise<any> {
-    return new Promise<any>((resolve, reject) => {
-        let query = `SELECT * FROM ${tableName}`;
-        let colNames = Object.keys(vals);
-        let valNames = Object.values(vals);
-        for (let i = 0; i < Object.keys(vals).length; i++) {
-            query += ' ';
-            if (i == 0) {
-                query += `WHERE ${colNames[i]} = '${valNames[i]}'`
-            } else {
-                query += `AND ${colNames[i]} = '${valNames[i]}'`
-            }
-        }
-        query += ';'
-        //console.log(query)
-
-        const result = pool.query(query);
-        result.then((innerResult) => {
-            const data = innerResult.rows[0];
-            resolve(data);
-        }).catch((error) => {
-            reject(error);
-        });
-    });
-}
+///////////////////////////////////////////////////////////////////////////////
+// INSERT Functions
+///////////////////////////////////////////////////////////////////////////////
 
 export async function insertRow(tableName: string, object: any): Promise<any> {
-    return new Promise<any>((resolve, reject) => {
-        let colNames = Object.keys(object).join(",");
-        let valNum = [];
-        for ( let i = 1; i < Object.keys(object).length+1; i++) {
-            valNum.push(`$${i}`);
-        }
-        let valNames = valNum.join(",");
-        //console.log(`INSERT INTO ${tableName} (${colNames}) VALUES (${valNames}) RETURNING *;`);
+    let colNames = Object.keys(object).join(",");
+    let valNum = [];
+    for ( let i = 1; i < Object.keys(object).length+1; i++) {
+        valNum.push(`$${i}`);
+    }
+    let valNames = valNum.join(",");
+    //console.log(`INSERT INTO ${tableName} (${colNames}) VALUES (${valNames}) RETURNING *;`);
 
-        const result = pool.query(
+    try {
+        const result = await pool.query(
             `INSERT INTO ${tableName} (${colNames})
-             VALUES (${valNames})
-             RETURNING *;`, Object.values(object));
-            
-        result.then((innerResult) => {
-            const data = innerResult.rows[0];
-            resolve(data);
-        }).catch((error) => {
-            reject(error);
-        });
-    });
+            VALUES (${valNames})
+            RETURNING *;`,
+            Object.values(object)
+        );
+    
+        return result.rows[0];
+    } 
+    catch (error) {
+        throw error;
+    }
 }
 
 export async function insertUser(user: Partial<User>): Promise<any> {
@@ -83,6 +44,50 @@ export async function insertUser(user: Partial<User>): Promise<any> {
 export async function insertCoach(coach: Partial<Coach>): Promise<any> {
     delete coach.coach_id;
     return insertRow("coaches", coach);
+}
+
+export async function insertPlayer(player: Partial<Player>): Promise<any> {
+    delete player.player_id;
+    return insertRow("players", player);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// GET Functions
+///////////////////////////////////////////////////////////////////////////////
+
+// To avoid SQL injection, don't allow user input to go into the first 2 parameters
+// tableName and tableIdName should always be programmer defined
+export async function getRowFromID(tableName: string, tableIdName: string, id: number): Promise<any> {
+    try {
+        const result = await pool.query(`SELECT * FROM ${tableName} WHERE ${tableIdName} = $1`, [id]);
+        return result.rows[0];
+    }
+    catch (error) {
+        throw error;
+    }
+}
+
+export async function getRowFromVals(tableName: string, vals: any): Promise<any> {
+    let query = `SELECT * FROM ${tableName}`;
+    let colNames = Object.keys(vals);
+    let valNames = Object.values(vals);
+    for (let i = 0; i < Object.keys(vals).length; i++) {
+        query += ' ';
+        if (i == 0) {
+            query += `WHERE ${colNames[i]} = '${valNames[i]}'`
+        } else {
+            query += `AND ${colNames[i]} = '${valNames[i]}'`
+        }
+    }
+    query += ';'
+
+    try {
+        const result = await pool.query(query);
+        return result.rows[0];
+    }
+    catch (error) {
+        return error;
+    }
 }
 
 export async function getUser(user: Partial<User>): Promise<any> {
@@ -101,17 +106,25 @@ export async function getGame(id: number): Promise<any> {
     return getRowFromID("games", "game_id", id);
 }
 
+export async function getGamesWithCoach(coach_id: number) : Promise<any> {
+    const team = await getRowFromVals("teams", {coach_id: coach_id});
+    let query = 'SELECT * FROM games WHERE hometeam_id = $1 OR awayteam_id = $1';
+    
+    try {
+        const result = await pool.query(query, [team.team_id]);
+        return result.rows;
+    }
+    catch (error) {
+        throw (error);
+    }
+}
+
 export async function getTeamStats(id: number): Promise<any> {
     return getRowFromID("team_stats", "teamstats_id", id);
 }
 
 export async function getSession(id: number): Promise<any> {
     return getRowFromID("scorebook_sessions", "session_id", id);
-}
-
-export async function insertPlayer(player: Partial<Player>): Promise<any> {
-    delete player.player_id;
-    return insertRow("players", player);
 }
 
 // Cookie Queries
