@@ -29,7 +29,7 @@
 
 <p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
 
-<a href="/addPlayer">Add Player</a>
+<a href="/my-team/player">Add Player</a>
 
 <main>
     <h1>Locrosse E-Scorebook</h1>
