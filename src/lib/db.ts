@@ -109,6 +109,11 @@ export async function getSession(id: number): Promise<any> {
     return getRowFromID("scorebook_sessions", "session_id", id);
 }
 
+export async function insertPlayer(player: Partial<Player>): Promise<any> {
+    delete player.player_id;
+    return insertRow("players", player);
+}
+
 // Cookie Queries
 export const getUserById = async (id: { user_id: any; }) => {
     const existingUser = id.user_id;
