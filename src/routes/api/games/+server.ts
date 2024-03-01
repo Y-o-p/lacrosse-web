@@ -1,4 +1,4 @@
-import { pool, getGame } from '$lib/db.ts';
+import { pool, getGame } from '$lib/db';
 import { json, error } from '@sveltejs/kit'
 
 /** @type {import('./$types').RequestHandler} */
@@ -10,31 +10,40 @@ export async function GET({ params, url }) {
     const date = url.searchParams.get("date");
     
     try {
-        let games: Array<any> = []
-        if (url.searchParams.keys().empty()) {
-            const result = await pool.query("SELECT * FROM games", [team_id]);
-            games.push(...result.rows);
+        const query = "SELECT * FROM games";
+        if (url.searchParams.size == 0) {
+            const result = await pool.query(query);
+            return json(result.rows);
         }
+        let columns: Array<any> = [];
+        let columnVals: Array<any> = [];
+        let i = 1;
         if (team_id != null) {
-            const result = await pool.query("SELECT * FROM games WHERE hometeam_id = $1 OR awayteam_id = $1", [team_id]);
-            games.push(...result.rows);
+            columns.push(`(hometeam_id = $${i} OR awayteam_id = $${i})`);
+            columnVals.push(team_id);
+            i++;
         }
         if (home_id != null) {
-            const result = await pool.query("SELECT * FROM games WHERE hometeam_id = $1", [home_id]);
-            games.push(...result.rows);
+            columns.push(`hometeam_id = $${i}`);
+            columnVals.push(home_id);
+            i++;
         }
         if (away_id != null) {
-            const result = await pool.query("SELECT * FROM games WHERE awayteam_id = $1", [away_id]);
-            games.push(...result.rows);
+            columns.push(`awayteam_id = $${i}`);
+            columnVals.push(away_id);
+            i++;
         }
         if (field != null) {
-            const result = await pool.query("SELECT * FROM games WHERE field = $1", [field]);
-            games.push(...result.rows);
+            columns.push(`game_field = $${i}`);
+            columnVals.push(field);
+            i++;
         }
-        return json(games);
+        console.log(query + " WHERE " + columns.join(" AND "));
+        const result = await pool.query(query + " WHERE " + columns.join(" AND "), columnVals);
+        return json(result.rows);
     }
-    catch (error) {
-        console.log(error);
+    catch (err) {
+        console.log(err);
         return error(500, { message: "Internal Server Error" });
     }
 }
