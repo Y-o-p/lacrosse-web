@@ -8,11 +8,10 @@ export async function handle({event, resolve}) {
     if (userId != undefined) {
         let userRow = await getUser({ user_id: BigInt(userId) });
         if (userRow["role_id"] == '1') { // coach login
-            let coachRow = await getCoach((userRow["coach_id"]))
-            console.log(coachRow)
-    
+            let coachRow = await getCoach((userRow["coach_id"]))    
             const coach: Coach = {
                 coach_id: BigInt(coachRow["coach_id"]),
+                team_id: BigInt(coachRow["team_id"]),
                 last_name: coachRow["last_name"],
                 first_name: coachRow["first_name"],
                 birth_date: coachRow["last_name"],

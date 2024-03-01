@@ -38,7 +38,6 @@ export async function GET({ params, url }) {
             columnVals.push(field);
             i++;
         }
-        console.log(query + " WHERE " + columns.join(" AND "));
         const result = await pool.query(query + " WHERE " + columns.join(" AND "), columnVals);
         return json(result.rows);
     }
