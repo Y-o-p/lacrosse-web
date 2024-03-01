@@ -1,7 +1,6 @@
 <script lang="ts">
     import { onMount } from "svelte";
     import type { PageServerData } from "../$types";
-    import { redirect } from "@sveltejs/kit";
     import { goto } from "$app/navigation";
 	export let data: PageServerData;
 	export let scorebooks: Array<Game> = new Array<Game>();
@@ -16,6 +15,7 @@
 		for (let game of gameRows) {
 			console.log(game);
 			scorebooks = [...scorebooks, {
+				game_id: BigInt(game["game_id"]),
                 hometeam_id: BigInt(game["hometeam_id"]),
                 awayteam_id: BigInt(game["awayteam_id"]),
                 game_date: new Date(game["game_date"]),
