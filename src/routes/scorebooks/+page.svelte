@@ -1,9 +1,20 @@
 <script lang="ts">
-    import { onMount } from "svelte";
+    interface ScorebookPreview {
+		game_id: bigint,
+		date: Date,
+		home: string,
+		away: string,
+		home_score: number,
+		away_score: number,
+		field: string
+	}
+	
+	import { onMount } from "svelte";
     import type { PageServerData } from "../$types";
     import { goto } from "$app/navigation";
+    import { getTeam } from "$lib/api";
 	export let data: PageServerData;
-	export let scorebooks: Array<Game> = new Array<Game>();
+	export let scorebookPreviews: Array<ScorebookPreview> = new Array<ScorebookPreview>();
 
 	onMount(() => {
 		refreshScorebooks();
@@ -14,15 +25,20 @@
 		const gameRows = await result.json();
 		for (let game of gameRows) {
 			console.log(game);
-			scorebooks = [...scorebooks, {
-				game_id: BigInt(game["game_id"]),
-                hometeam_id: BigInt(game["hometeam_id"]),
-                awayteam_id: BigInt(game["awayteam_id"]),
-                game_date: new Date(game["game_date"]),
-				game_field: game["game_field"],
+			const homeTeam = await getTeam(game["hometeam_id"]);
+			const awayTeam = await getTeam(game["awayteam_id"]);
+			console.log(homeTeam);
+			scorebookPreviews = [...scorebookPreviews, {
+				game_id: game["game_id"],
+				date: game["game_date"],
+				home: homeTeam.team_name,
+				away: awayTeam.team_name,
+				home_score: 10,
+				away_score: 0,
+				field: game["game_field"]
             }];
 		}
-		console.log(scorebooks[0]);
+		console.log(scorebookPreviews[0]);
 	}
 
 	async function goToScorebook(id) {
@@ -33,12 +49,11 @@
 <div>
 	<h1>Scorebooks</h1>
 	<ul>
-		{#each scorebooks as scorebook}
+		{#each scorebookPreviews as scorebook}
 			<li>
-				Date: {scorebook.game_date} Home: {scorebook.hometeam_id} Away: {scorebook.awayteam_id}
+				Date: {scorebook.date} Home: {scorebook.home} Away: {scorebook.away}
 				<button on:click={() => goToScorebook(scorebook.game_id)}>Edit</button>
 			</li>
 		{/each}
 	</ul>
 </div>
-{scorebooks.length}

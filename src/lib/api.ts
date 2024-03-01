@@ -1,3 +1,4 @@
+import { error } from "@sveltejs/kit";
 import { toJson } from "./util";
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -32,6 +33,22 @@ export async function getCoach(id: number): Promise<Coach> {
         })
         .catch((err) => reject(err));
     });
+}
+
+export async function getTeam(id: number): Promise<Team> {
+    try {
+        const result = await fetch(`/api/teams/${id}`);
+        const row = await result.json();
+        const team: Team = {
+            team_id: BigInt(row["team_id"]),
+            team_name: row["team_name"],
+            coach_id: BigInt(row["coach_id"])
+        }
+        return team;
+    }
+    catch (err) {
+        return err;
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

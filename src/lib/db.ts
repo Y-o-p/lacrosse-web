@@ -119,6 +119,10 @@ export async function getGamesWithCoach(coach_id: number) : Promise<any> {
     }
 }
 
+export async function getTeam(id: number): Promise<any> {
+    return getRowFromID("teams", "team_id", id);
+}
+
 export async function getTeamStats(id: number): Promise<any> {
     return getRowFromID("team_stats", "teamstats_id", id);
 }
