@@ -55,26 +55,21 @@ export async function getTeam(id: number): Promise<Team> {
 // POST Helper Functions
 ///////////////////////////////////////////////////////////////////////////////
 
-/**
- * Will POST team stats using the API
- * @param teamStats Should at least contain `teamId`
- * @returns team stats ID
- */
-export async function postTeamStats(teamStats: TeamStats | any): Promise<BigInt> {
-    return new Promise<BigInt>((resolve, reject) => {
-        fetch(`/api/team-stats`, {
+export async function post(url: string, body: any): Promise<any> {
+    try {
+        const result = await fetch(url, {
             method: 'POST',
             headers: {
                 'content-type': 'application/json'
             },
-            body: toJson(teamStats)
-        })
-        .then((response) => response.json())
-        .then((row) => {
-            resolve(BigInt(row["teamstats_id"]));
-        })
-        .catch((err) => reject(err));
-    });
+            body: toJson(body)
+        });
+        const row = await result.json();
+        return row;
+    }
+    catch (err) {
+        return err;
+    }
 }
 
 /**
@@ -82,20 +77,6 @@ export async function postTeamStats(teamStats: TeamStats | any): Promise<BigInt>
  * @param session Should at least contain `coachId`
  * @returns room code string
  */
-export async function postScorebookSession(session: ScorebookSession | any): Promise<string> {
-    return new Promise<string>((resolve, reject) => {
-        console.log(session);
-        fetch(`/api/sessions`, {
-            method: 'POST',
-            headers: {
-                'content-type': 'application/json'
-            },
-            body: toJson(session)
-        })
-        .then((response) => response.json())
-        .then((row) => {
-            resolve(row["room_code"]);
-        })
-        .catch((err) => reject(err));
-    });
+export async function postScorebookSession(session: Partial<ScorebookSession>): Promise<ScorebookSession> {
+    return await post("/api/sessions", session);
 }

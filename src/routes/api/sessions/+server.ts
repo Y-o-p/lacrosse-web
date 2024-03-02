@@ -14,9 +14,9 @@ export async function POST({ request }) {
     }
     const result = await pool.query(
         'INSERT INTO\
-        scorebook_sessions(game_id, expire_time, coach_id, room_code)\
+        sk_session(game_id, expire_time, coach_id, room_code)\
         VALUES ($1, $2, $3, $4)\
-        RETURNING (room_code)',
+        RETURNING *',
         [session.game_id, session.expire_time, session.coach_id, session.room_code]
     );
     return json(result.rows[0]);
