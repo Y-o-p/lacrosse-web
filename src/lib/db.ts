@@ -67,23 +67,26 @@ export async function getRowFromID(tableName: string, tableIdName: string, id: n
     }
 }
 
-export async function getRowFromVals(tableName: string, vals: any): Promise<any> {
+export async function getRowsFromVals(tableName: string, vals?: any): Promise<any> {
     let query = `SELECT * FROM ${tableName}`;
-    let colNames = Object.keys(vals);
-    let valNames = Object.values(vals);
-    for (let i = 0; i < Object.keys(vals).length; i++) {
-        query += ' ';
-        if (i == 0) {
-            query += `WHERE ${colNames[i]} = '${valNames[i]}'`
-        } else {
-            query += `AND ${colNames[i]} = '${valNames[i]}'`
+    let values = [];
+    let i = 1;
+    for (const [columnName, value] of Object.entries(vals)) {
+        if (value === null || value === undefined) {
+            continue;
         }
+        if (i == 1) {
+            query += ` WHERE ${columnName} = $${i}`
+        } else {
+            query += ` AND ${columnName} = $${i}`
+        }
+        values.push(value);
+        i++;
     }
-    query += ';'
 
     try {
-        const result = await pool.query(query);
-        return result.rows[0];
+        const result = await pool.query(query, values);
+        return result.rows;
     }
     catch (error) {
         return error;
@@ -91,7 +94,7 @@ export async function getRowFromVals(tableName: string, vals: any): Promise<any>
 }
 
 export async function getUser(user: Partial<User>): Promise<any> {
-    return getRowFromVals("users", user);
+    return getRowsFromVals("users", user);
 }
 
 export async function getCoach(id: number): Promise<any> {
@@ -107,7 +110,7 @@ export async function getGame(id: number): Promise<any> {
 }
 
 export async function getGamesWithCoach(coach_id: number) : Promise<any> {
-    const team = await getRowFromVals("teams", {coach_id: coach_id});
+    const team = (await getRowsFromVals("teams", {coach_id: coach_id}))[0];
     let query = 'SELECT * FROM games WHERE hometeam_id = $1 OR awayteam_id = $1';
     
     try {

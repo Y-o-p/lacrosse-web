@@ -6,7 +6,7 @@ export async function handle({event, resolve}) {
     // Authenticate the user here
     let userId = authenticateUser(event);
     if (userId != undefined) {
-        let userRow = await getUser({ user_id: BigInt(userId) });
+        let userRow = (await getUser({ user_id: BigInt(userId) }))[0];
         if (userRow["role_id"] == '1') { // coach login
             let coachRow = await getCoach((userRow["coach_id"]))    
             const coach: Coach = {
@@ -40,8 +40,7 @@ export async function handle({event, resolve}) {
     if (event.locals.user !== "webmaster") {
         if (event.locals.user !== "coach") {
             if (path.startsWith("/my-team") ||
-                path.startsWith("/scorebooks") ||
-                path.startsWith("/api/sessions")) {
+                path.startsWith("/scorebooks")) {
                 throw redirect(303, "/")
             }
         }

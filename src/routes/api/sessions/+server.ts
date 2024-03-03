@@ -1,6 +1,7 @@
 import { getRandomCode } from '$lib/util.js';
-import { pool } from '$lib/db.js';
-import { json } from '@sveltejs/kit'
+import { getRowsFromVals, pool } from '$lib/db.js';
+import { error, json } from '@sveltejs/kit'
+import { getRowsFromUrlParams } from '$lib/api.js';
 
 // The game ID must be supplied for this to succeed
 /** @type {import('./$types').RequestHandler} */
@@ -20,4 +21,9 @@ export async function POST({ request }) {
         [session.game_id, session.expire_time, session.coach_id, session.room_code]
     );
     return json(result.rows[0]);
+}
+
+/** @type {import('./$types').RequestHandler} */
+export async function GET({ params, url }) {
+    return getRowsFromUrlParams("sk_session", url.searchParams);
 }
