@@ -1,7 +1,6 @@
 import { getRandomCode } from '$lib/util.js';
-import { getRowsFromVals, pool } from '$lib/db.js';
-import { error, json } from '@sveltejs/kit'
-import { getRowsFromUrlParams } from '$lib/api.js';
+import { getRowsFromUrlParams, pool } from '$lib/db.js';
+import { json } from '@sveltejs/kit'
 
 // The game ID must be supplied for this to succeed
 /** @type {import('./$types').RequestHandler} */

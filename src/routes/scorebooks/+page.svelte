@@ -27,11 +27,11 @@
 		const result = await fetch(`/api/games?team=${data.locals.coach.team_id}`);
 		const gameRows = await result.json();
 		for (let game of gameRows) {
-			console.log(game);
 			const homeTeam = await getTeam(game["hometeam_id"]);
 			const awayTeam = await getTeam(game["awayteam_id"]);
-			console.log(homeTeam);
-			scorebookPreviews = [...scorebookPreviews, {
+			const session = await (await fetch(`/api/sessions?game_id=${game["game_id"]}&coach_id=${data.locals.coach.coach_id}`)).json();
+			console.log(session);
+			let scorebookPreview: ScorebookPreview = {
 				game_id: game["game_id"],
 				date: game["game_date"],
 				home: homeTeam.team_name,
@@ -39,9 +39,19 @@
 				home_score: 10,
 				away_score: 0,
 				field: game["game_field"]
-            }];
+            };
+			if (session.length > 0) {
+				scorebookPreview.session = {
+					session_id: BigInt(session[0]["session_id"]),
+					game_id: BigInt(session[0]["game_id"]),
+					coach_id: BigInt(session[0]["coach_id"]),
+					room_code: session[0]["room_code"],
+					expire_time: BigInt(session[0]["expire_time"])
+				};
+			}
+			scorebookPreviews = [...scorebookPreviews, scorebookPreview];
 		}
-		console.log(scorebookPreviews[0]);
+		//console.log(scorebookPreviews[0]);
 	}
 
 	// async function refreshScorebook(scorebook: ScorebookPreview) {

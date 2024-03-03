@@ -5,7 +5,7 @@ import { authenticateUser } from '$lib/auth';
 export async function handle({event, resolve}) {    
     // Authenticate the user here
     let userId = authenticateUser(event);
-    if (userId != undefined) {
+    if (userId !== undefined) {
         let userRow = (await getUser({ user_id: BigInt(userId) }))[0];
         if (userRow["role_id"] == '1') { // coach login
             let coachRow = await getCoach((userRow["coach_id"]))    

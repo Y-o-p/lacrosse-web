@@ -1,6 +1,4 @@
-import { error, json } from "@sveltejs/kit";
 import { toJson } from "./util";
-import { getRowsFromVals } from "./db";
 
 ///////////////////////////////////////////////////////////////////////////////
 // GET Helper Functions
@@ -49,21 +47,6 @@ export async function getTeam(id: number): Promise<Team> {
     }
     catch (err) {
         return err;
-    }
-}
-
-export async function getRowsFromUrlParams(tableName: string, urlParams: URLSearchParams): Promise<Response> {
-    const obj = {};
-    for (const [key, value] of urlParams) {
-        obj[key] = value;
-    }
-
-    try {
-        const result = await getRowsFromVals(tableName, obj);
-        return json(result);
-    }
-    catch (err) {
-        error(err);
     }
 }
 

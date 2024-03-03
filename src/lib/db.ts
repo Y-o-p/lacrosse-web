@@ -1,3 +1,4 @@
+import { error, json } from '@sveltejs/kit';
 import pg from 'pg';
 
 export const pool = new pg.Pool({
@@ -93,6 +94,21 @@ export async function getRowsFromVals(tableName: string, vals?: any): Promise<an
     }
 }
 
+export async function getRowsFromUrlParams(tableName: string, urlParams: URLSearchParams): Promise<Response> {
+    const obj = {};
+    for (const [key, value] of urlParams) {
+        obj[key] = value;
+    }
+
+    try {
+        const result = await getRowsFromVals(tableName, obj);
+        return json(result);
+    }
+    catch (err) {
+        error(err);
+    }
+}
+
 export async function getUser(user: Partial<User>): Promise<any> {
     return getRowsFromVals("users", user);
 }
@@ -138,3 +154,4 @@ export async function getSession(id: number): Promise<any> {
 export const getUserById = async (id: { user_id: any; }) => {
     const existingUser = id.user_id;
 }
+
