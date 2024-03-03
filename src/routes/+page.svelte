@@ -65,7 +65,7 @@
         <form method="POST" action="?/register">
             <div class="signup-row" style="display: table-row;">
                 <label for=12 style="display: table-cell;">Username:</label>
-                <input name="user_name" id=12 type="text">
+                <input name="uname" id=12 type="text">
             </div>
             <div class="signup-row" style="display: table-row;">
                 <label for=13 style="display: table-cell;">Password:</label>
