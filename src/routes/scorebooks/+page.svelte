@@ -1,6 +1,12 @@
 <script lang="ts">
-    import { deleteScorebookSession, postScorebookSession } from "$lib/api";
-
+	import { deleteScorebookSession, postScorebookSession } from "$lib/api";	
+	import { onMount } from "svelte";
+	import type { PageServerData } from "../$types";
+	import { goto } from "$app/navigation";
+	import { getTeam } from "$lib/api";
+	import Modal from "./modal.svelte";
+	import Confirm from "./confirm.svelte";
+	
     interface ScorebookPreview {
 		game_id: bigint,
 		date: Date,
@@ -11,13 +17,6 @@
 		field: string,
 		session?: ScorebookSession
 	}
-	
-	import { onMount } from "svelte";
-    import type { PageServerData } from "../$types";
-    import { goto } from "$app/navigation";
-    import { getTeam } from "$lib/api";
-    import Modal from "./modal.svelte";
-    import Confirm from "./confirm.svelte";
 	export let data: PageServerData;
 	let showDeletionModal = false;
 	let showNewScorebookModal = false;
@@ -30,8 +29,10 @@
 	});
 
 	async function refreshScorebooks() {
-		const result = await fetch(`/api/games?team=${data.locals.coach.team_id}`);
-		const gameRows = await result.json();
+		const homeTeamResult = await fetch(`/api/games?hometeam_id=${data.locals.coach.team_id}`);
+		const gameRows = await homeTeamResult.json();
+		const awayTeamResult = await fetch(`/api/games?awayteam_id=${data.locals.coach.team_id}`);
+		gameRows.push(...(await awayTeamResult.json()));
 		for (let game of gameRows) {
 			const homeTeam = await getTeam(game["hometeam_id"]);
 			const awayTeam = await getTeam(game["awayteam_id"]);
@@ -87,7 +88,21 @@
 	}
 
 	async function deleteScorebook(scorebook: ScorebookPreview) {
-		
+		const gameResult = await fetch(`api/games/${scorebook.game_id}`, {
+            method: 'DELETE',
+            headers: {
+                'content-type': 'application/json'
+            }
+        });
+		const playerStatsResult = await fetch(`api/player-stats?game_id=${scorebook.game_id}`, {
+            method: 'DELETE',
+            headers: {
+                'content-type': 'application/json'
+            }
+        });
+		const i = scorebookPreviews.indexOf(scorebook);
+		scorebookPreviews.splice(i, 1);
+		scorebookPreviews = scorebookPreviews;
 	}
 
 	async function endSession(scorebook: ScorebookPreview) {
