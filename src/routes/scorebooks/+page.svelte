@@ -16,8 +16,14 @@
     import type { PageServerData } from "../$types";
     import { goto } from "$app/navigation";
     import { getTeam } from "$lib/api";
+    import Modal from "./modal.svelte";
+    import Confirm from "./confirm.svelte";
 	export let data: PageServerData;
+	let showDeletionModal = false;
+	let showNewScorebookModal = false;
+	let showEndSessionModal = false;
 	let scorebookPreviews: Array<ScorebookPreview> = new Array<ScorebookPreview>();
+	let selectedScorebook: ScorebookPreview;
 
 	onMount(() => {
 		refreshScorebooks();
@@ -70,14 +76,27 @@
 		await navigator.clipboard.writeText(code);
 	}
 
-	async function deleteScorebook(scorebook: ScorebookPreview) {
+	async function deletionButton(scorebook: ScorebookPreview) {
+		selectedScorebook = scorebook;
+		showDeletionModal = true;
+	}
+
+	async function endSessionButton(scorebook: ScorebookPreview) {
+		selectedScorebook = scorebook;
+		showEndSessionModal = true;
+	}
+
+	async function deleteScorebook() {
 		
 	}
 
 </script>
 
+
+
+<h1>Scorebooks</h1>
+<button on:click={() => {showNewScorebookModal = !showNewScorebookModal;}}>New Scorebook</button>
 <div>
-	<h1>Scorebooks</h1>
 	<ul>
 		{#each scorebookPreviews as scorebook (scorebook.game_id)}
 			<li>
@@ -88,10 +107,25 @@
 				{:else}
 					{scorebook.session.room_code}
 					<button on:click={() => copyRoomCode(scorebook.session.room_code)}>Copy Code</button>
-					<button>End Session</button>
+					<button on:click={ () => endSessionButton(scorebook) }>End Session</button>
 				{/if}
-				<button>Delete</button>
+				<button on:click={ () => deletionButton(scorebook) }>Delete</button>
 			</li>
 		{/each}
 	</ul>
 </div>
+
+<Modal bind:show={showNewScorebookModal}>
+	<h2 slot="header">New Scorebook</h2>
+	<button>New Session</button>
+	<br>
+	<button>Edit</button>
+</Modal>
+
+<Confirm bind:show={showEndSessionModal} on:confirm={ () => {console.log("End session")} }>
+	<p>Are you sure you want to end the session? It will kick out anyone working on the scorebook.</p>
+</Confirm>
+
+<Confirm bind:show={showDeletionModal} on:confirm={ () => {console.log("Delete scorebook")} }>
+	<p>Are you sure you want to delete this scorebook? This action is irreversible.</p>
+</Confirm>
