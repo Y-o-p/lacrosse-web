@@ -89,6 +89,10 @@
 	async function goToScorebook(id) {
 		await goto(`/scorebooks/${id}`);
 	}
+	
+	async function copyRoomCode(code: string) {
+		await navigator.clipboard.writeText(code);
+	} 
 </script>
 
 <div>
@@ -102,7 +106,7 @@
 					<button on:click={() => newSession(scorebook)}>New Session</button>
 				{:else}
 					{scorebook.session.room_code}
-					<button>Copy Code</button>
+					<button on:click={() => copyRoomCode(scorebook.session.room_code)}>Copy Code</button>
 					<button>End Session</button>
 				{/if}
 			</li>
