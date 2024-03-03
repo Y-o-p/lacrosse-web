@@ -142,8 +142,8 @@ export async function getTeam(id: number): Promise<any> {
     return getRowFromID("teams", "team_id", id);
 }
 
-export async function getTeamStats(id: number): Promise<any> {
-    return getRowFromID("team_stats", "teamstats_id", id);
+export async function getPlayerStats(id: number): Promise<any> {
+    return getRowFromID("player_stats", "playerstat_id", id);
 }
 
 export async function getSession(id: number): Promise<any> {

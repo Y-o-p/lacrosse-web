@@ -1,0 +1,8 @@
+import { getPlayerStats } from '$lib/db.js';
+import { json } from '@sveltejs/kit'
+
+/** @type {import('./$types').RequestHandler} */
+export async function GET({ params }) {
+    const playerStats = await getPlayerStats(Number(params.id));
+    return json(playerStats);
+}

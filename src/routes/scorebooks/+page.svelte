@@ -51,31 +51,7 @@
 			}
 			scorebookPreviews = [...scorebookPreviews, scorebookPreview];
 		}
-		//console.log(scorebookPreviews[0]);
 	}
-
-	// async function refreshScorebook(scorebook: ScorebookPreview) {
-	// 	let result = await fetch(`/api/games/${scorebook.game_id}`);
-	// 	const game = await result.json();
-	// 	result = await fetch(`/api/sessions?coach=${data.locals.coach.coach_id}&game=${scorebook.game_id}`);
-	// 	const session = await result.json();
-	// 	const homeTeam = await getTeam(game["hometeam_id"]);
-	// 	const awayTeam = await getTeam(game["awayteam_id"]);
-	// 	scorebook.game_id = game["game_id"];
-	// 	scorebook.date = game["game_date"];
-	// 	scorebook.home = homeTeam.team_name;
-	// 	scorebook.away = awayTeam.team_name;
-	// 	scorebook.home_score = 10;
-	// 	scorebook.away_score = 0;
-	// 	scorebook.field = game["game_field"];
-	// 	scorebook.session = {
-	// 		session_id: session["session_id"],
-	// 		game_id: session["game_id"],
-	// 		coach_id: session["coach_id"],
-	// 		room_code: session["room_code"],
-	// 		expire_time: session["expire_time"]
-	// 	};
-	// }
 
 	async function newSession(scorebook: ScorebookPreview) {
         scorebook.session = await postScorebookSession({ 
@@ -92,7 +68,12 @@
 	
 	async function copyRoomCode(code: string) {
 		await navigator.clipboard.writeText(code);
-	} 
+	}
+
+	async function deleteScorebook(scorebook: ScorebookPreview) {
+		
+	}
+
 </script>
 
 <div>
@@ -109,6 +90,7 @@
 					<button on:click={() => copyRoomCode(scorebook.session.room_code)}>Copy Code</button>
 					<button>End Session</button>
 				{/if}
+				<button>Delete</button>
 			</li>
 		{/each}
 	</ul>

@@ -74,7 +74,7 @@ export async function post(url: string, body: any): Promise<any> {
 /**
  * Will POST scorebook session using the API
  * @param session Should at least contain `coachId`
- * @returns room code string
+ * @returns `Promise<ScorebookSession>` returned from the database
  */
 export async function postScorebookSession(session: Partial<ScorebookSession>): Promise<ScorebookSession> {
     return await post("/api/sessions", session);
