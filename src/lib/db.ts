@@ -155,3 +155,20 @@ export const getUserById = async (id: { user_id: any; }) => {
     const existingUser = id.user_id;
 }
 
+///////////////////////////////////////////////////////////////////////////////
+// DELETE Functions
+///////////////////////////////////////////////////////////////////////////////
+
+export async function deleteRowFromId(tableName: string, tableIdName: string, id: number) {
+    try {
+        const result = await pool.query(`DELETE FROM ${tableName} WHERE ${tableIdName} = $1 RETURNING (${tableIdName})`, [id]);
+        return result.rows[0];
+    }
+    catch (error) {
+        throw error;
+    }
+}
+
+export async function deletePlayerStats(id: number) {
+    return deleteRowFromId("player_stats", "playerstat_id", id);
+}
