@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { postScorebookSession } from "$lib/api";
+    import { deleteScorebookSession, postScorebookSession } from "$lib/api";
 
     interface ScorebookPreview {
 		game_id: bigint,
@@ -86,8 +86,14 @@
 		showEndSessionModal = true;
 	}
 
-	async function deleteScorebook() {
+	async function deleteScorebook(scorebook: ScorebookPreview) {
 		
+	}
+
+	async function endSession(scorebook: ScorebookPreview) {
+		const result = await deleteScorebookSession(scorebook.session);
+		delete scorebook.session;
+		scorebookPreviews = scorebookPreviews;
 	}
 
 </script>
@@ -122,10 +128,10 @@
 	<button>Edit</button>
 </Modal>
 
-<Confirm bind:show={showEndSessionModal} on:confirm={ () => {console.log("End session")} }>
+<Confirm bind:show={showEndSessionModal} on:confirm={ () => { endSession(selectedScorebook) } }>
 	<p>Are you sure you want to end the session? It will kick out anyone working on the scorebook.</p>
 </Confirm>
 
-<Confirm bind:show={showDeletionModal} on:confirm={ () => {console.log("Delete scorebook")} }>
+<Confirm bind:show={showDeletionModal} on:confirm={ () => { deleteScorebook(selectedScorebook) } }>
 	<p>Are you sure you want to delete this scorebook? This action is irreversible.</p>
 </Confirm>

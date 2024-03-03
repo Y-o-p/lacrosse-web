@@ -1,5 +1,5 @@
-import { getSession } from '$lib/db.js';
-import { json } from '@sveltejs/kit'
+import { deleteSession, getSession } from '$lib/db.js';
+import { error, json } from '@sveltejs/kit'
 
 /** @type {import('./$types').RequestHandler} */
 export async function GET({ params }) {
@@ -7,3 +7,13 @@ export async function GET({ params }) {
     return json(session);
 }
 
+/** @type {import('./$types').RequestHandler} */
+export async function DELETE({ params }) {
+    try {
+        const id = await deleteSession(Number(params.id));
+        return json(id);
+    }
+    catch (err) {
+        return error(500, err);
+    }
+}

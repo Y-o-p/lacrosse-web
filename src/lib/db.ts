@@ -172,3 +172,7 @@ export async function deleteRowFromId(tableName: string, tableIdName: string, id
 export async function deletePlayerStats(id: number) {
     return deleteRowFromId("player_stats", "playerstat_id", id);
 }
+
+export async function deleteSession(id: number) {
+    return deleteRowFromId("sk_session", "session_id", id);
+}

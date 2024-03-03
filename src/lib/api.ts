@@ -1,4 +1,23 @@
+// These are API helper functions. They are provided to avoid fetch calls.
+
 import { toJson } from "./util";
+
+export async function apiCall(method: string, url: string, body: any): Promise<any> {
+    try {
+        const result = await fetch(url, {
+            method: method,
+            headers: {
+                'content-type': 'application/json'
+            },
+            body: toJson(body)
+        });
+        const row = await result.json();
+        return row;
+    }
+    catch (err) {
+        return err;
+    }
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 // GET Helper Functions
@@ -54,21 +73,8 @@ export async function getTeam(id: number): Promise<Team> {
 // POST Helper Functions
 ///////////////////////////////////////////////////////////////////////////////
 
-export async function post(url: string, body: any): Promise<any> {
-    try {
-        const result = await fetch(url, {
-            method: 'POST',
-            headers: {
-                'content-type': 'application/json'
-            },
-            body: toJson(body)
-        });
-        const row = await result.json();
-        return row;
-    }
-    catch (err) {
-        return err;
-    }
+export async function apiPost(url: string, body: any): Promise<any> {
+    return await apiCall("POST", url, body);
 }
 
 /**
@@ -77,5 +83,17 @@ export async function post(url: string, body: any): Promise<any> {
  * @returns `Promise<ScorebookSession>` returned from the database
  */
 export async function postScorebookSession(session: Partial<ScorebookSession>): Promise<ScorebookSession> {
-    return await post("/api/sessions", session);
+    return await apiPost("/api/sessions", session);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// DELETE Helper Functions
+///////////////////////////////////////////////////////////////////////////////
+
+export async function apiDelete(url: string, body: any): Promise<any> {
+    return await apiCall("DELETE", url, body);
+}
+
+export async function deleteScorebookSession(session: Partial<ScorebookSession>): Promise<ScorebookSession> {
+    return await apiDelete(`/api/sessions/${session.session_id}`, session);
 }
