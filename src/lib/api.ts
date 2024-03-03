@@ -1,4 +1,5 @@
 // These are API helper functions. They are provided to avoid fetch calls.
+// You can use these in server and client side content.
 
 import { toJson } from "./util";
 

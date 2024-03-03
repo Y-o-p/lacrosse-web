@@ -1,19 +1,16 @@
+import { responseFromFunction } from '$lib/api_util.js';
 import { deletePlayerStats, getPlayerStats } from '$lib/db.js';
-import { error, json } from '@sveltejs/kit'
 
 /** @type {import('./$types').RequestHandler} */
 export async function GET({ params }) {
-    const playerStats = await getPlayerStats(Number(params.id));
-    return json(playerStats);
+    return responseFromFunction(async () => {
+        return getPlayerStats(Number(params.id));
+    })
 }
 
 /** @type {import('./$types').RequestHandler} */
 export async function DELETE({ params }) {
-    try {
-        const id = await deletePlayerStats(Number(params.id));
-        return json(id);
-    }
-    catch (err) {
-        return error(500, err);
-    }
+    return responseFromFunction(async () => {
+        return deletePlayerStats(Number(params.id));
+    })
 }

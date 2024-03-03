@@ -8,7 +8,15 @@ export function toJson(object: any) {
 
 export function getRandomCode(length: number) {
     return Array.from(
-      { length: length },
-      () => String.fromCharCode(Math.floor(Math.random() * 26) + 65)
+        { length: length },
+        () => String.fromCharCode(Math.floor(Math.random() * 26) + 65)
     ).join('');
-  }
+}
+
+export function objFromUrlParams(urlParams: URLSearchParams) {
+    const obj = {};
+    for (const [key, value] of urlParams) {
+        obj[key] = value;
+    }
+    return obj;
+}

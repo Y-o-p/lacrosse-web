@@ -1,5 +1,6 @@
 import { getRandomCode } from '$lib/util.js';
-import { getRowsFromUrlParams, pool } from '$lib/db.js';
+import { deleteRowsFromUrlParams, responseFromFunction, selectRowsFromUrlParams } from '$lib/api_util.js';
+import { pool } from '$lib/db.js';
 import { json } from '@sveltejs/kit'
 
 // The game ID must be supplied for this to succeed
@@ -22,7 +23,13 @@ export async function POST({ request }) {
     return json(result.rows[0]);
 }
 
+
 /** @type {import('./$types').RequestHandler} */
-export async function GET({ params, url }) {
-    return getRowsFromUrlParams("sk_session", url.searchParams);
+export async function GET({ url }) {
+    return selectRowsFromUrlParams("sk_session", url.searchParams);
+}
+
+/** @type {import('./$types').RequestHandler} */
+export async function DELETE({ url }) {
+    return deleteRowsFromUrlParams("sk_session", url.searchParams);
 }

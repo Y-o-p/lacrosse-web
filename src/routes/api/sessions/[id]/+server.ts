@@ -1,19 +1,16 @@
-import { deleteSession, getSession } from '$lib/db.js';
-import { error, json } from '@sveltejs/kit'
+import { responseFromFunction } from '$lib/api_util.js';
+import { deleteScorebookSession, getScorebookSession } from '$lib/db.js';
 
 /** @type {import('./$types').RequestHandler} */
 export async function GET({ params }) {
-    const session = await getSession(Number(params.id));
-    return json(session);
+    return responseFromFunction(async () => {
+        return getScorebookSession(Number(params.id));
+    })
 }
 
 /** @type {import('./$types').RequestHandler} */
 export async function DELETE({ params }) {
-    try {
-        const id = await deleteSession(Number(params.id));
-        return json(id);
-    }
-    catch (err) {
-        return error(500, err);
-    }
+    return responseFromFunction(async () => {
+        return deleteScorebookSession(Number(params.id));
+    })
 }
