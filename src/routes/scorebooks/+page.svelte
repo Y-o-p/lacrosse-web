@@ -66,6 +66,7 @@
 				expire_time: BigInt(session["expire_time"])
 			};
 			let scorebookPreview: ScorebookPreview = {
+				date: new Date(),
 				session: session
 			};
 			scorebookPreviews = [...scorebookPreviews, scorebookPreview];
