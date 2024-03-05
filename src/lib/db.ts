@@ -15,26 +15,27 @@ export const pool = new pg.Pool({
 async function queryFromVals(action: string, tableName: string, object?: any) {
     let query = `${action} FROM ${tableName}`;
     let values = [];
+    let queryConditions = [];
     let i = 1;
     for (const [columnName, value] of Object.entries(object)) {
-        if (value === null || value === undefined) {
+        if (value === undefined) {
             continue;
         }
-        if (i == 1) {
-            query += ` WHERE ${columnName} = $${i}`
-        } else {
-            query += ` AND ${columnName} = $${i}`
+        if (value === null || value == "null") {
+            queryConditions.push(`${columnName} IS NULL`);
         }
-        values.push(value);
-        i++;
+        else {
+            queryConditions.push(`${columnName} = $${i}`);
+            values.push(value);
+            i++;
+        }
     }
-    try {
-        const result = await pool.query(query, values);
-        return result.rows;
+    if (queryConditions.length > 0) {
+        query += " WHERE " + queryConditions.join(" AND ");
     }
-    catch (error) {
-        return error;
-    }
+
+    const result = await pool.query(query, values);
+    return result.rows;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

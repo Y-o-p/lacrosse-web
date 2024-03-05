@@ -8,13 +8,13 @@
 	import Confirm from "./confirm.svelte";
 	
     interface ScorebookPreview {
-		game_id: bigint,
-		date: Date,
-		home: string,
-		away: string,
-		home_score: number,
-		away_score: number,
-		field: string,
+		date?: Date,
+		game_id?: bigint,
+		home?: string,
+		away?: string,
+		home_score?: number,
+		away_score?: number,
+		field?: string,
 		session?: ScorebookSession
 	}
 	export let data: PageServerData;
@@ -37,10 +37,9 @@
 			const homeTeam = await getTeam(game["hometeam_id"]);
 			const awayTeam = await getTeam(game["awayteam_id"]);
 			const session = await (await fetch(`/api/sessions?game_id=${game["game_id"]}&coach_id=${data.locals.coach.coach_id}`)).json();
-			console.log(session);
 			let scorebookPreview: ScorebookPreview = {
 				game_id: game["game_id"],
-				date: game["game_date"],
+				date: new Date(game["game_date"]),
 				home: homeTeam.team_name,
 				away: awayTeam.team_name,
 				home_score: 10,
@@ -58,6 +57,28 @@
 			}
 			scorebookPreviews = [...scorebookPreviews, scorebookPreview];
 		}
+		const sessions = await (await fetch(`/api/sessions?game_id=null`)).json();
+		for (let session of sessions) {
+			session = {
+				session_id: BigInt(session["session_id"]),
+				coach_id: BigInt(session["coach_id"]),
+				room_code: session["room_code"],
+				expire_time: BigInt(session["expire_time"])
+			};
+			let scorebookPreview: ScorebookPreview = {
+				session: session
+			};
+			scorebookPreviews = [...scorebookPreviews, scorebookPreview];
+		}
+
+		sortScorebooks();
+	}
+
+	function sortScorebooks() {
+		scorebookPreviews.sort((a, b) => {
+			return b.date - a.date;
+		});
+		console.log(scorebookPreviews);
 	}
 
 	async function newSession(scorebook: ScorebookPreview) {
@@ -66,7 +87,6 @@
 			game_id: scorebook.game_id
 		});
 		scorebookPreviews = scorebookPreviews;
-		console.log(scorebook.session.room_code);
     }
 
 	async function goToScorebook(id) {
@@ -88,18 +108,23 @@
 	}
 
 	async function deleteScorebook(scorebook: ScorebookPreview) {
-		const gameResult = await fetch(`api/games/${scorebook.game_id}`, {
-            method: 'DELETE',
-            headers: {
-                'content-type': 'application/json'
-            }
-        });
-		const playerStatsResult = await fetch(`api/player-stats?game_id=${scorebook.game_id}`, {
-            method: 'DELETE',
-            headers: {
-                'content-type': 'application/json'
-            }
-        });
+		if (scorebook.game_id !== undefined) {
+			const gameResult = await fetch(`api/games/${scorebook.game_id}`, {
+				method: 'DELETE',
+				headers: {
+					'content-type': 'application/json'
+				}
+			});
+			const playerStatsResult = await fetch(`api/player-stats?game_id=${scorebook.game_id}`, {
+				method: 'DELETE',
+				headers: {
+					'content-type': 'application/json'
+				}
+			});
+		}
+		if (scorebook.session !== undefined) {
+			endSession(scorebook);
+		}
 		const i = scorebookPreviews.indexOf(scorebook);
 		scorebookPreviews.splice(i, 1);
 		scorebookPreviews = scorebookPreviews;
@@ -111,19 +136,37 @@
 		scorebookPreviews = scorebookPreviews;
 	}
 
+	async function newScorebookEdit() {
+		showNewScorebookModal = false;
+		// TODO: redirect to a different page
+	}
+
+	async function newScorebookNewSession() {
+		let scorebookPreview: ScorebookPreview = {
+			date: new Date(),
+			home_score: 0,
+			away_score: 0
+		};
+		scorebookPreviews = [...scorebookPreviews, scorebookPreview];
+		newSession(scorebookPreview);
+		sortScorebooks();
+	}
+
 </script>
-
-
 
 <h1>Scorebooks</h1>
 <button on:click={() => {showNewScorebookModal = !showNewScorebookModal;}}>New Scorebook</button>
 <div>
 	<ul>
-		{#each scorebookPreviews as scorebook (scorebook.game_id)}
+		{#each scorebookPreviews as scorebook}
 			<li>
-				Date: {scorebook.date} Home: {scorebook.home} Away: {scorebook.away}
+				{#if scorebook.game_id === undefined}
+					New Game
+				{:else}
+					Date: {scorebook.date} Home: {scorebook.home} Away: {scorebook.away}
+				{/if}
 				<button on:click={() => goToScorebook(scorebook.game_id)}>Edit</button>
-				{#if scorebook.session == undefined}
+				{#if scorebook.session === undefined}
 					<button on:click={() => newSession(scorebook)}>New Session</button>
 				{:else}
 					{scorebook.session.room_code}
@@ -138,9 +181,9 @@
 
 <Modal bind:show={showNewScorebookModal}>
 	<h2 slot="header">New Scorebook</h2>
-	<button>New Session</button>
+	<button on:click={ () => { newScorebookNewSession() } }>New Session</button>
 	<br>
-	<button>Edit</button>
+	<button on:click={ () => { newScorebookEdit() } }>Edit</button>
 </Modal>
 
 <Confirm bind:show={showEndSessionModal} on:confirm={ () => { endSession(selectedScorebook) } }>
