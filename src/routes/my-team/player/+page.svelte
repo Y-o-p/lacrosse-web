@@ -1,3 +1,9 @@
+<script lang="ts">
+    import type { PageServerData } from "./$types";
+    export let data: PageServerData;
+    console.log(data.coach.birthdate);
+
+</script>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -93,9 +99,10 @@
 
     </style>
 </head>
+
 <body>
     <div class="container">
-        <h1>Coach Roster Input</h1>
+        <h1>Coach, {data.coach.first_name}, Roster Input </h1>
         <form id="rosterForm" method="POST" action="?/addPlayer">
             <!-- Input fields -->
             <label for="firstName">First Name:</label>
@@ -118,6 +125,8 @@
             <!-- Hidden input for position -->
             <input type="hidden" id="position" name="position" required>
 
+            <!-- Hidden input for team_id-->
+            <input type="hidden" id="team_id" name="team_id" required value="3">
             <!-- Additional input fields -->
             <label for="height">Height (in inches):</label>
             <input type="number" id="height" name="height" min="0" max="100" step="1" required>

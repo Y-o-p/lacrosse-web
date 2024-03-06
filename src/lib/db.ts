@@ -118,3 +118,19 @@ export async function insertPlayer(player: Partial<Player>): Promise<any> {
 export const getUserById = async (id: { user_id: any; }) => {
     const existingUser = id.user_id;
 }
+
+// Get array of players from team_id
+export async function getPlayersByTeamId(teamId: bigint): Promise<Player[]> {
+    return new Promise<Player[]>((resolve, reject) => {
+        const query = `SELECT * FROM players WHERE team_id = $1`;
+        const values = [teamId];
+
+        pool.query(query, values, (error, result) => {
+            if (error) {
+                reject(error);
+            } else {
+                resolve(result.rows);
+            }
+        });
+    });
+}
