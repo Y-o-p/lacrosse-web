@@ -193,15 +193,17 @@
 			{:else}
 				Date: {scorebook.date} Home: {scorebook.home} Away: {scorebook.away}
 			{/if}
-			<button on:click={ () => editScorebook(scorebook.game_id) }>Edit</button>
-			{#if scorebook.session === undefined}
-				<button on:click={ () => newSession(scorebook) }>New Session</button>
-			{:else}
-				{scorebook.session.room_code}
-				<button on:click={ () => copyToClipboard(scorebook.session.room_code) }>Copy Code</button>
-				<button on:click={ () => endSessionButton(scorebook) }>End Session</button>
-			{/if}
-			<button on:click={ () => deletionButton(scorebook) }>Delete</button>
+			<div>
+				<button on:click={ () => editScorebook(scorebook.game_id) }>Edit</button>
+				{#if scorebook.session === undefined}
+					<button on:click={ () => newSession(scorebook) }>New Session</button>
+				{:else}
+					{scorebook.session.room_code}
+					<button on:click={ () => copyToClipboard(scorebook.session.room_code) }>Copy Code</button>
+					<button on:click={ () => endSessionButton(scorebook) }>End Session</button>
+				{/if}
+				<button on:click={ () => deletionButton(scorebook) }>Delete</button>
+			</div>
 		</li>
 	{/each}
 </ul>
