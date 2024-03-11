@@ -39,7 +39,7 @@ export const actions = {
         let coach: Coach = {
             last_name: data.get('lName').toString(),
             first_name: data.get('fName').toString(),
-            birth_date: new Date(),
+            birth_date: new Date(data.get('birthday').toString()),
             phone: data.get('phone').toString(),
             date_created: new Date()
         }

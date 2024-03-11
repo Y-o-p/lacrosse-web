@@ -1,11 +1,11 @@
 import pg from 'pg';
 
 export const pool = new pg.Pool({
-    database: import.meta.env.VITE_PGDATABASE || "postgres",
+    database: import.meta.env.VITE_PGDATABASE || "master",
     user: import.meta.env.VITE_PGUSER || "postgres",
     host: import.meta.env.VITE_PGHOST || "localhost",
     port: (Number(import.meta.env.VITE_PGPORT || 5432 )),
-    password: import.meta.env.VITE_PGDATABASE || "ident",
+    password: import.meta.env.VITE_PGDATABASE || "25uPY996mWr#",
 })
 
 
@@ -33,12 +33,12 @@ export async function getRowFromVals(tableName: string, vals: any): Promise<any>
         for (let i = 0; i < Object.keys(vals).length; i++) {
             query += ' ';
             if (i == 0) {
-                query += `WHERE ${colNames[i]} = '${valNames[i]}'`
+                query += `WHERE ${colNames[i]} = '${valNames[i]}'`;
             } else {
-                query += `AND ${colNames[i]} = '${valNames[i]}'`
+                query += `AND ${colNames[i]} = '${valNames[i]}'`;
             }
         }
-        query += ';'
+        query += ';';
         //console.log(query)
 
         const result = pool.query(query);
@@ -73,6 +73,42 @@ export async function insertRow(tableName: string, object: any): Promise<any> {
             reject(error);
         });
     });
+}
+
+export async function editRow(tableName: string, vals: any, ids: any): Promise<any> {
+    return new Promise<any>((resolve, reject) => {
+        let query = `UPDATE ${tableName} SET`;
+        let valColNames = Object.keys(vals);
+        let valNames = Object.values(vals);
+        for (let i = 0; i < Object.keys(vals).length; i++) {
+            query += ` ${valColNames[i]} = '${valNames[i]}'`
+            if (i != Object.keys(vals).length - 1) {
+                query += ','
+            }
+        }
+
+        let idColNames = Object.keys(ids);
+        let idNames = Object.values(ids);
+        for (let i = 0; i < Object.keys(ids).length; i++) {
+            query += ' ';
+            if (i == 0) {
+                query += `WHERE ${idColNames[i]} = '${idNames[i]}'`;
+            } else {
+                query += `AND ${idColNames[i]} = '${idNames[i]}'`;
+            }
+        }
+        query += ';';
+
+        console.log(query);
+        const result = pool.query(query);
+        //const result = null;
+        result.then((innerResult) => {
+            const data = innerResult.rows[0];
+            resolve(data);
+        }).catch((error) => {
+            reject(error);
+        });
+    })
 }
 
 export async function insertUser(user: Partial<User>): Promise<any> {
@@ -112,6 +148,14 @@ export async function getSession(id: number): Promise<any> {
 export async function insertPlayer(player: Partial<Player>): Promise<any> {
     delete player.player_id;
     return insertRow("players", player);
+}
+
+export async function editUser(vals: Partial<User>, ids: Partial<User>) {
+    return editRow("users", vals, ids);
+}
+
+export async function editCoach(vals: Partial<User>, ids: Partial<User>) {
+    return editRow("coaches", vals, ids);
 }
 
 // Cookie Queries
