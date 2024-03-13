@@ -75,6 +75,8 @@ export async function insertRow(tableName: string, object: any): Promise<any> {
     });
 }
 
+
+
 export async function insertUser(user: Partial<User>): Promise<any> {
     delete user.user_id;
     return insertRow("users", user);
@@ -125,12 +127,13 @@ export async function getPlayersByTeamId(teamId: bigint): Promise<Player[]> {
         const query = `SELECT * FROM players WHERE team_id = $1`;
         const values = [teamId];
 
-        pool.query(query, values, (error, result) => {
-            if (error) {
-                reject(error);
-            } else {
+        pool.query(query, values)
+            .then((result) => {
                 resolve(result.rows);
-            }
-        });
+            })
+            .catch((error) => {
+                reject(error);
+            });
     });
 }
+

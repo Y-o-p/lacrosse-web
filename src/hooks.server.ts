@@ -18,7 +18,8 @@ export async function handle({event, resolve}) {
                         first_name: coachRow["first_name"],
                         birth_date: coachRow["last_name"],
                         date_created: coachRow["last_name"],
-                        phone: coachRow["phone"]
+                        phone: coachRow["phone"],
+                        team_id: coachRow["team_id"]
                     };
             
                     event.locals = {

@@ -1,8 +1,12 @@
-// FOR DEMONSTRATION ONLY
-
-import { getCoach } from '$lib/api.js';
+import { getPlayersByTeamId } from '$lib/db';
 
 /** @type {import('./$types').PageServerLoad} */
 export async function load({ locals }) {
-	return locals;
+	const homePlayers = await getPlayersByTeamId(BigInt(1));
+	return {
+		props: {
+			locals,
+			homePlayers: homePlayers
+		}
+	}
 }

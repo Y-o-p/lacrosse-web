@@ -126,7 +126,7 @@
             <input type="hidden" id="position" name="position" required>
 
             <!-- Hidden input for team_id-->
-            <input type="hidden" id="team_id" name="team_id" required value="3">
+            <input type="hidden" id="team_id" name="team_id" required value="1">
             <!-- Additional input fields -->
             <label for="height">Height (in inches):</label>
             <input type="number" id="height" name="height" min="0" max="100" step="1" required>
