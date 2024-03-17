@@ -1,10 +1,11 @@
 <script lang="ts">
     import Modal from './scorebookModal.svelte';
     import { onMount, onDestroy } from 'svelte';
+
     import type { PageServerData } from "./$types";
-    export let data: PageServerData;
+    export let data: PageServerData;    // Locals {props.homePlayers & props.coach}
 
-
+    // Home Modal Delcatations
     let home_shotModal = false;
     let home_turnoverMadeModal = false;
     let home_clearAttemptedModal = false;
@@ -14,6 +15,7 @@
     let home_groundBallModal = false;
     let home_timeoutModal = false;
 
+    // Away Modal Delcatations
     let away_shotModal = false;
     let away_turnoverMadeModal = false;
     let away_clearAttemptedModal = false;
@@ -23,10 +25,11 @@
     let away_groundBallModal = false;
     let away_timeoutModal = false;
 
+    // Empty strings for select *options*
     let selectedShooter = '';
     let selectedPlayer = '';
 
-    let home_players = data.props.homePlayers; // Define an empty array to store home players
+    let home_players_roster = data.props.homePlayers; // Set Home Roster
     let away_players = ['Player A', 'Player B', 'Player C']; // Default away players
 
     let quarterLength = 15;
@@ -89,24 +92,29 @@
         <button on:click={() => (away_timeoutModal = true)}>Timeout</button>
     </div>
 
-    <Modal bind:home_shotModal>
-        <h1 slot="header">SHOT ATTEMPT</h1>
-        <label for="playerSelect">Shot by:</label>
-        <select bind:value={selectedShooter} on:change={handleSelection}>
-            <option value="">Select Player</option>
-            {#each home_players as player}
-              <option value={player.player_id}>{player.last_name}</option>
-            {/each}
-        </select>
-        <hr />
-        <button>Shot Made</button>
-        <button>Shot Missed/Wide</button>
-        <label for="awayPlayerSelect">Saved By:</label>
-        <select bind:value={selectedPlayer} on:change={handleSelection}>
-            <option value="">Select Savee</option>
-            {#each away_players as player}
-              <option value={player}>{player}</option>
-            {/each}
-        </select>
-    </Modal>
+
+
 </div>
+
+
+<!-- Home "Shot" Modal -->
+<Modal bind:home_shotModal>
+    <h1 slot="header">SHOT ATTEMPT</h1>
+    <label for="playerSelect">Shot by:</label>
+    <select bind:value={selectedShooter} on:change={handleSelection}>
+        <option value="">Select Player</option>
+        {#each home_players_roster as player}
+            <option value={player.player_id}>{player.last_name}</option>
+        {/each}
+    </select>
+    <hr />
+    <button>Shot Made</button>
+    <button>Shot Missed/Wide</button>
+    <label for="awayPlayerSelect">Saved By:</label>
+    <select bind:value={selectedPlayer} on:change={handleSelection}>
+        <option value="">Select Savee</option>
+        {#each away_players as player}
+            <option value={player}>{player}</option>
+        {/each}
+    </select>
+</Modal>

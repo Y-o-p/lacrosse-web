@@ -1,9 +1,9 @@
 <script lang="ts">
     import type { PageServerData } from "./$types";
     export let data: PageServerData;
-    console.log(data.coach.birthdate);
-
+    import Modal from './addPlayerModal.svelte';
 </script>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -101,47 +101,62 @@
 </head>
 
 <body>
-    <div class="container">
-        <h1>Coach, {data.coach.first_name}, Roster Input </h1>
-        <form id="rosterForm" method="POST" action="?/addPlayer">
-            <!-- Input fields -->
-            <label for="firstName">First Name:</label>
-            <input type="text" id="firstName" name="firstName" required>
-            
-            <label for="lastName">Last Name:</label>
-            <input type="text" id="lastName" name="lastName" required>
+    {#if data.coach.team_id == null}
 
-            <!-- Position selector -->
-            <div class="position-selector">
-                <label for="position">Position:</label>
-                <div class="position-circles">
-                    <div class="position-circle" data-position="GK">GK</div>
-                    <div class="position-circle" data-position="MF">MF</div>
-                    <div class="position-circle" data-position="A">A</div>
-                    <div class="position-circle" data-position="D">D</div>
+        <!-- Modal Dialogue for New Team Creation -->
+        <Modal>
+            <form id="addTeamForm" method="POST" action="?/createTeam">
+                <label for="teamName">Team Name:</label>
+                <input type="text" id="teamName" name="teamName" required>
+                <input type="submit" value="Create Team">
+                <input type="hidden" id="team_id" name="team_id" required value={null}>
+                <input type="hidden" id="coach_id" name="coach_id" required value={data.coach.coach_id}>
+            </form>
+        </Modal>
+        
+    {:else}
+        <div class="container">
+            <h1>Coach, {data.coach.first_name}, Roster Input </h1>
+            <form id="rosterForm" method="POST" action="?/addPlayer">
+                <!-- Input fields -->
+                <label for="firstName">First Name:</label>
+                <input type="text" id="firstName" name="firstName" required>
+                
+                <label for="lastName">Last Name:</label>
+                <input type="text" id="lastName" name="lastName" required>
+
+                <!-- Position selector -->
+                <div class="position-selector">
+                    <label for="position">Position:</label>
+                    <div class="position-circles">
+                        <div class="position-circle" data-position="GK">GK</div>
+                        <div class="position-circle" data-position="MF">MF</div>
+                        <div class="position-circle" data-position="A">A</div>
+                        <div class="position-circle" data-position="D">D</div>
+                    </div>
                 </div>
-            </div>
 
-            <!-- Hidden input for position -->
-            <input type="hidden" id="position" name="position" required>
+                <!-- Hidden input for position -->
+                <input type="hidden" id="position" name="position" required>
 
-            <!-- Hidden input for team_id-->
-            <input type="hidden" id="team_id" name="team_id" required value="1">
-            <!-- Additional input fields -->
-            <label for="height">Height (in inches):</label>
-            <input type="number" id="height" name="height" min="0" max="100" step="1" required>
+                <!-- Hidden input for team_id-->
+                <input type="hidden" id="team_id" name="team_id" required value={data.coach.team_id}>
+                <!-- Additional input fields -->
+                <label for="height">Height (in inches):</label>
+                <input type="number" id="height" name="height" min="0" max="100" step="1" required>
 
-            <label for="weight">Weight (in lbs):</label>
-            <input type="number" id="weight" name="weight" min="0" max="500" step="1" required>
+                <label for="weight">Weight (in lbs):</label>
+                <input type="number" id="weight" name="weight" min="0" max="500" step="1" required>
 
-            <label for="birthdate">Birthdate:</label>
-            <input type="date" id="birthdate" name="birthdate" required>
+                <label for="birthdate">Birthdate:</label>
+                <input type="date" id="birthdate" name="birthdate" required>
 
-            <!-- Submit button and error message -->
-            <input type="submit" value="Add Player">
-            <div class="error-message" id="position-error" style="display: none;">Please select a position</div>
-        </form>
-    </div>
+                <!-- Submit button and error message -->
+                <input type="submit" value="Add Player">
+                <div class="error-message" id="position-error" style="display: none;">Please select a position</div>
+            </form>
+        </div>
+    {/if}
 
     <!-- JavaScript code to handle form submission -->
     <script>
