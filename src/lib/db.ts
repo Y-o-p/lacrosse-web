@@ -65,6 +65,47 @@ export async function insertRow(tableName: string, object: any): Promise<any> {
     }
 }
 
+export async function editRow(tableName: string, vals: any, ids: any): Promise<any> {
+    return new Promise<any>((resolve, reject) => {
+        let query = `UPDATE ${tableName} SET`;
+        let valColNames = Object.keys(vals);
+        let valNames = Object.values(vals);
+        for (let i = 0; i < Object.keys(vals).length; i++) {
+            query += ` ${valColNames[i]} = '${valNames[i]}'`
+            if (i != Object.keys(vals).length - 1) {
+                query += ','
+            }
+        }
+
+        let idColNames = Object.keys(ids);
+        let idNames = Object.values(ids);
+        for (let i = 0; i < Object.keys(ids).length; i++) {
+            query += ' ';
+            if (i == 0) {
+                query += `WHERE ${idColNames[i]} = '${idNames[i]}'`;
+            } else {
+                query += `AND ${idColNames[i]} = '${idNames[i]}'`;
+            }
+        }
+        query += ';';
+
+        console.log(query);
+        const result = pool.query(query);
+        //const result = null;
+        result.then((innerResult) => {
+            const data = innerResult.rows[0];
+            resolve(data);
+        }).catch((error) => {
+            reject(error);
+        });
+    })
+}
+
+export async function insertUser(user: Partial<User>): Promise<any> {
+    delete user.user_id;
+    return insertRow("users", user);
+}
+
 export async function insertCoach(coach: Partial<Coach>): Promise<any> {
     delete coach.coach_id;
     return insertRow("coaches", coach);
@@ -85,6 +126,14 @@ export async function insertPlayer(player: Partial<Player>): Promise<any> {
     return insertRow("players", player);
 }
 
+export async function editUser(vals: Partial<User>, ids: Partial<User>) {
+    return editRow("users", vals, ids);
+}
+
+export async function editCoach(vals: Partial<User>, ids: Partial<User>) {
+    return editRow("coaches", vals, ids);
+}
+
 export async function insertScorebookSession(scorebookSession: Partial<ScorebookSession>): Promise<any> {
     delete scorebookSession.session_id;
     return insertRow("sk_session", scorebookSession);
@@ -93,11 +142,6 @@ export async function insertScorebookSession(scorebookSession: Partial<Scorebook
 export async function insertTeam(team: Partial<Team>): Promise<any> {
     delete team.team_id;
     return insertRow("teams", team);
-}
-
-export async function insertUser(user: Partial<User>): Promise<any> {
-    delete user.user_id;
-    return insertRow("users", user);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
