@@ -55,11 +55,11 @@
 			const sessions = await (await fetch(`/api/sessions?game_id=${game["game_id"]}&coach_id=${data.locals.coach.coach_id}`)).json();
 			if (sessions.length > 0) {
 				scorebookPreview.session = {
-					session_id: BigInt(session[0]["session_id"]),
-					game_id: BigInt(session[0]["game_id"]),
-					coach_id: BigInt(session[0]["coach_id"]),
-					room_code: session[0]["room_code"],
-					expire_time: BigInt(session[0]["expire_time"])
+					session_id: BigInt(sessions[0]["session_id"]),
+					game_id: BigInt(sessions[0]["game_id"]),
+					coach_id: BigInt(sessions[0]["coach_id"]),
+					room_code: sessions[0]["room_code"],
+					expire_time: BigInt(sessions[0]["expire_time"])
 				};
 			}
 			scorebookPreviews = [...scorebookPreviews, scorebookPreview];

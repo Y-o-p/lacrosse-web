@@ -16,7 +16,7 @@ export function getRandomCode(length: number) {
 export function objFromUrlParams(urlParams: URLSearchParams) {
     const obj = {};
     for (let [key, value] of urlParams) {
-        console.log(key, value);
+        //console.log(key, value);
         if (value === null) {
             value = "null";
         }
