@@ -1,9 +1,16 @@
-import { getRowFromID, pool } from '$lib/db.js';
-import { json } from '@sveltejs/kit'
+import { responseFromFunction } from '$lib/api_util.js';
+import { deleteGame, getGame } from '$lib/db.js';
 
 /** @type {import('./$types').RequestHandler} */
 export async function GET({ params }) {
-    const coach = await getRowFromID("games", "game_id", Number(params.id));
-    return json(coach);
+    return responseFromFunction(async () => {
+        return getGame(Number(params.id));
+    });
 }
 
+/** @type {import('./$types').RequestHandler} */
+export async function DELETE({ params }) {
+    return responseFromFunction(async () => {
+        return deleteGame(Number(params.id));
+    });
+}

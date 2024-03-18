@@ -1,9 +1,16 @@
-import { getSession } from '$lib/db.js';
-import { json } from '@sveltejs/kit'
+import { responseFromFunction } from '$lib/api_util.js';
+import { deleteScorebookSession, getScorebookSession } from '$lib/db.js';
 
 /** @type {import('./$types').RequestHandler} */
 export async function GET({ params }) {
-    const session = await getSession(Number(params.id));
-    return json(session);
+    return responseFromFunction(async () => {
+        return getScorebookSession(Number(params.id));
+    })
 }
 
+/** @type {import('./$types').RequestHandler} */
+export async function DELETE({ params }) {
+    return responseFromFunction(async () => {
+        return deleteScorebookSession(Number(params.id));
+    })
+}
