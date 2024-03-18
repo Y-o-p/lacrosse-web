@@ -12,7 +12,7 @@ export const actions = {
             user_name: data.get('uname').toString(),
             pword: data.get('pword').toString()
         }
-        let userRow = await getUser(vals)
+        let userRow = (await getUser(vals))[0]
         console.log(userRow)
         
         if (userRow == null){
