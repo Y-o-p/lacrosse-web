@@ -2,10 +2,10 @@ import { deleteRowsFromUrlParams, responseFromFunction, selectRowsFromUrlParams 
 
 /** @type {import('./$types').RequestHandler} */
 export async function GET({ url }) {
-    return selectRowsFromUrlParams("teams", url.searchParams);
+    return selectRowsFromUrlParams("games", url.searchParams);
 }
 
 /** @type {import('./$types').RequestHandler} */
 export async function DELETE({ url }) {
-    return deleteRowsFromUrlParams("teams", url.searchParams);
+    return deleteRowsFromUrlParams("games", url.searchParams);
 }

@@ -10,7 +10,7 @@ CREATE TABLE coaches (
 	coach_id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
 	last_name varchar,
 	first_name varchar,
-	team_ID bigint,
+	team_id bigint,
 	birth_date date,
 	phone varchar,
 	date_created date
@@ -56,10 +56,10 @@ CREATE TABLE player_stats (
 	penalties int
 );
 
-CREATE TABLE sk_session (
-	playerstat_id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+CREATE TABLE sk_sessions (
+	session_id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
 	game_id bigint,
 	coach_id bigint,
 	room_code varchar,
 	expire_time bigint
-)
+);

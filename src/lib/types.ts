@@ -21,24 +21,12 @@ interface Team {
     coach_id: bigint
 };
 
-interface TeamStats {
-    teamstats_id?: bigint,
-    game_id: bigint,
-    team_id: bigint,
-    goals: number,
-    assists: number,
-    shots: number,
-    timeouts: number,
-    field: string
-}
-
 interface Game {
     game_id?: bigint,
     hometeam_id: bigint,
     awayteam_id: bigint,
-    homestats_id: bigint,
-    awaystats_id: bigint,
-    game_date: Date    
+    game_date: Date, 
+    game_field: string
 }
 
 interface ScorebookSession {

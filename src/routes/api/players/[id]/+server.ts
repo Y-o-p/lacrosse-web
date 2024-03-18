@@ -1,16 +1,16 @@
-import { getPlayer } from '$lib/db.js';
-import { json } from '@sveltejs/kit';
+import { responseFromFunction } from '$lib/api_util.js';
+import { deletePlayer, getPlayer } from '$lib/db.js';
 
+/** @type {import('./$types').RequestHandler} */
 export async function GET({ params }) {
-    const id = params.id;
-    try {
-        const player = await getPlayer(Number(id));
-        return json(player);
-    } catch (error) {
-        console.error(error);
-        return json({
-            status: 500,
-            body: { error: 'Internal server error' },
-        });
-    }
+    return responseFromFunction(async () => {
+        return getPlayer(Number(params.id));
+    })
+}
+
+/** @type {import('./$types').RequestHandler} */
+export async function DELETE({ params }) {
+    return responseFromFunction(async () => {
+        return deletePlayer(Number(params.id));
+    })
 }
