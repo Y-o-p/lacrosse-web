@@ -5,6 +5,10 @@
     import type { PageServerData } from "./$types";
     export let data: PageServerData;    // Locals {props.homePlayers & props.coach}
 
+    // ROSTER DATA
+    let home_players_roster = data.props.homePlayers; // Set Home Roster
+    let away_players_roster = data.props.awayPlayers; // Default away players
+
     // Home Modal Delcatations
     let home_shotModal = false;
     let home_turnoverModal = false;
@@ -26,11 +30,9 @@
     let away_timeoutModal = false;
 
     // Empty strings for select *options*
-    let selectedShooter = '';
-    let selectedPlayer = '';
-
-    let home_players_roster = data.props.homePlayers; // Set Home Roster
-    let away_players = ['Player A', 'Player B', 'Player C']; // Default away players
+    let offensivePlayerSelected = '';
+    let defensivePlayerSelected = '';
+    
 
     let quarterLength = 15;
     let currentTime = 0;
@@ -60,9 +62,12 @@
         return `${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
     };
 
+    let selectedPlayer = ''; 
     const handleSelection = (event) => {
         selectedPlayer = event.target.value;
     };
+
+
 </script>
 
 <main>
@@ -93,77 +98,142 @@
             <button on:click={() => (away_timeoutModal = true)}>Timeout</button>
         </div>
     
-    
-    
     </div>
 </main>
 
+<!-- HOME SHOT MODAL -->
 <Modal bind:home_shotModal>
     <h1 slot="header">HOME TEAM SHOT ATTEMPT</h1>
 
-    <div class="shot-modal" style="display: table;">
-        <label for="playerSelect">Shot by:</label>
-        <select bind:value={selectedShooter} on:change={handleSelection}>
-            <option value="">Select Player</option>
-            {#each home_players_roster as player}
-                <option value={player.player_id}>{player.last_name}</option>
-            {/each}
-        </select>
-        <hr />
-        <button>Shot Made</button>
-        <button>Shot Missed/Wide</button>
-        <label for="awayPlayerSelect">Saved By:</label>
-        <select bind:value={selectedPlayer} on:change={handleSelection}>
-            <option value="">Select Savee</option>
-            {#each away_players as player}
-                <option value={player}>{player}</option>
-            {/each}
-        </select>
-    </div>
+    <form id="homeShotForm" method="POST" action="?/ShotAttempt">
+        <div class="shot-modal" style="display: table;">
+            <label for="homeShooter">Shot by:</label>
+            <select bind:value={offensivePlayerSelected} on:change={handleSelection} required>
+                <option value="">Select Player</option>
+                {#each home_players_roster as player}
+                    <option value={player.player_id}>{player.last_name}</option>
+                {/each}
+            </select>
+            <hr />
+
+            <button type="submit" name="button" value="Shot Made">Shot Made</button>
+            <button type="submit" name="button" value="Shot Missed/Wide">Shot Missed/Wide</button>
+            <hr />
+
+            <label for="AwaySavee">Saved By:</label>
+            <select bind:value={defensivePlayerSelected} on:change={handleSelection}>
+                <option value="">Select Savee</option>
+                {#each away_players_roster as player}
+                    <option value={player.player_id}>{player.last_name}</option>
+                {/each}
+            </select>
+
+            <!-- If savee selected, show Shot Saved button
+                prevents button be pressed without a savee -->
+            {#if defensivePlayerSelected != ''}
+                <button type="submit" name="button" value="Shot Saved">Shot Saved</button>
+            {/if}
+            
+            <input type="hidden" name="offensivePlayer" value={offensivePlayerSelected}>
+            <input type="hidden" name="defensivePlayer" value={defensivePlayerSelected}>
+        </div>
+    </form>
 </Modal>
 
 <Modal bind:home_turnoverModal>
     <h1 slot="header">HOME TEAM TURNOVER</h1>
 
-    <div class="turnover-modal" style="display: table;">
-        <label for="playerSelect">Made by:</label>
-        <select bind:value={selectedShooter} on:change={handleSelection}>
-            <option value="">Offensive Player</option>
-            {#each home_players_roster as player}
-                <option value={player.player_id}>{player.last_name}</option>
-            {/each}
-        </select>
-        <hr />
-        
-        <label for="awayPlayerSelect">Saved By:</label>
-        <select bind:value={selectedPlayer} on:change={handleSelection}>
-            <option value="">Defensive Player</option>
-            {#each away_players as player}
-                <option value={player}>{player}</option>
-            {/each}
-        </select>
-    </div>
+    <form id="homeTurnoverForm" method="POST" action="?/Turnover">
+        <div class="turnover-modal" style="display: table;">
+            <label for="playerSelect">Made by:</label>
+            <select bind:value={offensivePlayerSelected} on:change={handleSelection}>
+                <option value="">Offensive Player</option>
+                {#each home_players_roster as player}
+                    <option value={player.player_id}>{player.last_name}</option>
+                {/each}
+            </select>
+            <hr />
+            
+            <label for="awayPlayerSelect">Caused By:</label>
+            <select bind:value={defensivePlayerSelected} on:change={handleSelection}>
+                <option value="">Defensive Player</option>
+                {#each away_players_roster as player}
+                    <option value={player}>{player}</option>
+                {/each}
+            </select>
+            <button type="submit" name="button" value="Complete Turnover">Complete Turnover</button>
+            
+            <input type="hidden" name="offensivePlayer" value={offensivePlayerSelected}>
+            <input type="hidden" name="defensivePlayer" value={defensivePlayerSelected}>
+        </div>
+    </form>
+</Modal>
+
+
+<!-- AWAY SHOT MODAL -->
+<Modal bind:away_shotModal>
+    <h1 slot="header">AWAY TEAM SHOT ATTEMPT</h1>
+
+    <form id="awayShotForm" method="POST" action="?/ShotAttempt">
+        <div class="shot-modal" style="display: table;">
+            <label for="awayShooter">Shot by:</label>
+            <select bind:value={offensivePlayerSelected} on:change={handleSelection} required>
+                <option value="">Select Player</option>
+                {#each away_players_roster as player}
+                    <option value={player.player_id}>{player.last_name}</option>
+                {/each}
+            </select>
+            
+            <hr />
+            <button type="submit" name="button" value="Shot Made">Shot Made</button>
+            <button type="submit" name="button" value="Shot Missed/Wide">Shot Missed/Wide</button>
+            <hr />
+            <label for="AwaySavee">Saved By:</label>
+            <select bind:value={defensivePlayerSelected} on:change={handleSelection}>
+                <option value="">Select Savee</option>
+                {#each home_players_roster as player}
+                    <option value={player.player_id}>{player.last_name}</option>
+                {/each}
+            </select>
+
+            <!-- If savee selected, show Shot Saved button
+                prevents button be pressed without a savee -->
+            {#if defensivePlayerSelected != ''}
+                <button type="submit" name="button" value="Shot Saved">Shot Saved</button>
+            {/if}
+            
+            
+            <input type="hidden" name="offensivePlayer" value={offensivePlayerSelected}>
+            <input type="hidden" name="defensivePlayer" value={defensivePlayerSelected}>
+        </div>
+    </form>
 </Modal>
 
 <Modal bind:away_turnoverModal>
     <h1 slot="header">AWAY TEAM TURNOVER</h1>
 
-    <div class="turnover-modal" style="display: table;">
-        <label for="playerSelect">Made by:</label>
-        <select bind:value={selectedShooter} on:change={handleSelection}>
-            <option value="">Offensive Player</option>
-            {#each home_players_roster as player}
-                <option value={player.player_id}>{player.last_name}</option>
-            {/each}
-        </select>
-        <hr />
-        
-        <label for="awayPlayerSelect">Saved By:</label>
-        <select bind:value={selectedPlayer} on:change={handleSelection}>
-            <option value="">Defensive Player</option>
-            {#each away_players as player}
-                <option value={player}>{player}</option>
-            {/each}
-        </select>
-    </div>
+    <form id="awayTurnoverForm" method="POST" action="?/Turnover">
+        <div class="turnover-modal" style="display: table;">
+            <label for="playerSelect">Made by:</label>
+            <select bind:value={offensivePlayerSelected} on:change={handleSelection}>
+                <option value="">Offensive Player</option>
+                {#each away_players_roster as player}
+                    <option value={player.player_id}>{player.last_name}</option>
+                {/each}
+            </select>
+            <hr />
+            
+            <label for="awayPlayerSelect">Caused By:</label>
+            <select bind:value={defensivePlayerSelected} on:change={handleSelection}>
+                <option value="">Defensive Player</option>
+                {#each home_players_roster as player}
+                    <option value={player.player_id}>{player.last_name}</option>
+                {/each}
+            </select>
+            <button type="submit" name="button" value="Complete Turnover">Complete Turnover</button>
+            
+            <input type="hidden" name="offensivePlayer" value={offensivePlayerSelected}>
+            <input type="hidden" name="defensivePlayer" value={defensivePlayerSelected}>
+        </div>
+    </form>
 </Modal>

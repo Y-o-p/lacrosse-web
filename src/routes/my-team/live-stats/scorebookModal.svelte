@@ -1,24 +1,35 @@
 <script>
+	// Export Modals (Used in page.svelte via <Modal>)
 	export let home_shotModal; // boolean
 	export let home_turnoverModal;
+
+	export let away_shotModal; // boolean
 	export let away_turnoverModal;
 
 
-	let shotDialog; // HTMLDialogElement
+
+	// HTML Dialog Elements
+	let home_shotDialog; 
 	let turnoverDialog;
+	let away_shotDialog;
 	let away_turnoverDialog;
 
-	$: if (shotDialog && home_shotModal) shotDialog.showModal();
+
+
+	$: if (home_shotDialog && home_shotModal) home_shotDialog.showModal();
 	$: if (turnoverDialog && home_turnoverModal) turnoverDialog.showModal();
 	$: if (away_turnoverDialog && away_turnoverModal) away_turnoverDialog.showModal();
+	$: if (away_shotDialog && away_shotModal) away_shotDialog.showModal();
 	
 </script>
 
+
+<!-- HOME SHOT DIALOG -->
 <!-- svelte-ignore a11y-click-events-have-key-events a11y-no-noninteractive-element-interactions -->
 <dialog
-	bind:this={shotDialog}
+	bind:this={home_shotDialog}
 	on:close={() => (home_shotModal = false)}
-	on:click|self={() => shotDialog.close()}
+	on:click|self={() => home_shotDialog.close()}
 >
 	<!-- svelte-ignore a11y-no-static-element-interactions -->
 	<div on:click|stopPropagation>
@@ -29,11 +40,14 @@
 	</div>
 </dialog>
 
+<!-- HOME TURNOVER DIALOG -->
+<!-- svelte-ignore a11y-click-events-have-key-events a11y-no-noninteractive-element-interactions -->
 <dialog
-	bind:this={away_turnoverDialog}
-	on:click={() => (away_turnoverModal = false)}
-	on:click|self={() => away_turnoverDialog.close()}
+	bind:this={turnoverDialog}
+	on:click={() => (home_turnoverModal = false)}
+	on:click|self={() => turnoverDialog.close()}
 >
+	<!-- svelte-ignore a11y-no-static-element-interactions -->
 	<div on:click|stopPropagation>
 		<slot name="header" />
 		<hr />
@@ -42,11 +56,14 @@
 	</div>
 </dialog>
 
+<!-- AWAY SHOT DIALOG -->
+<!-- svelte-ignore a11y-click-events-have-key-events a11y-no-noninteractive-element-interactions -->
 <dialog
-	bind:this={turnoverDialog}
-	on:click={() => (home_turnoverModal = false)}
-	on:click|self={() => turnoverDialog.close()}
+	bind:this={away_shotDialog}
+	on:click={() => (away_shotModal = false)}
+	on:click|self={() => away_shotDialog.close()}
 >
+	<!-- svelte-ignore a11y-no-static-element-interactions -->
 	<div on:click|stopPropagation>
 		<slot name="header" />
 		<hr />
@@ -54,6 +71,26 @@
 		<hr />
 	</div>
 </dialog>
+
+<!-- AWAY TURNOVER DIALOG -->
+<!-- svelte-ignore a11y-click-events-have-key-events a11y-no-noninteractive-element-interactions -->
+<dialog
+	bind:this={away_turnoverDialog}
+	on:click={() => (away_turnoverModal = false)}
+	on:click|self={() => away_turnoverDialog.close()}
+>
+	<!-- svelte-ignore a11y-no-static-element-interactions -->
+	<div on:click|stopPropagation>
+		<slot name="header" />
+		<hr />
+		<slot />
+		<hr />
+	</div>
+</dialog>
+
+
+
+<!-- Styling -->
 
 <style>
 	dialog {
@@ -89,8 +126,5 @@
 		to {
 			opacity: 1;
 		}
-	}
-	button {
-		display: block;
 	}
 </style>
