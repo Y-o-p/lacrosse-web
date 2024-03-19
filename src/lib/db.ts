@@ -121,6 +121,27 @@ export async function insertTeam(team: Partial<Team>): Promise<any> {
     return insertRow("teams", team)
 }
 
+// TODO: ADD game id as param
+export async function insertPlayer_Stats(team_id: bigint): Promise<any> {
+    let players = await getPlayersByTeamId(team_id);
+    // log players first names
+
+    for (let player in players)  {
+        let player_stats = {
+            game_id: BigInt(0),
+            player_id: players[player].player_id,
+            goals: 0,
+            assists: 0,
+            shots: 0,
+            faceoffs_won: 0,
+            faceoffs_lost: 0,
+            saves: 0,
+            penalties: 0
+        };
+        insertRow("player_stats", player_stats)
+    }
+}
+
 // Cookie Queries
 export const getUserById = async (id: { user_id: any; }) => {
     const existingUser = id.user_id;
@@ -141,6 +162,8 @@ export async function getPlayersByTeamId(teamId: bigint): Promise<Player[]> {
             });
     });
 }
+
+// Get 
 
 export async function updateCoachTeamId(coachId: bigint): Promise<any>{
     try {

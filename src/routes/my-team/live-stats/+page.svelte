@@ -9,6 +9,10 @@
     let home_players_roster = data.props.homePlayers; // Set Home Roster
     let away_players_roster = data.props.awayPlayers; // Default away players
 
+    // Update player_stats table to include new row for each 
+    // in both rosters
+
+
     // Home Modal Delcatations
     let home_shotModal = false;
     let home_turnoverModal = false;
@@ -31,6 +35,7 @@
 
     // Empty strings for select *options*
     let offensivePlayerSelected = '';
+    let offensivePlayerSelected_secondary = '';
     let defensivePlayerSelected = '';
     
 
@@ -114,6 +119,13 @@
                     <option value={player.player_id}>{player.last_name}</option>
                 {/each}
             </select>
+            <label for="homeAssist">Assisted By:</label>
+            <select bind:value={offensivePlayerSelected_secondary} on:change={handleSelection}>
+                <option value="">Select Assist</option>
+                {#each home_players_roster as player}
+                    <option value={player.player_id}>{player.last_name}</option>
+                {/each}
+            </select>
             <hr />
 
             <button type="submit" name="button" value="Shot Made">Shot Made</button>
@@ -135,6 +147,7 @@
             {/if}
             
             <input type="hidden" name="offensivePlayer" value={offensivePlayerSelected}>
+            <input type="hidden" name="offensivePlayerSecondary" value={offensivePlayerSelected_secondary}>
             <input type="hidden" name="defensivePlayer" value={defensivePlayerSelected}>
         </div>
     </form>
@@ -183,10 +196,18 @@
                     <option value={player.player_id}>{player.last_name}</option>
                 {/each}
             </select>
+            <label for="awayAssist">Assisted By:</label>
+            <select bind:value={offensivePlayerSelected_secondary} on:change={handleSelection}>
+                <option value="">Select Assist</option>
+                {#each away_players_roster as player}
+                    <option value={player.player_id}>{player.last_name}</option>
+                {/each}
+            </select>
             
             <hr />
             <button type="submit" name="button" value="Shot Made">Shot Made</button>
             <button type="submit" name="button" value="Shot Missed/Wide">Shot Missed/Wide</button>
+
             <hr />
             <label for="AwaySavee">Saved By:</label>
             <select bind:value={defensivePlayerSelected} on:change={handleSelection}>
@@ -205,6 +226,7 @@
             
             <input type="hidden" name="offensivePlayer" value={offensivePlayerSelected}>
             <input type="hidden" name="defensivePlayer" value={defensivePlayerSelected}>
+            <input type="hidden" name="offensivePlayerSecondary" value={offensivePlayerSelected_secondary}>
         </div>
     </form>
 </Modal>
