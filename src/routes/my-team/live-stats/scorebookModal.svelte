@@ -1,9 +1,17 @@
 <script>
 	export let home_shotModal; // boolean
+	export let home_turnoverModal;
+	export let away_turnoverModal;
+
 
 	let shotDialog; // HTMLDialogElement
+	let turnoverDialog;
+	let away_turnoverDialog;
 
 	$: if (shotDialog && home_shotModal) shotDialog.showModal();
+	$: if (turnoverDialog && home_turnoverModal) turnoverDialog.showModal();
+	$: if (away_turnoverDialog && away_turnoverModal) away_turnoverDialog.showModal();
+	
 </script>
 
 <!-- svelte-ignore a11y-click-events-have-key-events a11y-no-noninteractive-element-interactions -->
@@ -18,8 +26,32 @@
 		<hr />
 		<slot />
 		<hr />
-		<!-- svelte-ignore a11y-autofocus -->
-		<button autofocus on:click={() => shotDialog.close()}>close modal</button>
+	</div>
+</dialog>
+
+<dialog
+	bind:this={away_turnoverDialog}
+	on:click={() => (away_turnoverModal = false)}
+	on:click|self={() => away_turnoverDialog.close()}
+>
+	<div on:click|stopPropagation>
+		<slot name="header" />
+		<hr />
+		<slot />
+		<hr />
+	</div>
+</dialog>
+
+<dialog
+	bind:this={turnoverDialog}
+	on:click={() => (home_turnoverModal = false)}
+	on:click|self={() => turnoverDialog.close()}
+>
+	<div on:click|stopPropagation>
+		<slot name="header" />
+		<hr />
+		<slot />
+		<hr />
 	</div>
 </dialog>
 

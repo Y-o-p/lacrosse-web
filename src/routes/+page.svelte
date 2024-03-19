@@ -30,6 +30,8 @@
 <p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
 
 <a href="/my-team/player">Add Player</a>
+<hr />
+<a href="/my-team">My Team</a>
 
 <main>
     <h1>Locrosse E-Scorebook</h1>
