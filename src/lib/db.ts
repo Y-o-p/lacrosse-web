@@ -136,7 +136,9 @@ export async function insertPlayer_Stats(team_id: bigint): Promise<any> {
             faceoffs_won: 0,
             faceoffs_lost: 0,
             saves: 0,
-            penalties: 0
+            penalties: 0,
+            clears_attempted: 0,
+            clears_made: 0
         };
         insertRow("player_stats", player_stats)
     }

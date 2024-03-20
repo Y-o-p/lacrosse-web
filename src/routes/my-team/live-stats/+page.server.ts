@@ -15,7 +15,7 @@ export async function load({ locals }) {
 		props: {
 			locals,
 			homePlayers: homePlayers,
-			awayPlayers: awayPlayers
+			awayPlayers: awayPlayers,
 		}
 	}
 }
@@ -81,7 +81,60 @@ export const actions = {
 		}
 		console.log("Turnover Made by:", playerWhichLostPosession_playerId);
 		console.log("Button clicked:", buttonClicked); // "Complete Turnover"
-	}
+	},
 
+	Clear: async ({ request }) => {
+		const data = await request.formData();
+		
+		// Extract data from form
+		const clear_playerId = data.get('offensivePlayer').toString();
+		const buttonClicked = data.get('button');
+
+		if (buttonClicked == "Unsuccessful Clear") {
+			console.log("Clear Attempted By:", clear_playerId);
+		} else if (buttonClicked == "Successful Clear") {
+			console.log("Clear Made By:", clear_playerId);
+		}
+	},
+
+	Faceoff: async ({ request }) => {
+		const data = await request.formData();
+		
+		// Extract data from form
+		const home_playerId = data.get('offensivePlayer').toString();
+		const away_playerId = data.get('defensivePlayer').toString();
+		const buttonClicked = data.get('button');
+
+		// Log collected form data in console
+		console.log("Faceoff Home Player::", home_playerId);
+		console.log("Faceoff Away Player::", away_playerId);
+		console.log("Button clicked:", buttonClicked); // "Complete Faceoff"
+	},
+
+	Penalty: async ({ request }) => {
+		const data = await request.formData();
+		
+		// Extract data from form
+		const penalty_playerId = data.get('offensivePlayer').toString();
+		const buttonClicked = data.get('button');
+		const penalty_duration = data.get('penaltyTime');
+
+		// Log collected form data in console
+		console.log("Penalty Player:", penalty_playerId);
+		console.log("Penalty Duration:", penalty_duration);
+		console.log("Button clicked:", buttonClicked); // "Complete Penalty"
+	},
+
+	Groundball: async ({ request }) => {
+		const data = await request.formData();
+		
+		// Extract data from form
+		const recoveringPlayer_playerId = data.get('offensivePlayer').toString();
+		const buttonClicked = data.get('button');
+
+		// Log collected form data in console
+		console.log("Picked up by:", recoveringPlayer_playerId);
+		console.log("Button clicked:", buttonClicked); // "Complete Penalty"
+	}
 
 };
