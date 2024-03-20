@@ -123,6 +123,18 @@ export const actions = {
 		console.log("Penalty Player:", penalty_playerId);
 		console.log("Penalty Duration:", penalty_duration);
 		console.log("Button clicked:", buttonClicked); // "Complete Penalty"
+	},
+
+	Groundball: async ({ request }) => {
+		const data = await request.formData();
+		
+		// Extract data from form
+		const recoveringPlayer_playerId = data.get('offensivePlayer').toString();
+		const buttonClicked = data.get('button');
+
+		// Log collected form data in console
+		console.log("Picked up by:", recoveringPlayer_playerId);
+		console.log("Button clicked:", buttonClicked); // "Complete Penalty"
 	}
 
 };

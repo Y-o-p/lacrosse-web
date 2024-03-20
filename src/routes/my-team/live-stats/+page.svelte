@@ -269,6 +269,27 @@
 </Modal>
 
 
+<Modal bind:home_groundBallModal>
+    <h1 slot="header">GROUNDBALL RECOVERED</h1>
+
+    <form id="groundballForm" method="POST" action="?/Faceoff">
+        <div class="turnover-modal" style="display: table;">
+            <label for="homePlayerSelect">Home Player:</label>
+            <select bind:value={offensivePlayerSelected} on:change={handleSelection} required>
+                <option value="">Offensive Player</option>
+                {#each home_players_roster as player}
+                    <option value={player.player_id}>{player.last_name}</option>
+                {/each}
+            </select>
+            <button type="submit" name="button" value="submit">Submit</button>
+            <hr />
+            <input type="hidden" name="offensivePlayer" value={offensivePlayerSelected}>
+            <input type="hidden" name="defensivePlayer" value={defensivePlayerSelected}>
+        </div>
+    </form>
+</Modal>
+
+
 
 
 
@@ -366,6 +387,26 @@
             <button type="submit" name="button" value="Successful Clear">Successful</button>
             
             <input type="hidden" name="offensivePlayer" value={offensivePlayerSelected}>
+        </div>
+    </form>
+</Modal>
+
+<Modal bind:away_groundBallModal>
+    <h1 slot="header">GROUNDBALL RECOVERED</h1>
+
+    <form id="groundballForm" method="POST" action="?/Faceoff">
+        <div class="turnover-modal" style="display: table;">
+            <label for="homePlayerSelect">Home Player:</label>
+            <select bind:value={offensivePlayerSelected} on:change={handleSelection} required>
+                <option value="">Offensive Player</option>
+                {#each away_players_roster as player}
+                    <option value={player.player_id}>{player.last_name}</option>
+                {/each}
+            </select>
+            <button type="submit" name="button" value="submit">Submit</button>
+            <hr />
+            <input type="hidden" name="offensivePlayer" value={offensivePlayerSelected}>
+            <input type="hidden" name="defensivePlayer" value={defensivePlayerSelected}>
         </div>
     </form>
 </Modal>
