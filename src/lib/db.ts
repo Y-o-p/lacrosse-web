@@ -5,11 +5,11 @@ import { error, json } from '@sveltejs/kit';
 import pg from 'pg';
 
 export const pool = new pg.Pool({
-    database: import.meta.env.VITE_PGDATABASE || "postgres",
+    database: import.meta.env.VITE_PGDATABASE || "master",
     user: import.meta.env.VITE_PGUSER || "postgres",
     host: import.meta.env.VITE_PGHOST || "localhost",
     port: (Number(import.meta.env.VITE_PGPORT || 5432 )),
-    password: import.meta.env.VITE_PGDATABASE || "S9388420",
+    password: import.meta.env.VITE_PGDATABASE || "25uPY996mWr#",
 })
 
 async function queryFromVals(action: string, tableName: string, object?: any) {
@@ -35,6 +35,28 @@ async function queryFromVals(action: string, tableName: string, object?: any) {
     }
 
     const result = await pool.query(query, values);
+    return result.rows;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// Conditional Query Functions (For Table Displays on pages)
+///////////////////////////////////////////////////////////////////////////////
+
+async function queryFromDayInterval(tableName: string, dateCol: string, interval: number) {
+    let query = `SELECT * FROM ${tableName} WHERE `;
+    query += dateCol + " > now() - interval '" + interval + " day';";
+
+    const result = await pool.query(query);
+    return result.rows;
+}
+
+export async function getRecentGameStats(game_id: any, team_id: any) {
+    let query = `SELECT * FROM player_stats `;
+    query += `WHERE game_id = ${game_id} `;
+    query += `AND team_id = ${team_id} `;
+    query += `AND goals > 0;`
+
+    const result = await pool.query(query);
     return result.rows;
 }
 
@@ -192,6 +214,10 @@ export async function getTeam(id: number): Promise<any> {
 
 export async function getUser(user: Partial<User>): Promise<any> {
     return getRowsFromVals("users", user);
+}
+
+export async function getGameByInterval(interval: number): Promise<any> {
+    return queryFromDayInterval("games", "game_date", interval);
 }
 
 // Cookie Queries

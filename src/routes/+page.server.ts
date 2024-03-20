@@ -1,5 +1,43 @@
 import { redirect } from "@sveltejs/kit";
-import { insertRow, pool, insertCoach, insertUser, getUser, getCoach } from "$lib/db";
+import { insertCoach, insertUser, getUser, getTeam, getGameByInterval, getRecentGameStats} from "$lib/db";
+
+/** @type {import('./$types').PageServerLoad} */
+export async function load({ locals }) {
+
+    let recentGameRows = await getGameByInterval(30);
+    let numGames = Object.keys(recentGameRows).length;
+    let recentGames = [];
+
+    for (let i = 0; i < numGames; i++){
+        let homeTeamRow = await getTeam(recentGameRows[i]["hometeam_id"]);
+        let awayTeamRow = await getTeam(recentGameRows[i]["awayteam_id"]);
+
+        let homeScore = 0;
+        let homeStatsRow = await getRecentGameStats(recentGameRows[i]["game_id"], recentGameRows[i]["hometeam_id"]);
+        for (let j = 0; j < Object.keys(homeStatsRow).length; j++){
+            homeScore += homeStatsRow[j]["goals"];
+        }
+
+        let awayScore = 0;
+        let awayStatsRow = await getRecentGameStats(recentGameRows[i]["game_id"], recentGameRows[i]["awayteam_id"]);
+        for (let j = 0; j < Object.keys(awayStatsRow).length; j++){
+            awayScore += awayStatsRow[j]["goals"];
+        }
+
+        let game: RecentGame = {
+            "Game Date": recentGameRows[i]["game_date"].toLocaleDateString(),
+            "Game Field": recentGameRows[i]["game_field"].toString(),
+            "Home Team": homeTeamRow["team_name"].toString(),
+            "Away Team": awayTeamRow["team_name"].toString(),
+            "Home Score": homeScore,
+            "Away Score": awayScore
+        }
+        recentGames.push(game);
+    }
+
+    locals.recentGames = recentGames;
+	return { locals: locals}
+}
 
 /** @type {import('./$types').Actions} */
 export const actions = {

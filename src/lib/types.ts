@@ -84,7 +84,19 @@ interface PlayerStats {
 interface User {
     user_id?: bigint,
     user_name: string,
-    pword: string
+    pword: string,
     role_id: bigint,
     coach_id: bigint
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// Page Table Data:
+///////////////////////////////////////////////////////////////////////////////
+interface RecentGame {
+    "Game Date": Date,
+    "Game Field": string,
+    "Home Team": string,
+    "Away Team": string,
+    "Home Score": number,
+    "Away Score": number
 }
