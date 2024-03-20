@@ -123,6 +123,8 @@ export async function editRow(tableName: string, vals: any, ids: any): Promise<a
     })
 }
 
+
+
 export async function insertUser(user: Partial<User>): Promise<any> {
     delete user.user_id;
     return insertRow("users", user);
