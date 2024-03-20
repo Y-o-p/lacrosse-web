@@ -36,10 +36,11 @@
 <form on:submit|preventDefault={handleSubmit}>
     <input bind:value={player.first_name} placeholder="First Name" />
     <input bind:value={player.last_name} placeholder="Last Name" />
-    <input bind:value={player.position} placeholder="Position" />
+    <input bind:value={player.pos} placeholder="Position" />
     <input bind:value={player.player_number} placeholder="Player Number" />
-    <input bind:value={player.height} placeholder="height" />
-    <input bind:value={player.firstName} placeholder="weight" />
+    <input bind:value={player.height} placeholder="Height" />
+    <input bind:value={player.weight} placeholder="Weight" />
+    <input bind:value={player.birth_date} placeholder="Birth Date" />
 
     <button type="submit">Save Changes</button>
 </form>

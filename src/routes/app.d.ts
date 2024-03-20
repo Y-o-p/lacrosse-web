@@ -1,6 +1,6 @@
 declare namespace App {
     interface Locals {
-        user: string,
+        user: User,
         id: number,
         coach?: Coach
     }
