@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -19,8 +18,8 @@
             background-color: #081820;
         }
         .container {
-            max-width: 8000px ;
-            margin: 75px auto;
+            max-width: 80% ;
+            margin: 15px 10px;
             padding: 20px;
             background-color: #88c070;
             border-radius: 8px;

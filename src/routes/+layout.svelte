@@ -12,9 +12,22 @@
 <div class="topAdSpace">Ad Space</div>
 <nav class="topnav">
     <a href="/" class:active={routeId == "/"}>Home</a>
-    <a href="/">Teams</a>
-    <a href="/">Games</a>
+    <a href="/teams" class:active={routeId == "/teams"}>Teams</a>
+    <a href="/games" class:active={routeId == "/games"}>Games</a>
+    <div class="dropdown">
+        <button class="dropbtn">Coach
+            <i class="fa fa-caret-down"></i>
+        </button>
+        <div class="dropdown-content">
+            <a href="/my-team">My Team</a>
+            <a href="/my-team/player">My Players</a>
+            <a href="/my-team/roster">My Roster</a>
+            <a href="/scorebooks">Scorebooks</a>
+            <a href="/scorekeeper">Scorekeeper</a>
+        </div>
+    </div>
     <a href="/account" class:active={routeId == "/account"}>Account</a>
+    
     <b on:click={() => (signupModal = true)}>Sign Up</b>
     <b on:click={() => (loginModal = true)}>Login</b>
 </nav>
@@ -71,7 +84,7 @@
                 <input name="phone" id=18 type="text" value="xxx-xxx-xxxx">
             </div>
             <div class="signup-row" style="display: table-row;">
-                <button on:click={() => saveRole()} style="display: table-cell;">Sign Up</button>
+                <button style="display: table-cell;">Sign Up</button>
             </div>
         </form>
     </div>
@@ -133,7 +146,7 @@
     }
 
     /* Change the color of links on hover */
-    .topnav a:hover {
+    .topnav a:hover, .dropdown:hover .dropbtn {
         background-color: #ddd;
         color: black;
     }
@@ -152,5 +165,47 @@
     .topnav b.active {
         background-color: #2c2fe2;
         color: white;
+    }
+
+    .dropdown {
+        float: left;
+        overflow: hidden;
+    }
+
+    .dropdown .dropbtn {
+        font-size: 16px;  
+        border: none;
+        outline: none;
+        color: white;
+        padding: 14px 16px;
+        background-color: inherit;
+        font-family: inherit;
+        margin: 0;
+    }
+
+    .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: #f9f9f9;
+        min-width: 160px;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        z-index: 1;
+    }
+
+    .dropdown-content a {
+        float: none;
+        color: black;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+        text-align: left;
+    }
+
+    .dropdown-content a:hover {
+        background-color: #ddd;
+    }
+
+    .dropdown:hover .dropdown-content {
+        display: block;
     }
 </style>
