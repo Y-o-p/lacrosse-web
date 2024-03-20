@@ -72,7 +72,9 @@ interface PlayerStats {
     faceoffs_won: number,
     faceoffs_lost: number,
     saves: number,
-    penalties: number
+    penalties: number,
+    clears_attempted: number,
+    clears_made: number
 }
 
 ///////////////////////////////////////////////////////////////////////////////

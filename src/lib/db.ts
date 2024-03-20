@@ -9,7 +9,7 @@ export const pool = new pg.Pool({
     user: import.meta.env.VITE_PGUSER || "postgres",
     host: import.meta.env.VITE_PGHOST || "localhost",
     port: (Number(import.meta.env.VITE_PGPORT || 5432 )),
-    password: import.meta.env.VITE_PGDATABASE || "ident",
+    password: import.meta.env.VITE_PGDATABASE || "S9388420",
 })
 
 async function queryFromVals(action: string, tableName: string, object?: any) {
@@ -100,6 +100,8 @@ export async function editRow(tableName: string, vals: any, ids: any): Promise<a
         });
     })
 }
+
+
 
 export async function insertUser(user: Partial<User>): Promise<any> {
     delete user.user_id;

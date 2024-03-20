@@ -46,7 +46,7 @@ export async function getCoach(id: number): Promise<Coach> {
                 first_name: row["first_name"],
                 birth_date: new Date,
                 date_created: new Date,
-                phone: row["phone"]
+                phone: row["phone"],
             };
             resolve(coach);
         })
