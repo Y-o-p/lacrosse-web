@@ -1,3 +1,9 @@
+<script lang="ts">
+    import type { PageServerData } from "./$types";
+    export let data: PageServerData;
+    import Modal from './addPlayerModal.svelte';
+</script>
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
