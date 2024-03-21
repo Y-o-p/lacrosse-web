@@ -5,11 +5,11 @@ import { error, json } from '@sveltejs/kit';
 import pg from 'pg';
 
 export const pool = new pg.Pool({
-    database: import.meta.env.VITE_PGDATABASE || "master",
+    database: import.meta.env.VITE_PGDATABASE || "postgres",
     user: import.meta.env.VITE_PGUSER || "postgres",
     host: import.meta.env.VITE_PGHOST || "localhost",
     port: (Number(import.meta.env.VITE_PGPORT || 5432 )),
-    password: import.meta.env.VITE_PGDATABASE || "25uPY996mWr#",
+    password: import.meta.env.VITE_PGDATABASE || "ident",
 })
 
 async function queryFromVals(action: string, tableName: string, object?: any) {
@@ -269,4 +269,60 @@ export async function deleteTeam(id: number) {
 
 export async function deleteUser(id: number) {
     return deleteRowFromId("users", "user_id", id);
+}
+
+// Get array of players from team_id
+export async function getPlayersByTeamId(teamId: bigint): Promise<Player[]> {
+    return new Promise<Player[]>((resolve, reject) => {
+        const query = `SELECT * FROM players WHERE team_id = $1`;
+        const values = [teamId];
+
+        pool.query(query, values)
+            .then((result) => {
+                resolve(result.rows);
+            })
+            .catch((error) => {
+                reject(error);
+            });
+    });
+}
+
+// Get 
+
+export async function updateCoachTeamId(coachId: bigint): Promise<any>{
+    try {
+        // Get the maximum team_id from coaches table
+        const getMaxTeamIdQuery = `SELECT COALESCE(MAX(team_id), 0) + 1 AS max_team_id FROM teams`;
+        const maxTeamIdResult = await pool.query(getMaxTeamIdQuery);
+        const maxTeamId = maxTeamIdResult.rows[0].max_team_id;
+
+        // Update the coach's team_id
+        const updateCoachQuery = `UPDATE coaches SET team_id = $1 WHERE coach_id = $2`;
+        const updateCoachValues = [maxTeamId, coachId];
+        await pool.query(updateCoachQuery, updateCoachValues);
+
+        // Return the updated coach data or success message
+        return { success: true, message: `Coach ${coachId} assigned to team ${maxTeamId}`, teamID: `${maxTeamId}` };
+    } catch (error) {
+        // Handle errors
+        throw new Error(`Error updating coach team ID: ${error.message}`);
+    }
+}
+
+export async function setCoachTeamId(coachId: bigint, teamId: bigint): Promise <any>{
+    try {
+        const team_id = teamId;
+        const coach_id = coachId;
+        const updateCoachQuery = `UPDATE coaches SET team_id = $1 WHERE coach_id = $2`;
+        const updateCoachValues = [team_id, coach_id];
+        await pool.query(updateCoachQuery, updateCoachValues);
+        
+        return {success: true, message: `Coach ${coach_id} assigned to team ${team_id}`};
+
+    } catch(error) {
+        // Handle Errors
+        throw new Error(`Error updating coach team ID, given teamID: ${error.message}`);
+
+    }
+
 }
