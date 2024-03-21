@@ -1,4 +1,4 @@
-import { getCoach, getUser} from '$lib/db';
+import { getCoach, getUser, getTeam} from '$lib/db';
 import { redirect } from '@sveltejs/kit';
 import { authenticateUser } from '$lib/auth';
 
@@ -25,13 +25,20 @@ export async function handle({event, resolve}) {
                     birth_date: coachRow["birth_date"],
                     date_created: coachRow["date_created"],
                     phone: coachRow["phone"],
-                    team_id: coachRow["team_id"]
+                    team_id: BigInt(coachRow["team_id"])
                 };
+
+                let teamRow = await getTeam(Number(coach.team_id));
+                const team: Team = {
+                    team_id: BigInt(teamRow["team_id"]),
+                    team_name: teamRow["team_name"],
+                    coach_id: teamRow["coach_id"],
+                }
         
                 event.locals = {
                     user: user,
-                    id: 1,
-                    coach: coach
+                    coach: coach,
+                    team: team
                 }
             } else if (userRow["role_id"] == 2) { // Temp Scorebook Keeper login
         
