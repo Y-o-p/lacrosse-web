@@ -207,7 +207,7 @@
             <select bind:value={defensivePlayerSelected} on:change={handleSelection}>
                 <option value="">Defensive Player</option>
                 {#each away_players_roster as player}
-                    <option value={player}>{player}</option>
+                    <option value={player.player_id}>{player.last_name}</option>
                 {/each}
             </select>
             <button type="submit" name="button" value="Complete Turnover">Complete Turnover</button>
