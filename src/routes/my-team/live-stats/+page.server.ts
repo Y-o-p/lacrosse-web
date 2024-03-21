@@ -1,15 +1,17 @@
-import { getPlayersByTeamId, insertPlayer_Stats } from '$lib/db';
+import { getPlayersByTeamId} from '$lib/db';
+import type { Shot } from '$lib/scorebook';
+
 
 /** @type {import('./$types').PageServerLoad} */
 export async function load({ locals }) {
 	const homePlayers = await getPlayersByTeamId(BigInt(locals.coach.team_id));
 	const awayPlayers = await getPlayersByTeamId(BigInt(2));
 
-	let player_statsInserted = false;
+	/**let player_statsInserted = false;
 	if (!player_statsInserted) {
 		await insertPlayer_Stats(BigInt(locals.coach.team_id));
 		player_statsInserted = true;
-	}
+	}*/
 	
 	return {
 		props: {

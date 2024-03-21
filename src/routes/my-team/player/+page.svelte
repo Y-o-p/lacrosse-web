@@ -2,6 +2,13 @@
     import type { PageServerData } from "./$types";
     export let data: PageServerData;
     import Modal from './addPlayerModal.svelte';
+
+    const positions = ['G', 'M', 'A', 'D'];
+    let selectedPosition = '';
+
+    const handleSelection = (event) => {
+        selectedPosition = event.target.value;
+    };
 </script>
 
 <html lang="en">
@@ -126,17 +133,18 @@
 
                 <!-- Position selector -->
                 <div class="position-selector">
-                    <label for="position">Position:</label>
                     <div class="position-circles">
-                        <div class="position-circle" data-position="GK">GK</div>
-                        <div class="position-circle" data-position="MF">MF</div>
-                        <div class="position-circle" data-position="A">A</div>
-                        <div class="position-circle" data-position="D">D</div>
+                        <label for="position">Position:</label>
+                        <select bind:value={selectedPosition} on:change={handleSelection} required>
+                            {#each positions as position}
+                                <option value={position}>{position}</option>
+                            {/each}
+                        </select>
                     </div>
                 </div>
 
                 <!-- Hidden input for position -->
-                <input type="hidden" id="position" name="position" required>
+                <input type="hidden" id="position" name="position" value={selectedPosition} required>
 
                 <!-- Hidden input for team_id-->
                 <input type="hidden" id="team_id" name="team_id" required value={data.coach.team_id}>
@@ -169,20 +177,6 @@
             else {
                 document.getElementById("position-error").style.display = "none";
             }
-        });
-
-        // Add event listener to position circles
-        const positionCircles = document.querySelectorAll(".position-circle");
-
-        // Add click event listener to each position circle
-        positionCircles.forEach(circle => {
-            circle.addEventListener("click", function() {
-                // Toggle active class
-                this.classList.toggle("active");
-                
-                // Set the selected position in the hidden input field
-                document.getElementById("position").value = this.dataset.position;
-            });
         });
     </script>
 </body>

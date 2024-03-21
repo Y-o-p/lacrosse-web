@@ -11,7 +11,7 @@ interface ScorebookAction {
     date: Date;
 }
 
-interface Shot extends ScorebookAction {
+export interface Shot extends ScorebookAction {
     actionType: ActionType.Shot;
     shotBy: BigInt;
     goal: Boolean;
@@ -29,6 +29,7 @@ async function performAction(game: BigInt, action: ScorebookAction) {
                     'content-type': 'application/json'
                 },
                 body: toJson(action)
+
             })).json();
         }
     }
