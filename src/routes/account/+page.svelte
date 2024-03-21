@@ -41,7 +41,7 @@
         </tr>
         <tr>
             <td>Team:</td>
-            <td>{teamName}</td>
+            <td>{data.team.team_name}</td>
         </tr>        
     </table>
     <form id="a" method="POST" action="?/logout">
