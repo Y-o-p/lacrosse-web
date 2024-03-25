@@ -1,7 +1,7 @@
 import { apiCall, getPlayerStats } from "./api";
 import { toJson } from "./util";
 
-enum ActionType {
+export enum ActionType {
     Shot,
     Turnover,
     ClearAttempted,
@@ -12,13 +12,12 @@ enum ActionType {
     Faceoff
 }
 
-interface ScorebookAction {
+export interface ScorebookAction {
     readonly actionType: ActionType;
     date: Date;
 }
 
 export interface Shot extends ScorebookAction {
-    actionType: ActionType.Shot;
     by: BigInt;
     goal: Boolean;
     assistedBy?: BigInt;
@@ -26,28 +25,23 @@ export interface Shot extends ScorebookAction {
 }
 
 export interface Turnover extends ScorebookAction {
-    actionType: ActionType.Turnover;
     by: BigInt;
     causedBy: BigInt;
 }
 
 export interface ClearAttempted extends ScorebookAction {
-    actionType: ActionType.ClearAttempted;
     by: BigInt;
 }
 
 export interface Penalty extends ScorebookAction {
-    actionType: ActionType.Penalty;
     by: BigInt;
     duration: number;
 }
 
 export interface Timeout extends ScorebookAction {
-    actionType: ActionType.Timeout;
 }
 
 export interface Faceoff extends ScorebookAction {
-    actionType: ActionType.Faceoff;
     homePlayer: BigInt;
     awayPlayer: BigInt;
     homeWon: BigInt;
@@ -56,7 +50,7 @@ export interface Faceoff extends ScorebookAction {
 async function performAction(game: BigInt, action: ScorebookAction) {
     switch (action.actionType) {
         case ActionType.Shot: {
-            var shotBy: PlayerStats = await (apiCall("GET", `/api/player-stats/${(action as Shot).shotBy}`))[0];
+            var shotBy: PlayerStats = await (apiCall("GET", `/api/player-stats/${(action as Shot).by}`))[0];
         }
     }
 }

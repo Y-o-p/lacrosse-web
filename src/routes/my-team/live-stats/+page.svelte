@@ -1,5 +1,6 @@
 <script lang="ts">
     import Modal from './scorebookModal.svelte';
+    import ActionHistory from './actionHistory.svelte';
     import { onMount, onDestroy } from 'svelte';
 
     import type { PageServerData } from "./$types";
@@ -95,6 +96,8 @@
             <h3>0 - 0</h3>
             <button on:click={() => (faceoffModal = true)}>Faceoff</button>
         </div>
+
+        <ActionHistory></ActionHistory>
     
         <div>
             <h1>Away Team</h1>
