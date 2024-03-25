@@ -1,3 +1,4 @@
+import { apiCall, getPlayerStats } from "./api";
 import { toJson } from "./util";
 
 enum ActionType {
@@ -55,15 +56,7 @@ export interface Faceoff extends ScorebookAction {
 async function performAction(game: BigInt, action: ScorebookAction) {
     switch (action.actionType) {
         case ActionType.Shot: {
-            // 
-            var goal = await (await fetch("/api/", {
-                method: "PATCH",
-                headers: {
-                    'content-type': 'application/json'
-                },
-                body: toJson(action)
-
-            })).json();
+            var shotBy: PlayerStats = await (apiCall("GET", `/api/player-stats/${(action as Shot).shotBy}`))[0];
         }
     }
 }

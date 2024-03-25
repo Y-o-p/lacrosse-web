@@ -3,17 +3,17 @@
 
 import { toJson } from "./util";
 
-export async function apiCall(method: string, url: string, body: any): Promise<any> {
+export async function apiCall<Type>(method: string, url: string, body?: Partial<Type>): Promise<Array<Type>> {
     try {
         const result = await fetch(url, {
             method: method,
             headers: {
                 'content-type': 'application/json'
             },
-            body: toJson(body)
+            body: body !== undefined ? toJson(body) : undefined
         });
-        const row = await result.json();
-        return row;
+        const rows: Array<Type> = JSON.parse((await result.json()));
+        return rows;
     }
     catch (err) {
         return err;
@@ -68,6 +68,12 @@ export async function getTeam(id: number): Promise<Team> {
     catch (err) {
         return err;
     }
+}
+
+export async function getPlayerStats(id: BigInt): Promise<PlayerStats> {
+    const result = await (await fetch(`/api/player-stats/${id}`)).json();
+    const player_stats: PlayerStats = JSON.parse(result);
+    return player_stats;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
