@@ -1,9 +1,14 @@
-import ScorebookModal from "../routes/my-team/live-stats/scorebookModal.svelte";
 import { toJson } from "./util";
 
 enum ActionType {
     Shot,
-
+    Turnover,
+    ClearAttempted,
+    Penalty,
+    GroundBall,
+    Sub,
+    Timeout,
+    Faceoff
 }
 
 interface ScorebookAction {
@@ -13,10 +18,38 @@ interface ScorebookAction {
 
 export interface Shot extends ScorebookAction {
     actionType: ActionType.Shot;
-    shotBy: BigInt;
+    by: BigInt;
     goal: Boolean;
     assistedBy?: BigInt;
     savedBy?: BigInt;
+}
+
+export interface Turnover extends ScorebookAction {
+    actionType: ActionType.Turnover;
+    by: BigInt;
+    causedBy: BigInt;
+}
+
+export interface ClearAttempted extends ScorebookAction {
+    actionType: ActionType.ClearAttempted;
+    by: BigInt;
+}
+
+export interface Penalty extends ScorebookAction {
+    actionType: ActionType.Penalty;
+    by: BigInt;
+    duration: number;
+}
+
+export interface Timeout extends ScorebookAction {
+    actionType: ActionType.Timeout;
+}
+
+export interface Faceoff extends ScorebookAction {
+    actionType: ActionType.Faceoff;
+    homePlayer: BigInt;
+    awayPlayer: BigInt;
+    homeWon: BigInt;
 }
 
 async function performAction(game: BigInt, action: ScorebookAction) {
