@@ -1,7 +1,7 @@
 import { responseFromFunction } from '$lib/api_util.js';
 import { deleteGame, getGame } from '$lib/db.js';
-import { json } from '@sveltejs/kit';
-import { editRow } from '$lib/db'; 
+import { json,error } from '@sveltejs/kit';
+import { editRow,getGamePlayerStats } from '$lib/db'; 
 
 export async function GET({ params }) {
     return responseFromFunction(async () => {
@@ -32,5 +32,16 @@ export async function PUT({ params, request }) {
     } catch (error) {
         console.error('Error updating game:', error);
         return json({ success: false, error: 'Failed to update game information' }, { status: 500 });
+    }
+}
+
+
+export async function get({ params }) {
+    const { gameId } = params;
+    try {
+        const stats = await getGamePlayerStats(gameId);
+        return json(stats);
+    } catch (err) {
+        return error(500, `Failed to fetch stats: ${err.message}`);
     }
 }

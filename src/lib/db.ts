@@ -5,11 +5,11 @@ import { error, json } from '@sveltejs/kit';
 import pg from 'pg';
 
 export const pool = new pg.Pool({
-    database: import.meta.env.VITE_PGDATABASE || "master",
+    database: import.meta.env.VITE_PGDATABASE || "Lacrosse database",
     user: import.meta.env.VITE_PGUSER || "postgres",
     host: import.meta.env.VITE_PGHOST || "localhost",
     port: (Number(import.meta.env.VITE_PGPORT || 5432 )),
-    password: import.meta.env.VITE_PGDATABASE || "S9388420",
+    password: import.meta.env.VITE_PGPASSWORD || "Romeo234",
 })
 
 async function queryFromVals(action: string, tableName: string, object?: any) {
@@ -324,5 +324,33 @@ export async function setCoachTeamId(coachId: bigint, teamId: bigint): Promise <
         throw new Error(`Error updating coach team ID, given teamID: ${error.message}`);
 
     }
-
 }
+
+//Function for detecting inconsitencies in scorebook
+export async function checkStatsInconsistencies(gameId) {
+    const { rows } = await pool.query(`
+        SELECT * FROM game_stats WHERE game_id = $1`, [gameId]
+    );
+    // These are the checks currently implemented ( more can be added as needed)
+    const inconsistencies = rows.filter(stat => {
+        const negativeCheck = stat.goals < 0 || stat.assists < 0 || stat.shots < 0 || stat.faceoffs_won < 0 || stat.faceoffs_lost < 0 || stat.saves < 0 || stat.penalties < 0;
+        const logicalCheck = stat.goals < stat.assists; // More goals than assists is incorrect
+        const faceoffCheck = stat.faceoffs_won < stat.faceoffs_lost; // More faceoffs won than lost is incorrect
+    
+        return negativeCheck || logicalCheck || faceoffCheck;
+    });
+    return inconsistencies;
+}
+
+
+export async function getGamePlayerStats(gameId) {
+    const query = `
+        SELECT * FROM player_stats 
+        WHERE game_id = $1`;
+    const values = [gameId];
+
+    const result = await pool.query(query, values);
+    return result.rows;
+}
+
+
