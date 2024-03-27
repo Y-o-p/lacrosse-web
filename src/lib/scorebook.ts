@@ -47,7 +47,7 @@ export interface Faceoff extends ScorebookAction {
     homeWon: BigInt;
 }
 
-async function performAction(game: BigInt, action: ScorebookAction) {
+export async function performAction(game: BigInt, action: ScorebookAction) {
     switch (action.actionType) {
         case ActionType.Shot: {
             var shotBy: PlayerStats = await (apiCall("GET", `/api/player-stats/${(action as Shot).by}`))[0];
@@ -55,7 +55,7 @@ async function performAction(game: BigInt, action: ScorebookAction) {
     }
 }
 
-async function undoAction(game: BigInt, action: ScorebookAction) {
+export async function undoAction(game: BigInt, action: ScorebookAction) {
     switch (action.actionType) {
         case ActionType.Shot: {
             // 
