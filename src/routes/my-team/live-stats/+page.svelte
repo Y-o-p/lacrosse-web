@@ -1,5 +1,5 @@
 <script lang="ts">
-    import Modal from './scorebookModal.svelte';
+    import Modal from '$lib/modal.svelte';
     import ActionHistory from './actionHistory.svelte';
     import { onMount, onDestroy } from 'svelte';
 
@@ -114,7 +114,7 @@
     </div>
 </main>
 
-<Modal bind:faceoffModal>
+<Modal bind:show={faceoffModal}>
     <h1 slot="header">FACEOFF</h1>
 
     <form id="faceoffForm" method="POST" action="?/Faceoff">
@@ -145,7 +145,7 @@
 </Modal>
 
 <!-- HOME SHOT MODAL -->
-<Modal bind:home_shotModal>
+<Modal bind:show={home_shotModal}>
     <h1 slot="header">HOME TEAM SHOT ATTEMPT</h1>
 
     <form id="homeShotForm" method="POST" action="?/ShotAttempt">
@@ -192,7 +192,7 @@
     </form>
 </Modal>
 
-<Modal bind:home_turnoverModal>
+<Modal bind:show={home_turnoverModal}>
     <h1 slot="header">HOME TEAM TURNOVER</h1>
 
     <form id="homeTurnoverForm" method="POST" action="?/Turnover">
@@ -221,7 +221,7 @@
     </form>
 </Modal>
 
-<Modal bind:home_clearModal>
+<Modal bind:show={home_clearModal}>
     <h1 slot="header">HOME TEAM TURNOVER</h1>
 
     <form id="homeClearForm" method="POST" action="?/Clear">
@@ -242,7 +242,7 @@
     </form>
 </Modal>
 
-<Modal bind:home_penaltyModal>
+<Modal bind:show={home_penaltyModal}>
     <h1 slot="header">HOME TEAM PENALTY</h1>
 
     <form id="homePenaltyForm" method="POST" action="?/Penalty">
@@ -272,7 +272,7 @@
 </Modal>
 
 
-<Modal bind:home_groundBallModal>
+<Modal bind:show={home_groundBallModal}>
     <h1 slot="header">GROUNDBALL RECOVERED</h1>
 
     <form id="groundballForm" method="POST" action="?/Faceoff">
@@ -297,7 +297,7 @@
 
 
 <!-- AWAY SHOT MODAL -->
-<Modal bind:away_shotModal>
+<Modal bind:show={away_shotModal}>
     <h1 slot="header">AWAY TEAM SHOT ATTEMPT</h1>
 
     <form id="awayShotForm" method="POST" action="?/ShotAttempt">
@@ -344,7 +344,7 @@
     </form>
 </Modal>
 
-<Modal bind:away_turnoverModal>
+<Modal bind:show={away_turnoverModal}>
     <h1 slot="header">AWAY TEAM TURNOVER</h1>
 
     <form id="awayTurnoverForm" method="POST" action="?/Turnover">
@@ -373,7 +373,7 @@
     </form>
 </Modal>
 
-<Modal bind:away_clearModal>
+<Modal bind:show={away_clearModal}>
     <h1 slot="header">AWAY TEAM CLEAR</h1>
 
     <form id="homeClearForm" method="POST" action="?/Clear">
@@ -394,7 +394,7 @@
     </form>
 </Modal>
 
-<Modal bind:away_groundBallModal>
+<Modal bind:show={away_groundBallModal}>
     <h1 slot="header">GROUNDBALL RECOVERED</h1>
 
     <form id="groundballForm" method="POST" action="?/Faceoff">
