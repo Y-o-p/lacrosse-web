@@ -17,6 +17,13 @@
     // in both rosters
 
     let modals: Array<boolean> = new Array<boolean>(Object.keys(ActionType).length);
+    let currentModal: ActionType;
+    $: {
+        console.log(modals)
+        currentModal = modals.findIndex((value) => (value == true))
+        console.log(currentModal);
+
+    } 
 
     // Empty strings for select *options*
     let offensivePlayerSelected = '';
@@ -55,6 +62,7 @@
 
     let selectedPlayer = ''; 
     const handleSelection = (event) => {
+        console.log(event);
         selectedPlayer = event.target.value;
     };
 
@@ -101,7 +109,7 @@
     </div>
 </main>
 
-<Modal bind:show={modals[ActionType.Faceoff]}>
+<Modal bind:show={modals[ActionType.Faceoff]} >
     <h1 slot="header">FACEOFF</h1>
 
     <div class="turnover-modal" style="display: table;">
