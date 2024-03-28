@@ -44,7 +44,7 @@ export interface Timeout extends ScorebookAction {
 export interface Faceoff extends ScorebookAction {
     homePlayer: BigInt;
     awayPlayer: BigInt;
-    homeWon: BigInt;
+    homeWon: Boolean;
 }
 
 export async function performAction(game: BigInt, action: ScorebookAction) {

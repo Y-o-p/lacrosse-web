@@ -4,7 +4,7 @@
     import { onMount, onDestroy } from 'svelte';
 
     import type { PageServerData } from "./$types";
-    import { type ScorebookAction, ActionType } from '$lib/scorebook';
+    import { type ScorebookAction, ActionType, performAction, undoAction } from '$lib/scorebook';
     export let data: PageServerData;    // Locals {props.homePlayers & props.coach}
 
     // ROSTER DATA
@@ -19,10 +19,7 @@
     let modals: Array<boolean> = new Array<boolean>(Object.keys(ActionType).length);
     let currentModal: ActionType;
     $: {
-        console.log(modals)
         currentModal = modals.findIndex((value) => (value == true))
-        console.log(currentModal);
-
     } 
 
     // Empty strings for select *options*
@@ -33,7 +30,21 @@
 
     // Actions
     let scorebookActions: Array<ScorebookAction> = new Array<ScorebookAction>();
-    let currentAction: ScorebookAction;
+    let selectedAction = -1;
+    let newAction = {
+        actionType: null,
+        date: null,
+        by: null,
+        goal: false,
+        assistedBy: null,
+        savedBy: null,
+        causedBy: null,
+        duration: 0,
+        homePlayer: null,
+        awayPlayer: null,
+        homeWon: false,
+    };
+    $: newAction.actionType = currentModal;
 
 
     let quarterLength = 15;
@@ -62,9 +73,30 @@
 
     let selectedPlayer = ''; 
     const handleSelection = (event) => {
-        console.log(event);
         selectedPlayer = event.target.value;
+        console.log(newAction);
     };
+
+    function handleNewAction(type: ActionType) {
+        modals[type] = true;
+        selectedAction = null;
+    }
+
+    function handleSubmitAction() {
+        if (selectedAction === null) {
+            // New Action
+            newAction.date = new Date();
+            scorebookActions = [...scorebookActions, newAction];
+            //performAction(data.props.game, newAction);
+        }
+        else {
+            // Edit Action
+            //undoAction(data.props.game, scorebookActions[selectedAction]);
+            //performAction(data.props.game, newAction);
+            scorebookActions[selectedAction] = newAction;
+        }
+        newAction = Object.assign({}, newAction);
+    }
 
 
 </script>
@@ -75,7 +107,7 @@
     
         <div>
             <h1>Home Team</h1>
-            <button on:click={() => (modals[ActionType.Shot] = true)}>Shot</button>
+            <button on:click={() => {handleNewAction(ActionType.Shot);}}>Shot</button>
             <button on:click={() => (modals[ActionType.Turnover] = true)}>Turnover Made</button>
             <button on:click={() => (modals[ActionType.ClearAttempted] = true)}>Clear Attempted</button>
             <button on:click={() => (modals[ActionType.Penalty] = true)}>Penalty</button>
@@ -92,7 +124,12 @@
 
         <ActionHistory 
             bind:actions={scorebookActions} 
-            bind:currentAction={currentAction}
+            bind:selectedAction={selectedAction}
+            on:edit={() => {
+                modals[scorebookActions[selectedAction].actionType] = true;
+                newAction = Object.assign({}, scorebookActions[selectedAction]); 
+                console.log(newAction);
+            }}
         ></ActionHistory>
     
         <div>
@@ -114,23 +151,23 @@
 
     <div class="turnover-modal" style="display: table;">
         <label for="homePlayerSelect">Home Player:</label>
-        <select bind:value={offensivePlayerSelected} on:change={handleSelection} required>
+        <select bind:value={newAction.homePlayer} on:change={handleSelection} required>
             <option value="">Offensive Player</option>
             {#each home_players_roster as player}
                 <option value={player.player_id}>{player.last_name}</option>
             {/each}
         </select>
-        <button type="submit" name="button" value="Home Won">Won</button>
+        <button on:click={() => handleSubmitAction()}>Won</button>
         <hr />
         
         <label for="awayPlayerSelect">Away Player:</label>
-        <select bind:value={defensivePlayerSelected} on:change={handleSelection} required>
+        <select bind:value={newAction.awayPlayer} on:change={handleSelection} required>
             <option value="">Defensive Player</option>
             {#each away_players_roster as player}
                 <option value={player.player_id}>{player.last_name}</option>
             {/each}
         </select>
-        <button type="submit" name="button" value="Away Won">Won</button>
+        <button on:click={() => handleSubmitAction()}>Won</button>
         
         <input type="hidden" name="offensivePlayer" value={offensivePlayerSelected}>
         <input type="hidden" name="defensivePlayer" value={defensivePlayerSelected}>
@@ -142,14 +179,14 @@
     <h1 slot="header">HOME TEAM SHOT ATTEMPT</h1>
     <div class="shot-modal" style="display: table;">
         <label for="homeShooter">Shot by:</label>
-        <select bind:value={offensivePlayerSelected} on:change={handleSelection} required>
+        <select bind:value={newAction.by} on:change={handleSelection} required>
             <option value="">Select Player</option>
             {#each home_players_roster as player}
                 <option value={player.player_id}>{player.last_name}</option>
             {/each}
         </select>
         <label for="homeAssist">Assisted By:</label>
-        <select bind:value={offensivePlayerSelected_secondary} on:change={handleSelection}>
+        <select bind:value={newAction.assistedBy} on:change={handleSelection}>
             <option value="">Select Assist</option>
             {#each home_players_roster as player}
                 <option value={player.player_id}>{player.last_name}</option>
@@ -157,12 +194,18 @@
         </select>
         <hr />
 
-        <button type="submit" name="button" value="Shot Made">Shot Made</button>
-        <button type="submit" name="button" value="Shot Missed/Wide">Shot Missed/Wide</button>
+        <button on:click={() => { 
+            newAction.goal = true;
+            handleSubmitAction(); 
+        }}>Shot Made</button>
+        <button on:click={() => { 
+            newAction.goal = false;
+            handleSubmitAction(); 
+        }}>Shot Missed/Wide</button>
         <hr />
 
         <label for="AwaySavee">Saved By:</label>
-        <select bind:value={defensivePlayerSelected} on:change={handleSelection}>
+        <select bind:value={newAction.savedBy} on:change={handleSelection}>
             <option value="">Select Savee</option>
             {#each away_players_roster as player}
                 <option value={player.player_id}>{player.last_name}</option>
@@ -172,7 +215,10 @@
         <!-- If savee selected, show Shot Saved button
             prevents button be pressed without a savee -->
         {#if defensivePlayerSelected != ''}
-            <button type="submit" name="button" value="Shot Saved">Shot Saved</button>
+            <button on:click={() => { 
+                newAction.goal = false;
+                handleSubmitAction(); 
+            }}>Shot Saved</button>
         {/if}
         
         <input type="hidden" name="offensivePlayer" value={offensivePlayerSelected}>
@@ -185,7 +231,7 @@
     <h1 slot="header">HOME TEAM TURNOVER</h1>
     <div class="turnover-modal" style="display: table;">
         <label for="playerSelect">Made by:</label>
-        <select bind:value={offensivePlayerSelected} on:change={handleSelection} required>
+        <select bind:value={newAction.by} on:change={handleSelection} required>
             <option value="">Offensive Player</option>
             {#each home_players_roster as player}
                 <option value={player.player_id}>{player.last_name}</option>
@@ -194,7 +240,7 @@
         <hr />
         
         <label for="awayPlayerSelect">Caused By:</label>
-        <select bind:value={defensivePlayerSelected} on:change={handleSelection}>
+        <select bind:value={newAction.causedBy} on:change={handleSelection}>
             <option value="">Defensive Player</option>
             {#each away_players_roster as player}
                 <option value={player.player_id}>{player.last_name}</option>
@@ -211,7 +257,7 @@
     <h1 slot="header">HOME TEAM TURNOVER</h1>
     <div class="clear-modal" style="display: table;">
         <label for="playerSelect">Clear by:</label>
-        <select bind:value={offensivePlayerSelected} on:change={handleSelection}>
+        <select bind:value={newAction.by} on:change={handleSelection}>
             <option value="">Offensive Player</option>
             {#each home_players_roster as player}
                 <option value={player.player_id}>{player.last_name}</option>
@@ -229,7 +275,7 @@
     <h1 slot="header">HOME TEAM PENALTY</h1>
     <div class="penalty-modal" style="display: table;">
         <label for="playerSelect">Penalty by:</label>
-        <select bind:value={offensivePlayerSelected} on:change={handleSelection} required>
+        <select bind:value={newAction.by} on:change={handleSelection} required>
             <option value="">Offensive Player</option>
             {#each home_players_roster as player}
                 <option value={player.player_id}>{player.last_name}</option>
@@ -237,7 +283,7 @@
         </select>
         <hr />
         <label for="penaltyDuration">Duration:</label>
-        <select bind:value={penaltyTime} on:change={handleSelection} required>
+        <select bind:value={newAction.duration} on:change={handleSelection} required>
             <option value="">Offensive Player</option>
             {#each penaltyTimes as time}
                 <option value={time}>{time}</option>
@@ -255,7 +301,7 @@
     <h1 slot="header">GROUNDBALL RECOVERED</h1>
     <div class="turnover-modal" style="display: table;">
         <label for="homePlayerSelect">Home Player:</label>
-        <select bind:value={offensivePlayerSelected} on:change={handleSelection} required>
+        <select bind:value={newAction.by} on:change={handleSelection} required>
             <option value="">Offensive Player</option>
             {#each home_players_roster as player}
                 <option value={player.player_id}>{player.last_name}</option>

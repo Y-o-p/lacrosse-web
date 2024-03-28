@@ -1,9 +1,9 @@
 <script lang="ts">
     import { undoAction, ActionType, type ScorebookAction, type Shot } from "$lib/scorebook";
-    import { onMount } from "svelte";
-
+    import { createEventDispatcher, onMount } from "svelte";
+    const dispatch = createEventDispatcher();
     export var actions: Array<ScorebookAction> = new Array<ScorebookAction>();
-    export var currentAction: ScorebookAction;
+    export var selectedAction: number;
     var game_id: bigint;
 
     onMount(() => {
@@ -21,7 +21,7 @@
         const i = actions.indexOf(action);
 		actions.splice(i, 1);
 		actions = actions;
-        currentAction = null;
+        selectedAction = null;
     }
 
 </script>
@@ -29,7 +29,7 @@
 {#each actions as action}
     <li>
         {action.date}
-        <button on:click={ () => { currentAction = action; }}>Edit</button>
+        <button on:click={ () => { selectedAction = actions.indexOf(action); dispatch("edit"); }}>Edit</button>
         <button on:click={ async () => undo(action) }>Undo</button>
     </li>
 {/each}
