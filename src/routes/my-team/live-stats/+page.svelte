@@ -4,7 +4,7 @@
     import { onMount, onDestroy } from 'svelte';
 
     import type { PageServerData } from "./$types";
-    import { type ScorebookAction, ActionType, performAction, undoAction } from '$lib/scorebook';
+    import { type ScorebookAction, ActionType, performAction } from '$lib/scorebook';
     export let data: PageServerData;    // Locals {props.homePlayers & props.coach}
 
     // ROSTER DATA
@@ -64,7 +64,6 @@
     let selectedPlayer = ''; 
     const handleSelection = (event) => {
         selectedPlayer = event.target.value;
-        console.log(newAction);
     };
 
     function handleNewAction(type: ActionType) {
@@ -77,12 +76,12 @@
             // New Action
             newAction.date = new Date();
             scorebookActions = [...scorebookActions, newAction];
-            performAction(data.props.game, newAction);
+            performAction(newAction);
         }
         else {
             // Edit Action
-            //undoAction(data.props.game, scorebookActions[selectedAction]);
-            //performAction(data.props.game, newAction);
+            performAction(scorebookActions[selectedAction], true);
+            performAction(newAction);
             scorebookActions[selectedAction] = newAction;
         }
         newAction = Object.assign({}, newAction);
@@ -144,7 +143,7 @@
         <select bind:value={newAction.homePlayer} on:change={handleSelection} required>
             <option value="">Offensive Player</option>
             {#each home_players_roster as player}
-                <option value={player.playerstat_id}>{player.last_name}</option>
+                <option value={player}>{player.last_name}</option>
             {/each}
         </select>
         <button on:click={() => handleSubmitAction()}>Won</button>
@@ -154,7 +153,7 @@
         <select bind:value={newAction.awayPlayer} on:change={handleSelection} required>
             <option value="">Defensive Player</option>
             {#each away_players_roster as player}
-                <option value={player.playerstat_id}>{player.last_name}</option>
+                <option value={player}>{player.last_name}</option>
             {/each}
         </select>
         <button on:click={() => handleSubmitAction()}>Won</button>
@@ -169,14 +168,14 @@
         <select bind:value={newAction.by} on:change={handleSelection} required>
             <option value="">Select Player</option>
             {#each home_players_roster as player}
-                <option value={player.playerstat_id}>{player.last_name}</option>
+                <option value={player}>{player.last_name}</option>
             {/each}
         </select>
         <label for="homeAssist">Assisted By:</label>
         <select bind:value={newAction.assistedBy} on:change={handleSelection}>
             <option value="">Select Assist</option>
             {#each home_players_roster as player}
-                <option value={player.playerstat_id}>{player.last_name}</option>
+                <option value={player}>{player.last_name}</option>
             {/each}
         </select>
         <hr />
@@ -195,7 +194,7 @@
         <select bind:value={newAction.savedBy} on:change={handleSelection}>
             <option value="">Select Savee</option>
             {#each away_players_roster as player}
-                <option value={player.playerstat_id}>{player.last_name}</option>
+                <option value={player}>{player.last_name}</option>
             {/each}
         </select>
 
@@ -217,7 +216,7 @@
         <select bind:value={newAction.by} on:change={handleSelection} required>
             <option value="">Offensive Player</option>
             {#each home_players_roster as player}
-                <option value={player.playerstat_id}>{player.last_name}</option>
+                <option value={player}>{player.last_name}</option>
             {/each}
         </select>
         <hr />
@@ -226,7 +225,7 @@
         <select bind:value={newAction.causedBy} on:change={handleSelection}>
             <option value="">Defensive Player</option>
             {#each away_players_roster as player}
-                <option value={player.playerstat_id}>{player.last_name}</option>
+                <option value={player}>{player.last_name}</option>
             {/each}
         </select>
         <button type="submit" name="button" value="Complete Turnover">Complete Turnover</button>
@@ -240,7 +239,7 @@
         <select bind:value={newAction.by} on:change={handleSelection}>
             <option value="">Offensive Player</option>
             {#each home_players_roster as player}
-                <option value={player.playerstat_id}>{player.last_name}</option>
+                <option value={player}>{player.last_name}</option>
             {/each}
         </select>
         <hr />
@@ -256,7 +255,7 @@
         <select bind:value={newAction.by} on:change={handleSelection} required>
             <option value="">Offensive Player</option>
             {#each home_players_roster as player}
-                <option value={player.playerstat_id}>{player.last_name}</option>
+                <option value={player}>{player.last_name}</option>
             {/each}
         </select>
         <hr />
@@ -279,7 +278,7 @@
         <select bind:value={newAction.by} on:change={handleSelection} required>
             <option value="">Offensive Player</option>
             {#each home_players_roster as player}
-                <option value={player.playerstat_id}>{player.last_name}</option>
+                <option value={player}>{player.last_name}</option>
             {/each}
         </select>
         <button type="submit" name="button" value="submit">Submit</button>

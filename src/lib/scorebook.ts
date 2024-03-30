@@ -18,23 +18,23 @@ export interface ScorebookAction {
 }
 
 export interface Shot extends ScorebookAction {
-    by: BigInt;
+    by: Player;
     goal: Boolean;
-    assistedBy?: BigInt;
-    savedBy?: BigInt;
+    assistedBy?: Player;
+    savedBy?: Player;
 }
 
 export interface Turnover extends ScorebookAction {
-    by: BigInt;
-    causedBy: BigInt;
+    by: Player;
+    causedBy: Player;
 }
 
 export interface ClearAttempted extends ScorebookAction {
-    by: BigInt;
+    by: Player;
 }
 
 export interface Penalty extends ScorebookAction {
-    by: BigInt;
+    by: Player;
     duration: number;
 }
 
@@ -42,29 +42,39 @@ export interface Timeout extends ScorebookAction {
 }
 
 export interface Faceoff extends ScorebookAction {
-    homePlayer: BigInt;
-    awayPlayer: BigInt;
+    homePlayer: Player;
+    awayPlayer: Player;
     homeWon: Boolean;
 }
 
-export async function performAction(game: BigInt, action: ScorebookAction, undo = false) {
+export function actionToString(action: ScorebookAction) {
+    switch (action.actionType) {
+        case ActionType.Shot: {
+            const shot = action as Shot;
+            return `${shot.by.first_name} ${shot.by.last_name} shot`;
+        }
+    }
+    return action.date;
+}
+
+export async function performAction(action: ScorebookAction, undo = false) {
     const polarity = undo ? -1 : 1;
     switch (action.actionType) {
         case ActionType.Shot: {
             const shot = action as Shot;
             console.log(shot);
-            var shotBy: PlayerStats = await getPlayerStats(shot.by);
+            var shotBy: PlayerStats = await getPlayerStats(shot.by.playerstat_id);
             shotBy.shots += polarity;
             if (shot.goal) {
                 shotBy.goals += polarity;
             }
             if (shot.assistedBy !== null) {
-                var assistedBy: PlayerStats = await getPlayerStats(shot.assistedBy);
+                var assistedBy: PlayerStats = await getPlayerStats(shot.assistedBy.playerstat_id);
                 assistedBy.assists += polarity;
                 await patchPlayerStats(assistedBy);
             }
             if (shot.savedBy !== null) {
-                var savedBy: PlayerStats = await getPlayerStats(shot.savedBy);
+                var savedBy: PlayerStats = await getPlayerStats(shot.savedBy.playerstat_id);
                 savedBy.saves += polarity;
                 await patchPlayerStats(savedBy);
             }
