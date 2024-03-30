@@ -97,12 +97,12 @@
         <div>
             <h1>Home Team</h1>
             <button on:click={() => {handleNewAction(ActionType.Shot);}}>Shot</button>
-            <button on:click={() => (modals[ActionType.Turnover] = true)}>Turnover Made</button>
-            <button on:click={() => (modals[ActionType.ClearAttempted] = true)}>Clear Attempted</button>
-            <button on:click={() => (modals[ActionType.Penalty] = true)}>Penalty</button>
-            <button on:click={() => (modals[ActionType.GroundBall] = true)}>Ground Ball</button>
-            <button on:click={() => (modals[ActionType.Sub] = true)}>Sub</button>
-            <button on:click={() => (modals[ActionType.Timeout] = true)}>Timeout</button>
+            <button on:click={() => {handleNewAction(ActionType.Turnover);}}>Turnover Made</button>
+            <button on:click={() => {handleNewAction(ActionType.ClearAttempted);}}>Clear Attempted</button>
+            <button on:click={() => {handleNewAction(ActionType.Penalty);}}>Penalty</button>
+            <button on:click={() => {handleNewAction(ActionType.GroundBall);}}>Ground Ball</button>
+            <button on:click={() => {handleNewAction(ActionType.Sub);}}>Sub</button>
+            <button on:click={() => {handleNewAction(ActionType.Timeout);}}>Timeout</button>
         </div>
 
         <div>
@@ -123,13 +123,13 @@
     
         <div>
             <h1>Away Team</h1>
-            <button on:click={() => (modals[ActionType.Shot] = true)}>Shot</button>
-            <button on:click={() => (modals[ActionType.Turnover] = true)}>Turnover Made</button>
-            <button on:click={() => (modals[ActionType.ClearAttempted] = true)}>Clear Attempted</button>
-            <button on:click={() => (modals[ActionType.Penalty] = true)}>Penalty</button>
-            <button on:click={() => (modals[ActionType.GroundBall] = true)}>Ground Ball</button>
-            <button on:click={() => (modals[ActionType.Sub] = true)}>Sub</button>
-            <button on:click={() => (modals[ActionType.Timeout] = true)}>Timeout</button>
+            <button on:click={() => {handleNewAction(ActionType.Shot);}}>Shot</button>
+            <button on:click={() => {handleNewAction(ActionType.Turnover);}}>Turnover Made</button>
+            <button on:click={() => {handleNewAction(ActionType.ClearAttempted);}}>Clear Attempted</button>
+            <button on:click={() => {handleNewAction(ActionType.Penalty);}}>Penalty</button>
+            <button on:click={() => {handleNewAction(ActionType.GroundBall);}}>Ground Ball</button>
+            <button on:click={() => {handleNewAction(ActionType.Sub);}}>Sub</button>
+            <button on:click={() => {handleNewAction(ActionType.Timeout);}}>Timeout</button>
         </div>
     
     </div>
@@ -267,7 +267,7 @@
             {/each}
         </select>
 
-        <button type="submit" name="button" value="Submit">Submit</button>
+        <button on:click={() => {handleSubmitAction()}}>Submit</button>
     </div>
 </Modal>
 

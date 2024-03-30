@@ -1,5 +1,4 @@
-import { apiCall, getPlayerStats, patchPlayerStats } from "./api";
-import { toJson } from "./util";
+import { getPlayerStats, patchPlayerStats } from "./api";
 
 export enum ActionType {
     Shot,
@@ -31,6 +30,7 @@ export interface Turnover extends ScorebookAction {
 
 export interface ClearAttempted extends ScorebookAction {
     by: Player;
+    successful: boolean;
 }
 
 export interface Penalty extends ScorebookAction {
@@ -53,6 +53,26 @@ export function actionToString(action: ScorebookAction) {
             const shot = action as Shot;
             return `${shot.by.first_name} ${shot.by.last_name} shot`;
         }
+        case ActionType.Turnover: {
+            const turnover = action as Turnover;
+            return `${turnover.by.first_name} ${turnover.by.last_name} turnover`;
+        }
+        case ActionType.ClearAttempted: {
+            const clearAttempted = action as ClearAttempted;
+            return `${clearAttempted.by.first_name} ${clearAttempted.by.last_name} clear attempted`;
+        }
+        case ActionType.Penalty: {
+            const penalty = action as Penalty;
+            return `${penalty.by.first_name} ${penalty.by.last_name} got a penalty`;
+        }
+        case ActionType.Timeout: {
+            const timeout = action as Timeout;
+            return `Timeout`;
+        }
+        case ActionType.Faceoff: {
+            const faceoff = action as Faceoff;
+            return `${faceoff.homePlayer.first_name} ${faceoff.homePlayer.last_name} faced ${faceoff.awayPlayer.first_name} ${faceoff.awayPlayer.last_name}`;
+        }
     }
     return action.date;
 }
@@ -62,7 +82,6 @@ export async function performAction(action: ScorebookAction, undo = false) {
     switch (action.actionType) {
         case ActionType.Shot: {
             const shot = action as Shot;
-            console.log(shot);
             var shotBy: PlayerStats = await getPlayerStats(shot.by.playerstat_id);
             shotBy.shots += polarity;
             if (shot.goal) {
@@ -79,8 +98,51 @@ export async function performAction(action: ScorebookAction, undo = false) {
                 await patchPlayerStats(savedBy);
             }
             await patchPlayerStats(shotBy);
-            console.log(shotBy);
-
+            break;
+        }
+        case ActionType.Turnover: {
+            const turnover = action as Turnover;
+            var turnoverBy: PlayerStats = await getPlayerStats(turnover.by.playerstat_id);
+            var turnoverCausedBy: PlayerStats = await getPlayerStats(turnover.causedBy.playerstat_id);
+            break;
+            // NOTE: there is no turnover stat
+        }
+        case ActionType.ClearAttempted: {
+            const clear = action as ClearAttempted;
+            var clearAttemptedBy: PlayerStats = await getPlayerStats(clear.by.playerstat_id);
+            clearAttemptedBy.clears_attempted += polarity;
+            if (clear.successful) {
+                clearAttemptedBy.clears_made += polarity;
+            }
+            await patchPlayerStats(clearAttemptedBy);
+            break;
+        }
+        case ActionType.Penalty: {
+            const penalty = action as Penalty;
+            var penaltyBy: PlayerStats = await getPlayerStats(penalty.by.playerstat_id);
+            penaltyBy.penalties += polarity;
+            await patchPlayerStats(penaltyBy);
+            break;
+        }
+        case ActionType.Timeout: {
+            const timeout = action as Timeout;
+            break;
+        }
+        case ActionType.Faceoff: {
+            const faceoff = action as Faceoff;
+            var homePlayer: PlayerStats = await getPlayerStats(faceoff.homePlayer.playerstat_id);
+            var awayPlayer: PlayerStats = await getPlayerStats(faceoff.awayPlayer.playerstat_id);
+            if (faceoff.homeWon) {
+                homePlayer.faceoffs_won += polarity;
+                awayPlayer.faceoffs_lost += polarity;
+            }
+            else {
+                homePlayer.faceoffs_lost += polarity;
+                awayPlayer.faceoffs_won += polarity;
+            }
+            await patchPlayerStats(homePlayer);
+            await patchPlayerStats(awayPlayer);
+            break;
         }
     }
 }
