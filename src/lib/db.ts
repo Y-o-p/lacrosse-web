@@ -159,30 +159,37 @@ export async function editRow(tableName: string, vals: any, ids: any): Promise<a
 }
 
 export async function editUser(vals: Partial<User>, ids: Partial<User>) {
+    delete vals.user_id;
     return editRow("users", vals, ids);
 }
 
 export async function editCoach(vals: Partial<Coach>, ids: Partial<Coach>) {
+    delete vals.coach_id;
     return editRow("coaches", vals, ids);
 }
 
 export async function editGame(vals: Partial<Game>, ids: Partial<Game>) {
+    delete vals.game_id;
     return editRow("games", vals, ids);
 }
 
 export async function editPlayerStats(vals: Partial<PlayerStats>, ids: Partial<PlayerStats>) {
+    delete vals.playerstat_id;
     return editRow("player_stats", vals, ids);
 }
 
 export async function editPlayer(vals: Partial<Player>, ids: Partial<Player>) {
+    delete vals.player_id;
     return editRow("players", vals, ids);
 }
 
 export async function editScorebookSession(vals: Partial<ScorebookSession>, ids: Partial<ScorebookSession>) {
+    delete vals.session_id;
     return editRow("sk_session", vals, ids);
 }
 
 export async function editTeam(vals: Partial<Team>, ids: Partial<Team>) {
+    delete vals.team_id;
     return editRow("teams", vals, ids);
 }
 

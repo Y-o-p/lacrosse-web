@@ -1,4 +1,4 @@
-import { apiCall, getPlayerStats } from "./api";
+import { apiCall, getPlayerStats, patchPlayerStats } from "./api";
 import { toJson } from "./util";
 
 export enum ActionType {
@@ -47,32 +47,30 @@ export interface Faceoff extends ScorebookAction {
     homeWon: Boolean;
 }
 
-export async function performAction(game: BigInt, action: ScorebookAction) {
+export async function performAction(game: BigInt, action: ScorebookAction, undo = false) {
+    const polarity = undo ? -1 : 1;
     switch (action.actionType) {
         case ActionType.Shot: {
             const shot = action as Shot;
+            console.log(shot);
             var shotBy: PlayerStats = await getPlayerStats(shot.by);
-            shotBy.shots++;
+            shotBy.shots += polarity;
             if (shot.goal) {
-                shotBy.goals++;
+                shotBy.goals += polarity;
             }
-            if (shot.assistedBy !== undefined) {
+            if (shot.assistedBy !== null) {
                 var assistedBy: PlayerStats = await getPlayerStats(shot.assistedBy);
-                assistedBy.assists++;
+                assistedBy.assists += polarity;
+                await patchPlayerStats(assistedBy);
             }
-            if (shot.savedBy !== undefined) {
+            if (shot.savedBy !== null) {
                 var savedBy: PlayerStats = await getPlayerStats(shot.savedBy);
-                savedBy.saves++;
+                savedBy.saves += polarity;
+                await patchPlayerStats(savedBy);
             }
+            await patchPlayerStats(shotBy);
             console.log(shotBy);
-        }
-    }
-}
 
-export async function undoAction(game: BigInt, action: ScorebookAction) {
-    switch (action.actionType) {
-        case ActionType.Shot: {
-            
         }
     }
 }

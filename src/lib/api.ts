@@ -76,6 +76,10 @@ export async function getPlayerStats(id: BigInt): Promise<PlayerStats> {
     return player_stats;
 }
 
+export async function patchPlayerStats(stats: Partial<PlayerStats>) {
+    return apiCall<PlayerStats>("PATCH", `/api/player-stats/${stats.playerstat_id}`, stats);
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 // POST Helper Functions
 ///////////////////////////////////////////////////////////////////////////////
