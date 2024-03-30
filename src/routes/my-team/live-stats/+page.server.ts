@@ -1,4 +1,5 @@
-import { getPlayersByTeamId} from '$lib/db';
+import { apiCall } from '$lib/api.js';
+import { getPlayersByTeamId, getRowsFromVals, insertPlayerStats} from '$lib/db';
 import type { Shot } from '$lib/scorebook';
 
 
@@ -6,6 +7,26 @@ import type { Shot } from '$lib/scorebook';
 export async function load({ locals }) {
 	const homePlayers = await getPlayersByTeamId(BigInt(locals.coach.team_id));
 	const awayPlayers = await getPlayersByTeamId(BigInt(2));
+
+	const homePlayersStats = await getRowsFromVals("player_stats", { game_id: 1, team_id: locals.coach.team_id });
+	const awayPlayersStats = await getRowsFromVals("player_stats", { game_id: 1, team_id: 2 });
+
+	homePlayers.forEach(async (player) => {
+		const stats = homePlayersStats.find((stats) => player.player_id == stats.player_id);
+		if (stats === undefined) {
+			const newStats = await insertPlayerStats({
+				game_id: 1n,
+				player_id: player.player_id,
+				team_id: player.team_id
+			});
+			player.playerstat_id = newStats.playerstat_id;
+		}
+		else {
+			player.playerstat_id = stats.playerstat_id;
+		}
+	});
+
+	console.log(homePlayers);
 
 	/**let player_statsInserted = false;
 	if (!player_statsInserted) {
@@ -18,6 +39,7 @@ export async function load({ locals }) {
 			locals,
 			homePlayers: homePlayers,
 			awayPlayers: awayPlayers,
+			game: 1n
 		}
 	}
 }

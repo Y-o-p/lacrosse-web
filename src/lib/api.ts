@@ -12,7 +12,7 @@ export async function apiCall<Type>(method: string, url: string, body?: Partial<
             },
             body: body !== undefined ? toJson(body) : undefined
         });
-        const rows: Array<Type> = JSON.parse((await result.json()));
+        const rows: Array<Type> = (await result.json()) as Array<Type>;
         return rows;
     }
     catch (err) {
@@ -72,7 +72,7 @@ export async function getTeam(id: number): Promise<Team> {
 
 export async function getPlayerStats(id: BigInt): Promise<PlayerStats> {
     const result = await (await fetch(`/api/player-stats/${id}`)).json();
-    const player_stats: PlayerStats = JSON.parse(result);
+    const player_stats: PlayerStats = result as PlayerStats;
     return player_stats;
 }
 

@@ -50,7 +50,21 @@ export interface Faceoff extends ScorebookAction {
 export async function performAction(game: BigInt, action: ScorebookAction) {
     switch (action.actionType) {
         case ActionType.Shot: {
-            var shotBy: PlayerStats = await (apiCall("GET", `/api/player-stats/${(action as Shot).by}`))[0];
+            const shot = action as Shot;
+            var shotBy: PlayerStats = await getPlayerStats(shot.by);
+            shotBy.shots++;
+            if (shot.goal) {
+                shotBy.goals++;
+            }
+            if (shot.assistedBy !== undefined) {
+                var assistedBy: PlayerStats = await getPlayerStats(shot.assistedBy);
+                assistedBy.assists++;
+            }
+            if (shot.savedBy !== undefined) {
+                var savedBy: PlayerStats = await getPlayerStats(shot.savedBy);
+                savedBy.saves++;
+            }
+            console.log(shotBy);
         }
     }
 }
@@ -58,7 +72,7 @@ export async function performAction(game: BigInt, action: ScorebookAction) {
 export async function undoAction(game: BigInt, action: ScorebookAction) {
     switch (action.actionType) {
         case ActionType.Shot: {
-            // 
+            
         }
     }
 }
