@@ -17,16 +17,7 @@
     // in both rosters
 
     let modals: Array<boolean> = new Array<boolean>(Object.keys(ActionType).length);
-    let currentModal: ActionType;
-    $: {
-        currentModal = modals.findIndex((value) => (value == true))
-    } 
-
-    // Empty strings for select *options*
-    let offensivePlayerSelected = '';
-    let offensivePlayerSelected_secondary = '';
-    let defensivePlayerSelected = '';
-    let penaltyTime = '';
+    $: currentModal = modals.findIndex((value) => (value == true))
 
     // Actions
     let scorebookActions: Array<ScorebookAction> = new Array<ScorebookAction>();
@@ -119,7 +110,7 @@
         <div>
             <h1>Score</h1>
             <h3>0 - 0</h3>
-            <button on:click={() => (faceoffModal = true)}>Faceoff</button>
+            <button on:click={() => (modals[ActionType.Faceoff] = true)}>Faceoff</button>
         </div>
 
         <ActionHistory 
@@ -168,9 +159,6 @@
             {/each}
         </select>
         <button on:click={() => handleSubmitAction()}>Won</button>
-        
-        <input type="hidden" name="offensivePlayer" value={offensivePlayerSelected}>
-        <input type="hidden" name="defensivePlayer" value={defensivePlayerSelected}>
     </div>
 </Modal>
 
@@ -214,16 +202,12 @@
 
         <!-- If savee selected, show Shot Saved button
             prevents button be pressed without a savee -->
-        {#if defensivePlayerSelected != ''}
+        {#if newAction.savedBy != ''}
             <button on:click={() => { 
                 newAction.goal = false;
                 handleSubmitAction(); 
             }}>Shot Saved</button>
         {/if}
-        
-        <input type="hidden" name="offensivePlayer" value={offensivePlayerSelected}>
-        <input type="hidden" name="offensivePlayerSecondary" value={offensivePlayerSelected_secondary}>
-        <input type="hidden" name="defensivePlayer" value={defensivePlayerSelected}>
     </div>
 </Modal>
 
@@ -247,9 +231,6 @@
             {/each}
         </select>
         <button type="submit" name="button" value="Complete Turnover">Complete Turnover</button>
-        
-        <input type="hidden" name="offensivePlayer" value={offensivePlayerSelected}>
-        <input type="hidden" name="defensivePlayer" value={defensivePlayerSelected}>
     </div>
 </Modal>
 
@@ -266,8 +247,6 @@
         <hr />
         <button type="submit" name="button" value="Unsuccessful Clear">Unsuccessful</button>
         <button type="submit" name="button" value="Successful Clear">Successful</button>
-        
-        <input type="hidden" name="offensivePlayer" value={offensivePlayerSelected}>
     </div>
 </Modal>
 
@@ -291,9 +270,6 @@
         </select>
 
         <button type="submit" name="button" value="Submit">Submit</button>
-
-        <input type="hidden" name="offensivePlayer" value={offensivePlayerSelected}>
-        <input type="hidden" name="penaltyTime" value={penaltyTime}>
     </div>
 </Modal>
 
@@ -308,8 +284,5 @@
             {/each}
         </select>
         <button type="submit" name="button" value="submit">Submit</button>
-        <hr />
-        <input type="hidden" name="offensivePlayer" value={offensivePlayerSelected}>
-        <input type="hidden" name="defensivePlayer" value={defensivePlayerSelected}>
     </div>
 </Modal>
