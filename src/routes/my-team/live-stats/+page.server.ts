@@ -5,28 +5,28 @@ import type { Shot } from '$lib/scorebook';
 
 /** @type {import('./$types').PageServerLoad} */
 export async function load({ locals }) {
-	const homePlayers = await getPlayersByTeamId(BigInt(locals.coach.team_id));
-	const awayPlayers = await getPlayersByTeamId(BigInt(2));
+	const homePlayers = await getRowsFromVals("players", { team_id: BigInt(locals.coach.team_id) });
+	const awayPlayers = await getRowsFromVals("players", { team_id: BigInt(2) });
 
-	const homePlayersStats = await getRowsFromVals("player_stats", { game_id: 1, team_id: locals.coach.team_id });
-	const awayPlayersStats = await getRowsFromVals("player_stats", { game_id: 1, team_id: 2 });
+	let playerStats = await getRowsFromVals("player_stats", { game_id: 1, team_id: locals.coach.team_id });
+	playerStats = playerStats.concat(await getRowsFromVals("player_stats", { game_id: 1, team_id: 2 }));
 
-	homePlayers.forEach(async (player) => {
-		const stats = homePlayersStats.find((stats) => player.player_id == stats.player_id);
+	[...homePlayers, ...awayPlayers].forEach(async (player) => {
+		const stats = playerStats.find((stats) => player.player_id == stats.player_id);
 		if (stats === undefined) {
 			const newStats = await insertPlayerStats({
 				game_id: 1n,
 				player_id: player.player_id,
 				team_id: player.team_id
 			});
-			player.playerstat_id = newStats.playerstat_id;
+			player.playerstat_id = BigInt(newStats.playerstat_id);
 		}
 		else {
-			player.playerstat_id = stats.playerstat_id;
+			player.playerstat_id = BigInt(stats.playerstat_id);
 		}
 	});
 
-	console.log(homePlayers);
+	console.log([...homePlayers, ...awayPlayers]);
 
 	/**let player_statsInserted = false;
 	if (!player_statsInserted) {

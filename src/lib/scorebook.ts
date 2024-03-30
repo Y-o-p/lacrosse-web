@@ -103,7 +103,9 @@ export async function performAction(action: ScorebookAction, undo = false) {
         case ActionType.Turnover: {
             const turnover = action as Turnover;
             var turnoverBy: PlayerStats = await getPlayerStats(turnover.by.playerstat_id);
+            console.log(turnoverBy);
             var turnoverCausedBy: PlayerStats = await getPlayerStats(turnover.causedBy.playerstat_id);
+            console.log(turnoverCausedBy);
             break;
             // NOTE: there is no turnover stat
         }
