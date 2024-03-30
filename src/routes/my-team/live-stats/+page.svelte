@@ -3,7 +3,7 @@
     import ActionHistory from './actionHistory.svelte';
     import { onMount, onDestroy } from 'svelte';
 
-    import type { PageServerData } from "./$types";
+    import type { Snapshot, PageServerData } from "./$types";
     import { type ScorebookAction, ActionType, performAction } from '$lib/scorebook';
     export let data: PageServerData;    // Locals {props.homePlayers & props.coach}
 
@@ -40,6 +40,15 @@
         successful: false
     };
     $: newAction.actionType = currentModal;
+
+    export const snapshot: Snapshot<Array<ScorebookAction>> = {
+        capture: () => scorebookActions,
+        restore: (value) => (scorebookActions = value),
+    };
+
+    window.onbeforeunload = function() {
+        return true;
+    };
 
     let quarterLength = 15;
     let currentTime = 0;
