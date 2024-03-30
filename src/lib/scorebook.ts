@@ -38,6 +38,10 @@ export interface Penalty extends ScorebookAction {
     duration: number;
 }
 
+export interface GroundBall extends ScorebookAction {
+    by: Player;
+}
+
 export interface Timeout extends ScorebookAction {
 }
 
@@ -65,6 +69,10 @@ export function actionToString(action: ScorebookAction) {
             const penalty = action as Penalty;
             return `${penalty.by.first_name} ${penalty.by.last_name} got a penalty`;
         }
+        case ActionType.GroundBall: {
+            const ground = action as GroundBall;
+            return `${ground.by.first_name} ${ground.by.last_name} recovered the ball`;
+        }
         case ActionType.Timeout: {
             const timeout = action as Timeout;
             return `Timeout`;
@@ -82,6 +90,9 @@ export async function performAction(action: ScorebookAction, undo = false) {
     switch (action.actionType) {
         case ActionType.Shot: {
             const shot = action as Shot;
+            if (shot.by === null) {
+                throw new Error("Missing parameters");
+            }
             var shotBy: PlayerStats = await getPlayerStats(shot.by.playerstat_id);
             shotBy.shots += polarity;
             if (shot.goal) {
@@ -102,6 +113,9 @@ export async function performAction(action: ScorebookAction, undo = false) {
         }
         case ActionType.Turnover: {
             const turnover = action as Turnover;
+            if (turnover.by === null || turnover.causedBy === null) {
+                throw new Error("Missing parameters");
+            }
             var turnoverBy: PlayerStats = await getPlayerStats(turnover.by.playerstat_id);
             console.log(turnoverBy);
             var turnoverCausedBy: PlayerStats = await getPlayerStats(turnover.causedBy.playerstat_id);
@@ -111,6 +125,9 @@ export async function performAction(action: ScorebookAction, undo = false) {
         }
         case ActionType.ClearAttempted: {
             const clear = action as ClearAttempted;
+            if (clear.by === null) {
+                throw new Error("Missing parameters");
+            }
             var clearAttemptedBy: PlayerStats = await getPlayerStats(clear.by.playerstat_id);
             clearAttemptedBy.clears_attempted += polarity;
             if (clear.successful) {
@@ -121,9 +138,23 @@ export async function performAction(action: ScorebookAction, undo = false) {
         }
         case ActionType.Penalty: {
             const penalty = action as Penalty;
+            if (penalty.by === null) {
+                throw new Error("Missing parameters");
+            }
             var penaltyBy: PlayerStats = await getPlayerStats(penalty.by.playerstat_id);
             penaltyBy.penalties += polarity;
             await patchPlayerStats(penaltyBy);
+            break;
+        }
+        case ActionType.GroundBall: {
+            const ground = action as GroundBall;
+            if (ground.by === null) {
+                throw new Error("Missing parameters");
+            }
+            // NOTE: there is no ground ball stat
+            var groundBy: PlayerStats = await getPlayerStats(ground.by.playerstat_id);
+            //groundBy. += polarity;
+            //await patchPlayerStats(penaltyBy);
             break;
         }
         case ActionType.Timeout: {
@@ -132,6 +163,9 @@ export async function performAction(action: ScorebookAction, undo = false) {
         }
         case ActionType.Faceoff: {
             const faceoff = action as Faceoff;
+            if (faceoff.homePlayer === null || faceoff.awayPlayer === null) {
+                throw new Error("Missing parameters");
+            }
             var homePlayer: PlayerStats = await getPlayerStats(faceoff.homePlayer.playerstat_id);
             var awayPlayer: PlayerStats = await getPlayerStats(faceoff.awayPlayer.playerstat_id);
             if (faceoff.homeWon) {

@@ -20,10 +20,13 @@
 
 </script>
 
-{#each actions as action}
-    <li>
-        {actionToString(action)}
-        <button on:click={ () => { selectedAction = actions.indexOf(action); dispatch("edit"); }}>Edit</button>
-        <button on:click={ async () => undo(action) }>Undo</button>
-    </li>
-{/each}
+<h1>Game History</h1>
+<div style="overflow-y:scroll;max-height: 100px;">
+    {#each actions as action}
+        <li>
+            {actionToString(action)}
+            <button on:click={ () => { selectedAction = actions.indexOf(action); dispatch("edit"); }}>Edit</button>
+            <button on:click={ async () => undo(action) }>Undo</button>
+        </li>
+    {/each}
+</div>
