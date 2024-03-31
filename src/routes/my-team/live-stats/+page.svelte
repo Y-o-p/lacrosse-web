@@ -144,7 +144,7 @@
             newAction = Object.assign({}, scorebookActions[selectedAction]); 
             console.log(newAction);
         }}>
-            <div class="action-list-header" slot="header">
+            <div slot="header">
                 <table>
                     <tr>
                         <th class="action-list-header">{formatTime(currentTime)}</th> 
@@ -153,6 +153,11 @@
                     <tr></tr>
                     <tr></tr>
                 </table>
+            </div>
+
+            <div slot="footer">
+                <button>Half Time</button>
+                <button>End Game</button>
             </div>
         </ActionHistory>
 
@@ -358,19 +363,5 @@
         margin-left: auto;
         margin-right: auto;
         text-align: center;
-    }
-
-    .action-list-header {
-        margin-left: auto;
-        text-align: center;
-        margin-right: auto;
-    }
-
-    .action-list-header th {
-        padding: 0px;
-        margin-left: auto;
-        margin-right: auto;
-        text-align: center;
-        width: 50%;
     }
 </style>

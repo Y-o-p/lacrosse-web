@@ -34,6 +34,7 @@
             </div>
         {/each}
     </div>
+    <slot class="footer" name="footer" />
 </div>
 
 <style>
@@ -45,15 +46,17 @@
         border-radius: 10px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         max-width: 600px;
-        min-height: 300px;
+        height: 300px;
         margin-left: auto;
         margin-right: auto;
         text-align: center;
+        display: flex;
+        flex-direction: column;
     }
 
     /* Style for action container */
     .actions-container {
-        max-height: 220px;
+        flex: 1;
         overflow-y: scroll;
     }
 
@@ -95,5 +98,11 @@
     .edit {
         margin-right: 5px;
         margin-left: auto;
+    }
+
+    .footer {
+        margin-top: auto;
+        justify-content: space-between;
+        align-items: center;
     }
 </style>
