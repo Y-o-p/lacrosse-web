@@ -43,12 +43,19 @@
 
     export const snapshot: Snapshot<Array<ScorebookAction>> = {
         capture: () => scorebookActions,
-        restore: (value) => (scorebookActions = value),
+        restore: (actions) => {
+            actions.forEach((action) => {
+                action.date = new Date(action.date);
+            });
+            scorebookActions = actions;
+        }
     };
 
-    window.onbeforeunload = function() {
-        return true;
-    };
+    function beforeUnload(event) {
+        event.preventDefault();
+        event.returnValue = '';
+        return '...';
+    }
 
     let quarterLength = 15;
     let currentTime = 0;
@@ -110,6 +117,8 @@
     }
 </script>
 
+<svelte:window on:beforeunload={beforeUnload}/>
+
 <main>
     <div>    
         <div class="team-container">
@@ -124,7 +133,7 @@
         </div>
 
         <div class="faceoff">            
-            <button on:click={() => (handleNewAction(ActionType.Faceoff))}>Faceoff</button>
+            <button on:click={() => {handleNewAction(ActionType.Faceoff);}}>Faceoff</button>
         </div>
     
         <ActionHistory 
@@ -165,7 +174,7 @@
     <h1 slot="header">FACEOFF</h1>
     <form>
         <div class="turnover-modal" style="display: table;">
-            <label for="homePlayerSelect">Home Player:</label>
+            <label for={newAction.awayPlayer}>Home Player:</label>
             <select bind:value={newAction.homePlayer} on:change={handleSelection} required>
                 <option value={null}>Offensive Player</option>
                 {#each selectedPlayers as player}
@@ -178,7 +187,7 @@
             } }>Won</button>
             <hr />
             
-            <label for="awayPlayerSelect">Away Player:</label>
+            <label for={newAction.awayPlayer}>Away Player:</label>
             <select bind:value={newAction.awayPlayer} on:change={handleSelection} required>
                 <option value={null}>Defensive Player</option>
                 {#each unselectedPlayers as player}
@@ -198,14 +207,14 @@
     <h1 slot="header">HOME TEAM SHOT ATTEMPT</h1>
     <form>
         <div class="shot-modal" style="display: table;">
-            <label for={null}>Shot by:</label>
+            <label for={newAction.by}>Shot by:</label>
             <select bind:value={newAction.by} on:change={handleSelection} required>
                 <option value={null}>Select Player</option>
                 {#each selectedPlayers as player}
                     <option value={player}>{player.last_name}</option>
                 {/each}
             </select>
-            <label for={null}>Assisted By:</label>
+            <label for={newAction.assistedBy}>Assisted By:</label>
             <select bind:value={newAction.assistedBy} on:change={handleSelection}>
                 <option value={null}>Select Assist</option>
                 {#each selectedPlayers as player}
@@ -226,7 +235,7 @@
                 <hr />
             {/if}
 
-            <label for="AwaySavee">Saved By:</label>
+            <label for={newAction.savedBy}>Saved By:</label>
             <select bind:value={newAction.savedBy} on:change={handleSelection}>
                 <option value={null}>Select Save</option>
                 {#each unselectedPlayers as player}
@@ -250,7 +259,7 @@
     <h1 slot="header">HOME TEAM TURNOVER</h1>
     <form>
         <div class="turnover-modal" style="display: table;">
-            <label for="playerSelect">Made by:</label>
+            <label for={newAction.by}>Made by:</label>
             <select bind:value={newAction.by} on:change={handleSelection} required>
                 <option value={null}>Offensive Player</option>
                 {#each selectedPlayers as player}
@@ -259,8 +268,8 @@
             </select>
             <hr />
             
-            <label for="awayPlayerSelect">Caused By:</label>
-            <select bind:value={newAction.causedBy} on:change={handleSelection} required>
+            <label for={newAction.causedBy}>Caused By:</label>
+            <select bind:value={newAction.causedBy} on:change={handleSelection}>
                 <option value={null}>Defensive Player</option>
                 {#each unselectedPlayers as player}
                     <option value={player}>{player.last_name}</option>
@@ -275,7 +284,7 @@
     <h1 slot="header">HOME TEAM TURNOVER</h1>
     <form>
         <div class="clear-modal" style="display: table;">
-            <label for="playerSelect">Clear by:</label>
+            <label for={newAction.by}>Clear by:</label>
             <select bind:value={newAction.by} on:change={handleSelection}>
                 <option value={null}>Offensive Player</option>
                 {#each selectedPlayers as player}
@@ -299,7 +308,7 @@
     <h1 slot="header">HOME TEAM PENALTY</h1>
     <form>
         <div class="penalty-modal" style="display: table;">
-            <label for="playerSelect">Penalty by:</label>
+            <label for={newAction.by}>Penalty by:</label>
             <select bind:value={newAction.by} on:change={handleSelection} required>
                 <option value={null}>Offensive Player</option>
                 {#each selectedPlayers as player}
@@ -307,7 +316,7 @@
                 {/each}
             </select>
             <hr />
-            <label for="penaltyDuration">Duration:</label>
+            <label for={newAction.duration}>Duration:</label>
             <select bind:value={newAction.duration} on:change={handleSelection} required>
                 <option value={null}>Offensive Player</option>
                 {#each penaltyTimes as time}
@@ -324,7 +333,7 @@
     <h1 slot="header">GROUNDBALL RECOVERED</h1>
     <form>
         <div class="turnover-modal" style="display: table;">
-            <label for="homePlayerSelect">Offensive Player:</label>
+            <label for={newAction.by}>Offensive Player:</label>
             <select bind:value={newAction.by} on:change={handleSelection} required>
                 <option value={null}>Offensive Player</option>
                 {#each selectedPlayers as player}

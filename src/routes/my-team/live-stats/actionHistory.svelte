@@ -22,41 +22,6 @@
 
 </script>
 
-<!-- <div class="gameHistory">
-    <h1>Game History</h1>
-    <div style="overflow-y:scroll;max-height: 100px;">
-        {#each actions as action (action.date)}
-            <div in:fade out:fly={{x: 50}} animate:flip={{ duration: 400 }}>
-                {action.date.getHours()}:{action.date.getMinutes()} {actionToString(action)}
-                <button on:click={ () => { selectedAction = actions.indexOf(action); dispatch("edit"); }}>Edit</button>
-                <button class="btn" on:click={ async () => undo(action) }><FaSolidUndoAlt /></button>
-                
-
-            </div>
-        {/each}
-    </div>
-</div>
-<style>
-    /* Style buttons */
-    .btn {
-        background-color: lightgrey; /* Blue background */
-        border: none; /* Remove borders */
-        color: white; /* White text */
-        padding: 3px 4px; /* Some padding */
-        font-size: 16px; /* Set a font size */
-        cursor: pointer; /* Mouse pointer on hover */
-    }
-
-    /* Darker background on mouse-over */
-    .btn:hover {
-        background-color: RoyalBlue;
-    }
-
-    .gameHistory {
-        background: green
-    }
-</style> -->
-
 <div class="game-history">
     <slot name="header" />
     <div class="actions-container">

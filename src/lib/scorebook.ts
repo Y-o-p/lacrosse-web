@@ -25,7 +25,7 @@ export interface Shot extends ScorebookAction {
 
 export interface Turnover extends ScorebookAction {
     by: Player;
-    causedBy: Player;
+    causedBy?: Player;
 }
 
 export interface ClearAttempted extends ScorebookAction {
@@ -55,23 +55,51 @@ export function actionToString(action: ScorebookAction) {
     switch (action.actionType) {
         case ActionType.Shot: {
             const shot = action as Shot;
-            return `${shot.by.first_name} ${shot.by.last_name} shot`;
+            //console.log(shot);
+            var message = "";
+            if (shot.savedBy !== null) {
+                message = `Save by ${shot.savedBy.last_name}, shot by ${shot.by.last_name}`
+            }
+            else if (shot.goal) {
+                message = `Goal by ${shot.by.last_name}`
+            }
+            else {
+                message = `Shot by ${shot.by.last_name}`
+            }
+
+            if (shot.assistedBy !== null) {
+                message += `, assist by ${shot.assistedBy.last_name}`
+            }
+            return message;
         }
         case ActionType.Turnover: {
             const turnover = action as Turnover;
-            return `${turnover.by.first_name} ${turnover.by.last_name} turnover`;
+            var message = `Turnover by ${turnover.by.last_name}`;
+            if (turnover.causedBy !== null) {
+                message += `, caused by ${turnover.causedBy.last_name}`;
+            }
+            return message;
         }
         case ActionType.ClearAttempted: {
             const clearAttempted = action as ClearAttempted;
-            return `${clearAttempted.by.first_name} ${clearAttempted.by.last_name} clear attempted`;
+            if (clearAttempted.successful) {
+                return `Clear by ${clearAttempted.by.last_name}`;
+            }
+            else {
+                return `Clear attempted by ${clearAttempted.by.last_name}`;
+            }
         }
         case ActionType.Penalty: {
             const penalty = action as Penalty;
-            return `${penalty.by.first_name} ${penalty.by.last_name} got a penalty`;
+            var message = `Penalty on ${penalty.by.last_name}`;
+            if (penalty.duration !== null) {
+                message += `, out for ${penalty.duration} minutes`;
+            }
+            return message;
         }
         case ActionType.GroundBall: {
             const ground = action as GroundBall;
-            return `${ground.by.first_name} ${ground.by.last_name} recovered the ball`;
+            return `Ground ball recovered by ${ground.by.last_name}`;
         }
         case ActionType.Timeout: {
             const timeout = action as Timeout;
@@ -79,7 +107,9 @@ export function actionToString(action: ScorebookAction) {
         }
         case ActionType.Faceoff: {
             const faceoff = action as Faceoff;
-            return `${faceoff.homePlayer.first_name} ${faceoff.homePlayer.last_name} faced ${faceoff.awayPlayer.first_name} ${faceoff.awayPlayer.last_name}`;
+            const wonBy = faceoff.homeWon ? faceoff.homePlayer : faceoff.awayPlayer;
+            const lostBy = faceoff.homeWon ? faceoff.awayPlayer : faceoff.homePlayer;
+            return `Faceoff won by ${wonBy.last_name}, lost by ${lostBy.last_name}`;
         }
     }
     return action.date;
@@ -113,13 +143,13 @@ export async function performAction(action: ScorebookAction, undo = false) {
         }
         case ActionType.Turnover: {
             const turnover = action as Turnover;
-            if (turnover.by === null || turnover.causedBy === null) {
+            if (turnover.by === null) {
                 throw new Error("Missing parameters");
             }
             var turnoverBy: PlayerStats = await getPlayerStats(turnover.by.playerstat_id);
-            console.log(turnoverBy);
-            var turnoverCausedBy: PlayerStats = await getPlayerStats(turnover.causedBy.playerstat_id);
-            console.log(turnoverCausedBy);
+            if (turnover.causedBy !== null) {
+                var turnoverCausedBy: PlayerStats = await getPlayerStats(turnover.causedBy.playerstat_id);
+            }
             break;
             // NOTE: there is no turnover stat
         }

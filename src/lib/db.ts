@@ -147,15 +147,10 @@ export async function editRow(tableName: string, vals: any, ids: any): Promise<a
             query += `AND ${idColNames[i]} = '${idNames[i]}'`;
         }
     }
-    query += ';';
+    query += ' RETURNING *;';
 
-    try {
-        const result = await pool.query(query);
-        return result.rows[0];
-    }
-    catch (error) {
-        throw error;
-    }
+    const result = await pool.query(query);
+    return result.rows[0];
 }
 
 export async function editUser(vals: Partial<User>, ids: Partial<User>) {

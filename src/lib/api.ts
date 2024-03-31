@@ -70,7 +70,7 @@ export async function getTeam(id: number): Promise<Team> {
     }
 }
 
-export async function getPlayerStats(id: BigInt): Promise<PlayerStats> {
+export async function getPlayerStats(id): Promise<PlayerStats> {
     const result = await (await fetch(`/api/player-stats/${id}`)).json();
     const player_stats: PlayerStats = result as PlayerStats;
     return player_stats;

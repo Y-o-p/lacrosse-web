@@ -11,7 +11,8 @@ export async function GET({ params }) {
 /** @type {import('./$types').RequestHandler} */
 export async function PATCH({ params, request }) {
     return responseFromFunction(async () => {
-        return editPlayerStats(await request.json() as PlayerStats, {player_id: BigInt(params.id)});
+        let j = await request.json();
+        return editPlayerStats(j as PlayerStats, {player_id: BigInt(params.id)});
     });
 }
 
