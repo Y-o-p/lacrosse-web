@@ -89,7 +89,7 @@
             newAction.date = new Date();
             try {
                 await performAction(newAction); 
-                scorebookActions = [...scorebookActions, newAction];
+                scorebookActions = [newAction, ...scorebookActions];
             }
             catch {
                 alert("Could not submit action");
@@ -111,10 +111,8 @@
 </script>
 
 <main>
-    <div>
-        <h2>{formatTime(currentTime)}</h2>
-    
-        <div>
+    <div>    
+        <div class="team-container">
             <h1>Home Team</h1>
             <button on:click={() => {handleNewAction(ActionType.Shot);}}>Shot</button>
             <button on:click={() => {handleNewAction(ActionType.Turnover);}}>Turnover Made</button>
@@ -125,21 +123,8 @@
             <button on:click={() => {handleNewAction(ActionType.Timeout);}}>Timeout</button>
         </div>
 
-        <div>
-            <h1>Score</h1>
-            <h3>0 - 0</h3>
+        <div class="faceoff">            
             <button on:click={() => (handleNewAction(ActionType.Faceoff))}>Faceoff</button>
-        </div>
-    
-        <div>
-            <h1>Away Team</h1>
-            <button on:click={() => {handleNewAction(ActionType.Shot, false);}}>Shot</button>
-            <button on:click={() => {handleNewAction(ActionType.Turnover, false);}}>Turnover Made</button>
-            <button on:click={() => {handleNewAction(ActionType.ClearAttempted, false);}}>Clear Attempted</button>
-            <button on:click={() => {handleNewAction(ActionType.Penalty, false);}}>Penalty</button>
-            <button on:click={() => {handleNewAction(ActionType.GroundBall, false);}}>Ground Ball</button>
-            <button on:click={() => {handleNewAction(ActionType.Sub, false);}}>Sub</button>
-            <button on:click={() => {handleNewAction(ActionType.Timeout, false);}}>Timeout</button>
         </div>
     
         <ActionHistory 
@@ -149,8 +134,29 @@
             modals[scorebookActions[selectedAction].actionType] = true;
             newAction = Object.assign({}, scorebookActions[selectedAction]); 
             console.log(newAction);
-        }}
-        ></ActionHistory>
+        }}>
+            <div class="action-list-header" slot="header">
+                <table>
+                    <tr>
+                        <th class="action-list-header">{formatTime(currentTime)}</th> 
+                        <th class="action-list-header">0 - 0</th>
+                    </tr>
+                    <tr></tr>
+                    <tr></tr>
+                </table>
+            </div>
+        </ActionHistory>
+
+        <div class="team-container">
+            <h1>Away Team</h1>
+            <button on:click={() => {handleNewAction(ActionType.Shot, false);}}>Shot</button>
+            <button on:click={() => {handleNewAction(ActionType.Turnover, false);}}>Turnover Made</button>
+            <button on:click={() => {handleNewAction(ActionType.ClearAttempted, false);}}>Clear Attempted</button>
+            <button on:click={() => {handleNewAction(ActionType.Penalty, false);}}>Penalty</button>
+            <button on:click={() => {handleNewAction(ActionType.GroundBall, false);}}>Ground Ball</button>
+            <button on:click={() => {handleNewAction(ActionType.Sub, false);}}>Sub</button>
+            <button on:click={() => {handleNewAction(ActionType.Timeout, false);}}>Timeout</button>
+        </div>
 
     </div>
 </main>
@@ -331,3 +337,31 @@
         </div>
     </form>
 </Modal>
+
+<style>
+    .team-container {
+        margin-left: auto;
+        margin-right: auto;
+        text-align: center;
+    }
+
+    .faceoff {
+        margin-left: auto;
+        margin-right: auto;
+        text-align: center;
+    }
+
+    .action-list-header {
+        margin-left: auto;
+        text-align: center;
+        margin-right: auto;
+    }
+
+    .action-list-header th {
+        padding: 0px;
+        margin-left: auto;
+        margin-right: auto;
+        text-align: center;
+        width: 50%;
+    }
+</style>
