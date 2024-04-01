@@ -5,7 +5,7 @@ import { error, json } from '@sveltejs/kit';
 import pg from 'pg';
 
 export const pool = new pg.Pool({
-    database: import.meta.env.VITE_PGDATABASE || "master",
+    database: import.meta.env.VITE_PGDATABASE || "postgres",
     user: import.meta.env.VITE_PGUSER || "postgres",
     host: import.meta.env.VITE_PGHOST || "localhost",
     port: (Number(import.meta.env.VITE_PGPORT || 5432 )),
@@ -324,5 +324,18 @@ export async function setCoachTeamId(coachId: bigint, teamId: bigint): Promise <
         throw new Error(`Error updating coach team ID, given teamID: ${error.message}`);
 
     }
+}
 
+export async function getAllTeams(): Promise<Team[]> {
+    return new Promise<Team[]>((resolve, reject) => {
+        const query = `SELECT * FROM teams`;
+
+        pool.query(query)
+            .then((result) => {
+                resolve(result.rows);
+            })
+            .catch((error) => {
+                reject(error);
+            });
+    });
 }
