@@ -9,7 +9,7 @@ export const pool = new pg.Pool({
     user: import.meta.env.VITE_PGUSER || "postgres",
     host: import.meta.env.VITE_PGHOST || "localhost",
     port: (Number(import.meta.env.VITE_PGPORT || 5432 )),
-    password: import.meta.env.VITE_PGDATABASE || "S9388420",
+    password: import.meta.env.VITE_PGDATABASE || "ident",
 })
 
 async function queryFromVals(action: string, tableName: string, object?: any) {
@@ -87,44 +87,6 @@ export async function insertRow(tableName: string, object: any): Promise<any> {
     }
 }
 
-export async function editRow(tableName: string, vals: any, ids: any): Promise<any> {
-    return new Promise<any>((resolve, reject) => {
-        let query = `UPDATE ${tableName} SET`;
-        let valColNames = Object.keys(vals);
-        let valNames = Object.values(vals);
-        for (let i = 0; i < Object.keys(vals).length; i++) {
-            query += ` ${valColNames[i]} = '${valNames[i]}'`
-            if (i != Object.keys(vals).length - 1) {
-                query += ','
-            }
-        }
-
-        let idColNames = Object.keys(ids);
-        let idNames = Object.values(ids);
-        for (let i = 0; i < Object.keys(ids).length; i++) {
-            query += ' ';
-            if (i == 0) {
-                query += `WHERE ${idColNames[i]} = '${idNames[i]}'`;
-            } else {
-                query += `AND ${idColNames[i]} = '${idNames[i]}'`;
-            }
-        }
-        query += ';';
-
-        console.log(query);
-        const result = pool.query(query);
-        //const result = null;
-        result.then((innerResult) => {
-            const data = innerResult.rows[0];
-            resolve(data);
-        }).catch((error) => {
-            reject(error);
-        });
-    })
-}
-
-
-
 export async function insertUser(user: Partial<User>): Promise<any> {
     delete user.user_id;
     return insertRow("users", user);
@@ -150,14 +112,6 @@ export async function insertPlayer(player: Partial<Player>): Promise<any> {
     return insertRow("players", player);
 }
 
-export async function editUser(vals: Partial<User>, ids: Partial<User>) {
-    return editRow("users", vals, ids);
-}
-
-export async function editCoach(vals: Partial<User>, ids: Partial<User>) {
-    return editRow("coaches", vals, ids);
-}
-
 export async function insertScorebookSession(scorebookSession: Partial<ScorebookSession>): Promise<any> {
     delete scorebookSession.session_id;
     return insertRow("sk_session", scorebookSession);
@@ -166,6 +120,72 @@ export async function insertScorebookSession(scorebookSession: Partial<Scorebook
 export async function insertTeam(team: Partial<Team>): Promise<any> {
     delete team.team_id;
     return insertRow("teams", team);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// EDIT Functions
+///////////////////////////////////////////////////////////////////////////////
+
+export async function editRow(tableName: string, vals: any, ids: any): Promise<any> {
+    let query = `UPDATE ${tableName} SET`;
+    let valColNames = Object.keys(vals);
+    let valNames = Object.values(vals);
+    for (let i = 0; i < Object.keys(vals).length; i++) {
+        query += ` ${valColNames[i]} = '${valNames[i]}'`
+        if (i != Object.keys(vals).length - 1) {
+            query += ','
+        }
+    }
+
+    let idColNames = Object.keys(ids);
+    let idNames = Object.values(ids);
+    for (let i = 0; i < Object.keys(ids).length; i++) {
+        query += ' ';
+        if (i == 0) {
+            query += `WHERE ${idColNames[i]} = '${idNames[i]}'`;
+        } else {
+            query += `AND ${idColNames[i]} = '${idNames[i]}'`;
+        }
+    }
+    query += ' RETURNING *;';
+
+    const result = await pool.query(query);
+    return result.rows[0];
+}
+
+export async function editUser(vals: Partial<User>, ids: Partial<User>) {
+    delete vals.user_id;
+    return editRow("users", vals, ids);
+}
+
+export async function editCoach(vals: Partial<Coach>, ids: Partial<Coach>) {
+    delete vals.coach_id;
+    return editRow("coaches", vals, ids);
+}
+
+export async function editGame(vals: Partial<Game>, ids: Partial<Game>) {
+    delete vals.game_id;
+    return editRow("games", vals, ids);
+}
+
+export async function editPlayerStats(vals: Partial<PlayerStats>, ids: Partial<PlayerStats>) {
+    delete vals.playerstat_id;
+    return editRow("player_stats", vals, ids);
+}
+
+export async function editPlayer(vals: Partial<Player>, ids: Partial<Player>) {
+    delete vals.player_id;
+    return editRow("players", vals, ids);
+}
+
+export async function editScorebookSession(vals: Partial<ScorebookSession>, ids: Partial<ScorebookSession>) {
+    delete vals.session_id;
+    return editRow("sk_session", vals, ids);
+}
+
+export async function editTeam(vals: Partial<Team>, ids: Partial<Team>) {
+    delete vals.team_id;
+    return editRow("teams", vals, ids);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
