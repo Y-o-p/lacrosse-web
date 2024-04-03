@@ -25,7 +25,7 @@
         }
         .container {
             max-width: 80% ;
-            margin: 15px 10px;
+            margin: 20px 10px;
             padding: 20px;
             background-color: #88c070;
             border-radius: 8px;
@@ -187,3 +187,12 @@
     </script>
 </body>
 </html>
+
+<style>
+    html {
+        margin-top: 135px;
+        margin-bottom: 100px;
+        margin-left: 10px;
+        margin-right: 110px;
+    }
+</style>
