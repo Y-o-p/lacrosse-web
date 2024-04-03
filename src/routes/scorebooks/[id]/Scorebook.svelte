@@ -3,16 +3,17 @@
     import ActionHistory from './actionHistory.svelte';
     import { onMount, onDestroy } from 'svelte';
 
-    import type { Snapshot, PageServerData } from "./$types";
+    import type { Snapshot } from "./$types";
     import { type ScorebookAction, ActionType, performAction } from '$lib/scorebook';
-    export let data: PageServerData;    // Locals {props.homePlayers & props.coach}
+    import { getGame, patchGame } from '$lib/api';
 
     // ROSTER DATA
-    let home_players_roster = data.props.homePlayers; // Set Home Roster
-    let away_players_roster = data.props.awayPlayers; // Default away players
+    export let game;
+    export let homePlayers;
+    export let awayPlayers;
     let homeSelected = true;
-    $: selectedPlayers = homeSelected ? home_players_roster : away_players_roster;
-    $: unselectedPlayers = homeSelected ? away_players_roster : home_players_roster;
+    $: selectedPlayers = homeSelected ? homePlayers : awayPlayers;
+    $: unselectedPlayers = homeSelected ? awayPlayers : homePlayers;
 
     let penaltyTimes = ["5", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55", "60"];
 
@@ -115,6 +116,13 @@
         }
         newAction = Object.assign({}, newAction);
     }
+
+    async function publish() {
+        let newGame = await getGame(game.game_id);
+        newGame.published = true;
+        await patchGame(newGame);
+        game = newGame;
+    }
 </script>
 
 <svelte:window on:beforeunload={beforeUnload}/>
@@ -157,7 +165,7 @@
 
             <div slot="footer">
                 <button>Half Time</button>
-                <button>End Game</button>
+                <button on:click={() => { publish() }}>End Game</button>
             </div>
         </ActionHistory>
 

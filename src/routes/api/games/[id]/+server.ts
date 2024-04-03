@@ -1,11 +1,19 @@
 import { responseFromFunction } from '$lib/api_util.js';
-import { deleteGame, getGame } from '$lib/db.js';
+import { deleteGame, editGame, getGame } from '$lib/db.js';
 import { json } from '@sveltejs/kit';
 import { editRow } from '$lib/db'; 
 
 export async function GET({ params }) {
     return responseFromFunction(async () => {
         return getGame(Number(params.id));
+    });
+}
+
+/** @type {import('./$types').RequestHandler} */
+export async function PATCH({ params, request }) {
+    return responseFromFunction(async () => {
+        let j = await request.json();
+        return editGame(j as Game, {game_id: BigInt(params.id)});
     });
 }
 
