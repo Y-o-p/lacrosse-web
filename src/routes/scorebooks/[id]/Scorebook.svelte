@@ -5,6 +5,7 @@
 
     import type { Snapshot } from "./$types";
     import { type ScorebookAction, ActionType, performAction } from '$lib/scorebook';
+    import { getGame, patchGame } from '$lib/api';
 
     // ROSTER DATA
     export let game;
@@ -115,6 +116,13 @@
         }
         newAction = Object.assign({}, newAction);
     }
+
+    async function publish() {
+        let newGame = await getGame(game.game_id);
+        newGame.published = true;
+        await patchGame(newGame);
+        game = newGame;
+    }
 </script>
 
 <svelte:window on:beforeunload={beforeUnload}/>
@@ -157,7 +165,7 @@
 
             <div slot="footer">
                 <button>Half Time</button>
-                <button>End Game</button>
+                <button on:click={() => { publish() }}>End Game</button>
             </div>
         </ActionHistory>
 
