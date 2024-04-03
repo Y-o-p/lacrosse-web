@@ -26,7 +26,8 @@ interface Game {
     hometeam_id: bigint,
     awayteam_id: bigint,
     game_date: Date, 
-    game_field: string
+    game_field: string,
+    published: boolean,
 }
 
 interface ScorebookSession {
