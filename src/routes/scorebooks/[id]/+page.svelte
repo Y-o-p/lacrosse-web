@@ -1,6 +1,12 @@
 <script lang="ts">
-	/** @type {import('./$types').PageData} */
-	export let data;
+    import type { PageServerData } from "./$types";
+    import Scorebook from "./Scorebook.svelte";
+    export let data: PageServerData;
+
 </script>
 
-<h1>Scorebook {data.id}</h1>
+<Scorebook 
+    bind:homePlayers={data.props.homePlayers}
+    bind:awayPlayers={data.props.awayPlayers}
+    bind:game={data.props.game}
+></Scorebook>
