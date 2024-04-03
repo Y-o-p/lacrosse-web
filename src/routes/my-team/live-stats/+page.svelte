@@ -6,6 +6,7 @@
 </script>
 
 <Scorebook 
-    bind:home_players_roster={data.props.homePlayers}
-    bind:away_players_roster={data.props.awayPlayers} 
+    bind:homePlayers={data.props.homePlayers}
+    bind:awayPlayers={data.props.awayPlayers}
+    bind:game={data.props.game}
 ></Scorebook>

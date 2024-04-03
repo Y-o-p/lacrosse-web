@@ -7,11 +7,12 @@
     import { type ScorebookAction, ActionType, performAction } from '$lib/scorebook';
 
     // ROSTER DATA
-    export let home_players_roster; // Set Home Roster
-    export let away_players_roster; // Default away players
+    export let game;
+    export let homePlayers;
+    export let awayPlayers;
     let homeSelected = true;
-    $: selectedPlayers = homeSelected ? home_players_roster : away_players_roster;
-    $: unselectedPlayers = homeSelected ? away_players_roster : home_players_roster;
+    $: selectedPlayers = homeSelected ? homePlayers : awayPlayers;
+    $: unselectedPlayers = homeSelected ? awayPlayers : homePlayers;
 
     let penaltyTimes = ["5", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55", "60"];
 
