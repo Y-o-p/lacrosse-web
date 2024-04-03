@@ -1,10 +1,8 @@
 <script lang="ts">
     import Table from "./table.svelte";
     import type { PageServerData } from "./$types";
-    import { onMount } from "svelte";
 
     export let data: PageServerData;
-    let games;
 
     let recentGames = data.locals.recentGames;
     let blueStyle = "blueTable";
@@ -12,9 +10,25 @@
 
 <main>
     <h1>Locrosse E-Scorebook</h1>
-
     <h2>Recent Games</h2>
-    <Table tableData={recentGames} style={blueStyle}/>
+    <div class="table-wrapper">
+        <Table tableData={recentGames} style={blueStyle}/>
+    </div>
 </main>
+
+<style>
+    main {
+        margin-top: 130px;
+        margin-bottom: 100px;
+        margin-left: 10px;
+        margin-right: 110px;
+    }
+
+    .table-wrapper {
+		max-height: 30%;
+		overflow-y: auto;
+		max-width: 100%;
+	}
+</style>
 
   

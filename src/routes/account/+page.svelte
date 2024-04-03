@@ -5,10 +5,6 @@
     export let data: PageServerData;
 
     let teamName = "none";
-    //if (data.coach.team_id == null || data.coach.team_id == "") {
-    //    teamName = "None";
-    //}
-
     let editModal = false;
 </script>
 
@@ -74,6 +70,13 @@
 </Modal>
 
 <style>
+    main {
+        margin-top: 130px;
+        margin-bottom: 100px;
+        margin-left: 10px;
+        margin-right: 110px;
+    }
+
     .accountInfo {
         font-size: 20px;
         width: 75%;

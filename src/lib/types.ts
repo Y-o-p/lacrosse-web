@@ -94,11 +94,42 @@ interface User {
 ///////////////////////////////////////////////////////////////////////////////
 // Page Table Data:
 ///////////////////////////////////////////////////////////////////////////////
-interface RecentGame {
+interface GameTable {
     "Game Date": Date,
     "Game Field": string,
     "Home Team": string,
     "Away Team": string,
     "Home Score": number,
     "Away Score": number
+}
+
+interface TeamTable {
+    "Team": string,
+    "Coach": string,
+    "Wins": number,
+    "Losses": number,
+}
+
+interface PlayerTable {
+    "Name": string,
+    "Team": string,
+    "Jersey Number": number,
+    "Position": string,
+    "Height (inches)": number,
+    "Weight (pounds)": number,
+    "Date of Birth": Date
+}
+
+interface PlayerStatsTable {
+    "Player": string,
+    "Team": string,
+    "Goals": number,
+    "Assists": number,
+    "Shots": number,
+    "Faceoffs Won": number,
+    "Faceoffs Lost": number,
+    "Saves": number,
+    "Clears Attempted": number,
+    "Clears Made": number,
+    "Penalties": number
 }

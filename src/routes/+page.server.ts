@@ -1,5 +1,5 @@
 import { redirect } from "@sveltejs/kit";
-import { insertCoach, insertUser, getUser, getTeam, getGameByInterval, getRecentGameStats} from "$lib/db";
+import { insertCoach, insertUser, getUser, getTeam, getGameByInterval, getGameStats} from "$lib/db";
 
 /** @type {import('./$types').PageServerLoad} */
 export async function load({ locals }) {
@@ -13,18 +13,18 @@ export async function load({ locals }) {
         let awayTeamRow = await getTeam(recentGameRows[i]["awayteam_id"]);
 
         let homeScore = 0;
-        let homeStatsRow = await getRecentGameStats(recentGameRows[i]["game_id"], recentGameRows[i]["hometeam_id"]);
+        let homeStatsRow = await getGameStats(recentGameRows[i]["game_id"], recentGameRows[i]["hometeam_id"]);
         for (let j = 0; j < Object.keys(homeStatsRow).length; j++){
             homeScore += homeStatsRow[j]["goals"];
         }
 
         let awayScore = 0;
-        let awayStatsRow = await getRecentGameStats(recentGameRows[i]["game_id"], recentGameRows[i]["awayteam_id"]);
+        let awayStatsRow = await getGameStats(recentGameRows[i]["game_id"], recentGameRows[i]["awayteam_id"]);
         for (let j = 0; j < Object.keys(awayStatsRow).length; j++){
             awayScore += awayStatsRow[j]["goals"];
         }
 
-        let game: RecentGame = {
+        let game: GameTable = {
             "Game Date": recentGameRows[i]["game_date"].toLocaleDateString(),
             "Game Field": recentGameRows[i]["game_field"].toString(),
             "Home Team": homeTeamRow["team_name"].toString(),
@@ -36,7 +36,7 @@ export async function load({ locals }) {
     }
 
     locals.recentGames = recentGames;
-	return { locals: locals}
+	return { locals: locals};
 }
 
 /** @type {import('./$types').Actions} */

@@ -50,7 +50,7 @@ async function queryFromDayInterval(tableName: string, dateCol: string, interval
     return result.rows;
 }
 
-export async function getRecentGameStats(game_id: any, team_id: any) {
+export async function getGameStats(game_id: any, team_id: any) {
     let query = `SELECT * FROM player_stats `;
     query += `WHERE game_id = ${game_id} `;
     query += `AND team_id = ${team_id} `;
