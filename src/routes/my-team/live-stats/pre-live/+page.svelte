@@ -2,10 +2,6 @@
     import type { PageServerData } from "./$types";
     export let data: PageServerData;
 
-    
-
-
-
     // ROSTER DATA
     let allPlayers = data.props.allPlayers;     // allPlayer[0][0] -> team_id 1, player_id 1
     
@@ -44,9 +40,6 @@
         selectedAwayTeam = event.target.value;
         awayTeam_players = allPlayers[selectedAwayTeam - 1];
     };
-
-
-
 
     let home_p1 = '';
     let home_p2 = '';

@@ -125,7 +125,7 @@
 	 * @param id The `game_id` of the scorebook
 	 */
 	async function editScorebook(id) {
-		await goto(`/my-team/live-stats`);
+		await goto(`/my-team/live-stats/pre-live`);
 	}
 	
 	async function newScorebookEdit() {
