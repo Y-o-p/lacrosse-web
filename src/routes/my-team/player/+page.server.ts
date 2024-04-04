@@ -1,11 +1,12 @@
-import { insertRow, pool, insertCoach, insertUser, getUser, getCoach, insertPlayer, updateCoachTeamId, setCoachTeamId, insertTeam } from "$lib/db";
+import { getTeam, insertRow, pool, insertCoach, insertUser, getUser, getCoach, insertPlayer, updateCoachTeamId, setCoachTeamId, insertTeam } from "$lib/db";
 
 import { redirect } from "@sveltejs/kit";
 
 export async function load({ locals }) {
+
+    const team = await getTeam(Number(locals.coach.team_id));
     
-    
-    return locals;
+    return {locals, team};
 }
 
 export const actions = {

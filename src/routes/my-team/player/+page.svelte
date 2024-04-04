@@ -107,7 +107,7 @@
 </head>
 
 <body>
-    {#if data.coach.team_id == null}
+    {#if data.locals.coach.team_id == null}
 
         <!-- Modal Dialogue for New Team Creation -->
         <Modal>
@@ -116,13 +116,13 @@
                 <input type="text" id="teamName" name="teamName" required>
                 <input type="submit" value="Create Team">
                 <input type="hidden" id="team_id" name="team_id" required value={null}>
-                <input type="hidden" id="coach_id" name="coach_id" required value={data.coach.coach_id}>
+                <input type="hidden" id="coach_id" name="coach_id" required value={data.locals.coach.coach_id}>
             </form>
         </Modal>
         
     {:else}
         <div class="container">
-            <h1>Coach, {data.coach.first_name}, Roster Input </h1>
+            <h1>Add Player to {data.team.team_name} </h1>
             <form id="rosterForm" method="POST" action="?/addPlayer">
                 <!-- Input fields -->
                 <label for="firstName">First Name:</label>
@@ -147,7 +147,7 @@
                 <input type="hidden" id="position" name="position" value={selectedPosition} required>
 
                 <!-- Hidden input for team_id-->
-                <input type="hidden" id="team_id" name="team_id" required value={data.coach.team_id}>
+                <input type="hidden" id="team_id" name="team_id" required value={data.locals.coach.team_id}>
                 <!-- Additional input fields -->
                 <label for="height">Height (in inches):</label>
                 <input type="number" id="height" name="height" min="0" max="100" step="1" required>

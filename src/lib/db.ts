@@ -9,7 +9,7 @@ export const pool = new pg.Pool({
     user: import.meta.env.VITE_PGUSER || "postgres",
     host: import.meta.env.VITE_PGHOST || "localhost",
     port: (Number(import.meta.env.VITE_PGPORT || 5432 )),
-    password: import.meta.env.VITE_PGDATABASE || "ident",
+    password: import.meta.env.VITE_PGDATABASE || "S9388420",
 })
 
 async function queryFromVals(action: string, tableName: string, object?: any) {
@@ -339,5 +339,18 @@ export async function setCoachTeamId(coachId: bigint, teamId: bigint): Promise <
         throw new Error(`Error updating coach team ID, given teamID: ${error.message}`);
 
     }
+}
 
+export async function getAllTeams(): Promise<Team[]> {
+    return new Promise<Team[]>((resolve, reject) => {
+        const query = `SELECT * FROM teams`;
+
+        pool.query(query)
+            .then((result) => {
+                resolve(result.rows);
+            })
+            .catch((error) => {
+                reject(error);
+            });
+    });
 }
