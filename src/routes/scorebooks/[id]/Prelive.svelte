@@ -29,20 +29,58 @@
         // Populate the home roster array
         selectedHomeTeam = event.target.value;
         homeRoster = await apiCall<Array<Player>>("GET", `/api/players?team_id=${selectedHomeTeam}`);
-        
+        homeLineup.forEach((player, i) => {
+            homeLineup[i] = homeRoster[i];
+        });
+        homeLineup = homeLineup;
     };
 
     let selectedAwayTeam;
     const handleAwayTeamSelect = async (event) => {
         selectedAwayTeam = event.target.value;
         awayRoster = await apiCall<Array<Player>>("GET", `/api/players?team_id=${selectedAwayTeam}`);
+        awayLineup.forEach((player, i) => {
+            awayLineup[i] = awayRoster[i];
+        });
+        awayLineup = awayLineup;
     };
 
     async function startGame() {
         homeTeam = selectedHomeTeam;
         awayTeam = selectedAwayTeam;
-        game.hometeam_id = homeTeam.team_id;
-        game.awayteam_id = awayTeam.team_id;
+
+        console.log(homeTeam);
+        console.log(awayTeam);
+        console.log(game);
+        let playerStats = await apiCall<PlayerStats>("GET", `/api/player-stats?game_id=${game.game_id}&team_id=${homeTeam}`);
+        console.log(playerStats);
+        playerStats = playerStats.concat(await apiCall<PlayerStats>("GET", `/api/player-stats?game_id=${game.game_id}&team_id=${awayTeam}`));
+
+        [...homeRoster, ...awayRoster].forEach(async (player) => {
+            const stats = playerStats.find((stats) => player.player_id == stats.player_id);
+            if (stats === undefined) {
+                const newStats = await apiCall<PlayerStats>("POST", `/api/player-stats`, {
+                    game_id: game.game_id,
+                    player_id: player.player_id,
+                    team_id: player.team_id,
+                    goals: 0,
+                    assists: 0,
+                    shots: 0,
+                    faceoffs_won: 0,
+                    faceoffs_lost: 0,
+                    saves: 0,
+                    penalties: 0,
+                    clears_attempted: 0,
+                    clears_made: 0
+                });
+                player.playerstat_id = newStats.playerstat_id;
+            }
+            else {
+                player.playerstat_id = stats.playerstat_id;
+            }
+        });
+        game.hometeam_id = homeTeam;
+        game.awayteam_id = awayTeam;
         await patchGame(game);
     }
 

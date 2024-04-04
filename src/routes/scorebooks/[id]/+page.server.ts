@@ -22,7 +22,16 @@ export async function load({ locals, params }) {
                         const newStats = await insertPlayerStats({
                             game_id: game_id,
                             player_id: player.player_id,
-                            team_id: player.team_id
+                            team_id: player.team_id,
+                            goals: 0,
+                            assists: 0,
+                            shots: 0,
+                            faceoffs_won: 0,
+                            faceoffs_lost: 0,
+                            saves: 0,
+                            penalties: 0,
+                            clears_attempted: 0,
+                            clears_made: 0
                         });
                         player.playerstat_id = newStats.playerstat_id;
                     }
