@@ -10,6 +10,9 @@ export async function load({locals}) {
     for (let i = 0; i < numGames; i++) {
         let homeTeamRow = await getTeam(gameRows[i]["hometeam_id"]);
         let awayTeamRow = await getTeam(gameRows[i]["awayteam_id"]);
+        if (homeTeamRow === undefined || awayTeamRow === undefined) {
+            continue;
+        }
 
         let homeScore = 0;
         let homeStatsRow = await getGameStats(gameRows[i]["game_id"], gameRows[i]["hometeam_id"]);

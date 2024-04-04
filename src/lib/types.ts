@@ -23,8 +23,8 @@ interface Team {
 
 interface Game {
     game_id?: bigint,
-    hometeam_id: bigint,
-    awayteam_id: bigint,
+    hometeam_id?: bigint,
+    awayteam_id?: bigint,
     game_date: Date, 
     game_field: string,
     published: boolean,

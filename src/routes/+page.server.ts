@@ -11,6 +11,9 @@ export async function load({ locals }) {
     for (let i = 0; i < numGames; i++){
         let homeTeamRow = await getTeam(recentGameRows[i]["hometeam_id"]);
         let awayTeamRow = await getTeam(recentGameRows[i]["awayteam_id"]);
+        if (homeTeamRow === undefined || awayTeamRow === undefined) {
+            continue;
+        }
 
         let homeScore = 0;
         let homeStatsRow = await getGameStats(recentGameRows[i]["game_id"], recentGameRows[i]["hometeam_id"]);

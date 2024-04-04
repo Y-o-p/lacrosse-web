@@ -11,9 +11,11 @@
     export let game;
     export let homePlayers;
     export let awayPlayers;
+    export let homeLineup;
+    export let awayLineup;
     let homeSelected = true;
-    $: selectedPlayers = homeSelected ? homePlayers : awayPlayers;
-    $: unselectedPlayers = homeSelected ? awayPlayers : homePlayers;
+    $: selectedPlayers = homeSelected ? homeLineup : awayLineup;
+    $: unselectedPlayers = homeSelected ? awayLineup : homeLineup;
 
     let penaltyTimes = ["5", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55", "60"];
 
