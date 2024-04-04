@@ -17,12 +17,12 @@
     <div class="table-wrapper1">
         <Table tableData={playerTable} style={blueStyle}/>
     </div>
-    <h2>Player Satistcs</h2>
+    <h2>Player Statistics</h2>
     <div class="table-wrapper1">
         <Table tableData={playerStats} style={blueStyle}/>
     </div>
     {#if gamesStats != null}
-        <h2>Player Satistcs By Game</h2>
+        <h2>Player Statistics By Game</h2>
         <div class="table-wrapper2">
             <Table tableData={gamesStats} style={blueStyle}/>
         </div>
