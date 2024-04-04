@@ -50,7 +50,7 @@ async function queryFromDayInterval(tableName: string, dateCol: string, interval
     return result.rows;
 }
 
-export async function getRecentGameStats(game_id: any, team_id: any) {
+export async function getGameStats(game_id: any, team_id: any) {
     let query = `SELECT * FROM player_stats `;
     query += `WHERE game_id = ${game_id} `;
     query += `AND team_id = ${team_id} `;
@@ -195,13 +195,8 @@ export async function editTeam(vals: Partial<Team>, ids: Partial<Team>) {
 // To avoid SQL injection, don't allow user input to go into the first 2 parameters
 // tableName and tableIdName should always be programmer defined
 export async function getRowFromId(tableName: string, tableIdName: string, id: number): Promise<any> {
-    try {
-        const result = await pool.query(`SELECT * FROM ${tableName} WHERE ${tableIdName} = $1`, [id]);
-        return result.rows[0];
-    }
-    catch (error) {
-        throw error;
-    }
+    const result = await pool.query(`SELECT * FROM ${tableName} WHERE ${tableIdName} = $1`, [id]);
+    return result.rows[0];
 }
 
 export async function getRowsFromVals(tableName: string, vals?: any): Promise<any> {

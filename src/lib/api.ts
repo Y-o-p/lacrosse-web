@@ -76,6 +76,20 @@ export async function getPlayerStats(id): Promise<PlayerStats> {
     return player_stats;
 }
 
+export async function getGame(id): Promise<Game> {
+    const result = await (await fetch(`/api/games/${id}`)).json();
+    const player_stats: Game = result as Game;
+    return player_stats;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// PATCH Helper Functions
+///////////////////////////////////////////////////////////////////////////////
+
+export async function patchGame(stats: Partial<Game>) {
+    return apiCall<Game>("PATCH", `/api/games/${stats.game_id}`, stats);
+}
+
 export async function patchPlayerStats(stats: Partial<PlayerStats>) {
     return apiCall<PlayerStats>("PATCH", `/api/player-stats/${stats.playerstat_id}`, stats);
 }

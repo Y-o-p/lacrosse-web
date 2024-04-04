@@ -125,7 +125,7 @@
 	 * @param id The `game_id` of the scorebook
 	 */
 	async function editScorebook(id) {
-		await goto(`/my-team/live-stats/pre-live`);
+		await goto(`/scorebooks/${id}`);
 	}
 	
 	async function newScorebookEdit() {
@@ -183,30 +183,32 @@
 </script>
 
 <!--Scorebook List-->
-<h1>Scorebooks</h1>
-<button on:click={ () => { showNewScorebookModal = true }}>New Scorebook</button>
-<ul>
-	{#each scorebookPreviews as scorebook}
-		<li>
-			{#if scorebook.game_id === undefined}
-				New Game
-			{:else}
-				Date: {scorebook.date} Home: {scorebook.home} Away: {scorebook.away}
-			{/if}
-			<div>
-				<button on:click={ () => editScorebook(scorebook.game_id) }>Edit</button>
-				{#if scorebook.session === undefined}
-					<button on:click={ () => newSession(scorebook) }>New Session</button>
+<main>
+	<h1>Scorebooks</h1>
+	<button on:click={ () => { showNewScorebookModal = true }}>New Scorebook</button>
+	<ul>
+		{#each scorebookPreviews as scorebook}
+			<li>
+				{#if scorebook.game_id === undefined}
+					New Game
 				{:else}
-					{scorebook.session.room_code}
-					<button on:click={ () => copyToClipboard(scorebook.session.room_code) }>Copy Code</button>
-					<button on:click={ () => endSessionButton(scorebook) }>End Session</button>
+					Date: {scorebook.date} Home: {scorebook.home} Away: {scorebook.away}
 				{/if}
-				<button on:click={ () => deletionButton(scorebook) }>Delete</button>
-			</div>
-		</li>
-	{/each}
-</ul>
+				<div>
+					<button on:click={ () => editScorebook(scorebook.game_id) }>Edit</button>
+					{#if scorebook.session === undefined}
+						<button on:click={ () => newSession(scorebook) }>New Session</button>
+					{:else}
+						{scorebook.session.room_code}
+						<button on:click={ () => copyToClipboard(scorebook.session.room_code) }>Copy Code</button>
+						<button on:click={ () => endSessionButton(scorebook) }>End Session</button>
+					{/if}
+					<button on:click={ () => deletionButton(scorebook) }>Delete</button>
+				</div>
+			</li>
+		{/each}
+	</ul>
+</main>
 
 <!--Modal for making a new scoreboook-->
 <Modal bind:show={showNewScorebookModal}>
@@ -225,3 +227,12 @@
 <Confirm bind:show={showDeletionModal} on:confirm={ () => { deleteScorebook(selectedScorebook) } }>
 	<p>Are you sure you want to delete this scorebook? This action is irreversible.</p>
 </Confirm>
+
+<style>
+    main {
+        margin-top: 130px;
+        margin-bottom: 100px;
+        margin-left: 10px;
+        margin-right: 110px;
+    }
+</style>

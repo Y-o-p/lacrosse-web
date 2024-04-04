@@ -4,25 +4,26 @@
 
     export let data: PageServerData;
 
-    let teamData = data.locals.teamData;
-    let teamTable = data.locals.teamTable;
-    let roster = data.locals.roster;
+    let homeTeamData = data.locals.homeTeamData;
+    let awayTeamData = data.locals.awayTeamData;
+    let gameTable = data.locals.gameTable;
+    let statsTable = data.locals.statsTable
     let blueStyle = "blueTable";
 </script>
 
 <main>
-    <h1>{teamData.team_name}</h1>
-    <h2>Team Satistcs</h2>
+    <h1>{homeTeamData.team_name} VS. {awayTeamData.team_name}</h1>
+    <h2>Information</h2>
     <div class="table-wrapper1">
-        <Table tableData={teamTable} style={blueStyle}/>
+        <Table tableData={gameTable} style={blueStyle}/>
     </div>
-    <h2>Roster</h2>
+    <h2>Statistics Per Player</h2>
     <div class="table-wrapper2">
-        <Table tableData={roster} style={blueStyle}/>
+        <Table tableData={statsTable} style={blueStyle}/>
     </div>
 </main>
 
-<style> 
+<style>
     main {
         margin-top: 130px;
         margin-bottom: 100px;
@@ -32,13 +33,13 @@
 
     .table-wrapper1 {
 		max-height: 300px;
-        max-width: 100%;
 		overflow-y: auto;
+		max-width: 100%;
 	}
 
     .table-wrapper2 {
 		max-height: 300px;
-        max-width: 100%;
 		overflow-y: auto;
+		max-width: 100%;
 	}
 </style>
