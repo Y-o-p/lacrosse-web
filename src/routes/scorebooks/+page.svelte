@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { deleteScorebookSession, postScorebookSession } from "$lib/api";	
+	import { apiPost, deleteScorebookSession, postScorebookSession } from "$lib/api";	
 	import { onMount } from "svelte";
 	import type { PageServerData } from "../$types";
 	import { goto } from "$app/navigation";
@@ -130,6 +130,13 @@
 	
 	async function newScorebookEdit() {
 		showNewScorebookModal = false;
+		console.log("NEW GAME")
+		const newGame = await apiPost("/api/games", { 
+			game_date: new Date(),
+			published: false
+		});
+		console.log(newGame);
+		editScorebook(newGame.game_id);
 		// TODO: redirect to a different page
 	}
 

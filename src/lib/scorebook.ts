@@ -117,6 +117,7 @@ export function actionToString(action: ScorebookAction) {
 
 export async function performAction(action: ScorebookAction, undo = false) {
     const polarity = undo ? -1 : 1;
+    console.log(action);
     switch (action.actionType) {
         case ActionType.Shot: {
             const shot = action as Shot;
@@ -124,6 +125,7 @@ export async function performAction(action: ScorebookAction, undo = false) {
                 throw new Error("Missing parameters");
             }
             var shotBy: PlayerStats = await getPlayerStats(shot.by.playerstat_id);
+            console.log(shotBy);
             shotBy.shots += polarity;
             if (shot.goal) {
                 shotBy.goals += polarity;

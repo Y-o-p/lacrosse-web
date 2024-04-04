@@ -9,7 +9,7 @@
 </script>
 
 <main>
-    <h1>Locrosse E-Scorebook</h1>
+    <h1>Lacrosse E-Scorebook</h1>
     <h2>Recent Games</h2>
     <div class="table-wrapper">
         <Table tableData={recentGames} style={blueStyle}/>
