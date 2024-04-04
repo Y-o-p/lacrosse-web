@@ -47,68 +47,67 @@
 
     const handleHomePlayerSelect = (event) => {
         if (event.target.id == "home_p1") {
-            home_p1 = event.target.value;
+            homeTeam_playerIds[0] = event.target.value;
         }
         else if (event.target.id == "home_p2") {
-            home_p2 = event.target.value;
+            homeTeam_playerIds[1] = event.target.value;
         }
         else if (event.target.id == "home_p3") {
-            home_p3 = event.target.value;
+            homeTeam_playerIds[2] = event.target.value;
         }
         else if (event.target.id == "home_p4") {
-            home_p4 = event.target.value;
+            homeTeam_playerIds[3] = event.target.value;
         }
         else if (event.target.id == "home_p5") {
-            home_p5 = event.target.value;
+            homeTeam_playerIds[4] = event.target.value;
         }
         else if (event.target.id == "home_p6") {
-            home_p6 = event.target.value;
+            homeTeam_playerIds[5] = event.target.value;
         }
         else if (event.target.id == "home_p7") {
-            home_p7 = event.target.value;
+            homeTeam_playerIds[6] = event.target.value;
         }
         else if (event.target.id == "home_p8") {
-            home_p8 = event.target.value;
+            homeTeam_playerIds[7] = event.target.value;
         }
         else if (event.target.id == "home_p9") {
-            home_p9 = event.target.value;
+            homeTeam_playerIds[8] = event.target.value;
         }
         else if (event.target.id == "home_p10") {
-            home_p10 = event.target.value;
+            homeTeam_playerIds[9] = event.target.value;
         }
-
     }
 
     const handleAwayPlayerSelect = (event) => {
         if (event.target.id == "away_p1") {
-            away_p1 = event.target.value;
+            awayTeam_playerIds[0] = event.target.value;
         }
         else if (event.target.id == "away_p2") {
-            away_p2 = event.target.value;
+            awayTeam_playerIds[1] = event.target.value;
         }
         else if (event.target.id == "away_p3") {
-            away_p3 = event.target.value;
+            awayTeam_playerIds[2] = event.target.value;
         }
         else if (event.target.id == "away_p4") {
-            away_p4 = event.target.value;
+            awayTeam_playerIds[3] = event.target.value;
         }
         else if (event.target.id == "away_p5") {
-            away_p5 = event.target.value;
+            awayTeam_playerIds[4] = event.target.value;
         }
         else if (event.target.id == "away_p6") {
-            away_p6 = event.target.value;
+            awayTeam_playerIds[5] = event.target.value;
         }
         else if (event.target.id == "away_p7") {
-            away_p7 = event.target.value;
+            awayTeam_playerIds[6] = event.target.value;
         }
         else if (event.target.id == "away_p8") {
-            away_p8 = event.target.value;
+            awayTeam_playerIds[7] = event.target.value;
         }
         else if (event.target.id == "away_p9") {
-            away_p9 = event.target.value;
+            awayTeam_playerIds[8] = event.target.value;
         }
         else if (event.target.id == "away_p10") {
-            away_p10 = event.target.value;
+            awayTeam_playerIds[9] = event.target.value;
         }
     }
     
