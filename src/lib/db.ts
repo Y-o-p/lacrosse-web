@@ -9,7 +9,7 @@ export const pool = new pg.Pool({
     user: import.meta.env.VITE_PGUSER || "postgres",
     host: import.meta.env.VITE_PGHOST || "localhost",
     port: (Number(import.meta.env.VITE_PGPORT || 5432 )),
-    password: import.meta.env.VITE_PGDATABASE || "ident",
+    password: import.meta.env.VITE_PGDATABASE || "S9388420",
 })
 
 async function queryFromVals(action: string, tableName: string, object?: any) {
@@ -221,6 +221,10 @@ export async function getPlayer(id: number): Promise<any> {
 
 export async function getScorebookSession(id: number): Promise<any> {
     return getRowFromId("scorebook_sessions", "session_id", id);
+}
+
+export async function getScorebookSessionFromRoomCode(room_code): Promise<any> {
+    return getRowFromId("sk_session", "room_code", room_code);
 }
 
 export async function getTeam(id: number): Promise<any> {

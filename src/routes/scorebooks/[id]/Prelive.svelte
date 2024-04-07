@@ -84,8 +84,10 @@
         await patchGame(game);
     }
 
+    let selectedPlayers = [];
+
     const handleHomePlayerSelect = (event) => {
-        
+        selectedPlayers.push(event.target.value);
     }
 
     const handleAwayPlayerSelect = (event) => {
@@ -108,7 +110,7 @@
             
             {#each homeLineup as player, i}
                 <div>
-                    <label for="homePlayerSelect">Player {i}:</label>
+                    <label for="homePlayerSelect">Player {i+1}:</label>
                     <select bind:value={player} on:change={handleHomePlayerSelect} required>
                         <option value="">Select Player</option>
                         {#each homeRoster as playerFromRoster}
@@ -132,7 +134,7 @@
 
             {#each awayLineup as player, i}
                 <div>
-                    <label for="homePlayerSelect">Player {i}:</label>
+                    <label for="homePlayerSelect">Player {i+1}:</label>
                     <select bind:value={player} on:change={handleAwayPlayerSelect} required>
                         <option value="">Select Player</option>
                         {#each awayRoster as playerFromRoster}
