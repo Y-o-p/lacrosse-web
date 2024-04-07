@@ -1,5 +1,13 @@
 import { getTeam, getCoach, getRowsFromVals } from "$lib/db"
 
+function checkEmpty(element) {
+    let ret = element;
+    if (element == "" || element == null) {
+        ret = "";
+    }
+    return ret;
+}
+
 /** @type {import('./$types').PageServerLoad} */
 export async function load({locals, params}) {
     
@@ -35,11 +43,14 @@ export async function load({locals, params}) {
 
         let player: Partial<PlayerTable> = {
             Name: playerName,
-            "Jersey Number": playerRows[i]["jersey_num"],
+            Team: checkEmpty(teamRow["team_name"]).toString(),
+            '#': playerRows[i]["jersey_num"],
             Position: playerRows[i]["pos"],
             "Height (inches)": playerRows[i]["height"],
             "Weight (pounds)": playerRows[i]["weight"],
-            "Date of Birth": playerRows[i]["birth_date"].toLocaleDateString()
+            Class: checkEmpty(playerRows[i]["clg_class"]).toString(),
+            Major: checkEmpty(playerRows[i]["major"]).toString(),
+            "Home Town": checkEmpty(playerRows[i]["home_town"]).toString()
         }
         playersTable.push(player);
     }

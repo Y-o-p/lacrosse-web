@@ -4,8 +4,15 @@
     import Modal from './modal.svelte';
     export let data: PageServerData;
 
-    let teamName = "none";
     let editModal = false;
+    
+    function checkEmpty(element) {
+        let ret = element;
+        if (element == null || element == "") {
+            ret = "";
+        }
+        return ret;
+    }
 </script>
 
 <main>
@@ -13,31 +20,31 @@
     <table class="accountInfo">
         <tr>
             <td>Username:</td>
-            <td>{data.user.user_name}</td>
+            <td>{checkEmpty(data.user.user_name)}</td>
         </tr>
         <tr>
             <td>Password</td>
-            <td>{data.user.pword}</td>
+            <td>{checkEmpty(data.user.pword)}</td>
         </tr>
         <tr>
             <td>First Name:</td>
-            <td>{data.coach.first_name}</td>
+            <td>{checkEmpty(data.coach.first_name)}</td>
         </tr>
         <tr>
             <td>Last Name:</td>            
-            <td>{data.coach.last_name}</td>
+            <td>{checkEmpty(data.coach.last_name)}</td>
         </tr>
         <tr>
-            <td>Date of Birth:</td>
-            <td>{data.coach.birth_date.toLocaleDateString()}</td>
+            <td>Email:</td>
+            <td>{checkEmpty(data.coach.email)}</td>
         </tr>
         <tr>
             <td>Phone:</td>
-            <td>{data.coach.phone}</td>    
+            <td>{checkEmpty(data.coach.phone)}</td>    
         </tr>
         <tr>
             <td>Team:</td>
-            <td>{data.team.team_name}</td>
+            <td>{checkEmpty(data.team.team_name)}</td>
         </tr>        
     </table>
     <form id="a" method="POST" action="?/logout">
@@ -61,6 +68,10 @@
                 <div class="edit-row" style="display: table-row;">
                     <label for=18 style="display: table-cell;">Phone Number:</label>
                     <input name="phone" id=18 type="text" value="###-###-####">
+                </div>
+                <div class="edit-row" style="display: table-row;">
+                    <label for=13 style="display: table-cell;">Email:</label>
+                    <input name="email" id=14 type="text">
                 </div>
                 <div class="edit-row" style="display: table-row;">
                     <button style="display: table-cell;">Save Changes</button>

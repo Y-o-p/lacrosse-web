@@ -16,36 +16,62 @@ export async function load({locals, params}) {
     let homeScore = 0;
     let awayScore = 0;
 
-    let playerStatsTable = [];
+    let homePlayerStatsTable = [];
+    let awayPlayerStatsTable = [];
+    let homeGkStatsTable = [];
+    let awayGkStatsTable = [];
     for (let i = 0; i < numSats; i++) {
         let playerRow = await getPlayer(playerStats[i]["player_id"]);
         let playerName = playerRow["first_name"].toString();
         playerName += " ";
         playerName += playerRow["last_name"].toString();
+        let points = playerStats[i]["goals"] + playerStats[i]["assists"];
 
         let teamRow = await getTeam(playerStats[i]["team_id"]);
 
-        let stat: PlayerStatsTable = {
+        let stat: Partial<PlayerStatsTable> = {
+            '#': playerRow["jersey_num"],
             Player: playerName,
-            Team: teamRow["team_name"].toString(),
-            Goals: playerStats[i]["goals"],
-            Assists: playerStats[i]["assists"],
-            Shots: playerStats[i]["shots"],
-            "Faceoffs Won": playerStats[i]["faceoffs_won"],
-            "Faceoffs Lost": playerStats[i]["faceoffs_lost"],
-            Saves: playerStats[i]["saves"],
-            "Clears Attempted": playerStats[i]["clears_attempted"],
-            "Clears Made": playerStats[i]["clears_made"],
-            Penalties: playerStats[i]["penalties"]
+            G: playerStats[i]["goals"],
+            A: playerStats[i]["assists"],
+            P: points,
+            S: playerStats[i]["shots"],
+            SOG: playerStats[i]["shots_on_goal"],
+            GB: playerStats[i]["ground_balls"],
+            TO: playerStats[i]["turnovers"],
+            CT: playerStats[i]["turnovers_caused"],
+            "FO Won": playerStats[i]["faceoffs_won"],
+            "FO Lost": playerStats[i]["faceoffs_lost"],
+            PEN: playerStats[i]["penalties"]
         }
-        playerStatsTable.push(stat);
-
-        if (gameRow["hometeam_id"] == teamRow["team_id"]) {
+        if (playerRow["team_id"] == gameRow["hometeam_id"]) {
+            homePlayerStatsTable.push(stat);
             homeScore += playerStats[i]["goals"];
-        }
 
-        if (gameRow["awayteam_id"] == teamRow["team_id"]) {
+            if (playerRow["pos"] == 'G') {
+                if (playerStats[i]["saves"] > 0 || playerStats[i]["goals_allowed"] > 0) {
+                    let gkStats: Partial<GoalieStatsTable> = {
+                        GA: playerStats[i]["goals_allowed"],
+                        Saves: playerStats[i]["saves"]
+                    }
+                    homeGkStatsTable.push(gkStats);
+                } else {
+                    //console.log(playerStats[i]["player_id"]);
+                }
+            }
+        } else if (playerRow["team_id"] == gameRow["awayteam_id"]) {
+            awayPlayerStatsTable.push(stat);
             awayScore += playerStats[i]["goals"];
+
+            if (playerRow["pos"] == 'G') {
+                if (playerStats[i]["saves"] > 0 || playerStats[i]["goals_allowed"] > 0) {
+                    let gkStats: Partial<GoalieStatsTable> = {
+                        GA: playerStats[i]["goals_allowed"],
+                        Saves: playerStats[i]["saves"]
+                    }
+                    awayGkStatsTable.push(gkStats);
+                }
+            }
         }
     }
 
@@ -63,6 +89,9 @@ export async function load({locals, params}) {
     locals.homeTeamData = homeTeamRow;
     locals.awayTeamData = awayTeamRow;
     locals.gameTable = gameTable
-    locals.statsTable = playerStatsTable;
+    locals.homeStatsTable = homePlayerStatsTable;
+    locals.awayStatsTable = awayPlayerStatsTable;
+    locals.homeGkStatsTable = homeGkStatsTable;
+    locals.awayGkStatsTable = awayGkStatsTable;
     return { locals: locals};
 }

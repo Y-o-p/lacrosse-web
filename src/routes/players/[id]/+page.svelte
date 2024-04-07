@@ -8,6 +8,8 @@
     let playerTable = data.locals.playerTable;
     let gamesStats = data.locals.gamesStats;
     let playerStats = data.locals.playerStats;
+    let gkGamesStats = data.locals.gkGamesStats;
+    let gkStats = data.locals.gkStats;
     let blueStyle = "blueTable";
 </script>
 
@@ -27,6 +29,20 @@
             <Table tableData={gamesStats} style={blueStyle}/>
         </div>
     {/if}
+    {#if gkStats != null}
+    <div>
+        <h2>Goalkeeping Statistics</h2>
+        <div class="table-wrapper2">
+            <Table tableData={gkStats} style={blueStyle}/>
+        </div>
+    </div>
+    {/if}
+    {#if gkGamesStats != null}
+        <h2>Goalkeeping Statistics By Game</h2>
+        <div class="table-wrapper2">
+            <Table tableData={gkGamesStats} style={blueStyle}/>
+        </div>
+    {/if}
 </main>
 
 <style>
@@ -38,13 +54,13 @@
     }
 
     .table-wrapper1 {
-		max-height: 300px;
+		/*max-height: 300px;*/
         max-width: 100%;
 		overflow-y: auto;
 	}
 
     .table-wrapper2 {
-		max-height: 300px;
+		/*max-height: 300px;*/
         max-width: 100%;
 		overflow-y: auto;
 	}

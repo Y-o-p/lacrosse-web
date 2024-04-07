@@ -31,13 +31,13 @@
     }
 
     .table-wrapper1 {
-		max-height: 300px;
+		/*max-height: 300px;*/
         max-width: 100%;
 		overflow-y: auto;
 	}
 
     .table-wrapper2 {
-		max-height: 300px;
+		/*max-height: 300px;*/
         max-width: 100%;
 		overflow-y: auto;
 	}
