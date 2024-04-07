@@ -25,7 +25,7 @@
     }
 
     .table-wrapper {
-		max-height: 30%;
+		/*max-height: 30%;*/
 		overflow-y: auto;
 		max-width: 100%;
 	}
