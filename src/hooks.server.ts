@@ -22,7 +22,7 @@ export async function handle({event, resolve}) {
                     coach_id: BigInt(coachRow["coach_id"]),
                     last_name: coachRow["last_name"],
                     first_name: coachRow["first_name"],
-                    birth_date: coachRow["birth_date"],
+                    email: coachRow["email"],
                     date_created: coachRow["date_created"],
                     phone: coachRow["phone"],
                     team_id: BigInt(coachRow["team_id"])

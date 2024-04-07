@@ -6,6 +6,7 @@ export async function load({ locals }) {
 
     // If user is a viewer, redirect to home page
     if ( locals.user == null ) {
+        console.log("LOCALS.USER = NULL");
         throw redirect(303, "/");
     }
 
@@ -20,6 +21,7 @@ export const actions = {
 
         let newUser = data.get('uname').toString()
         let newPword = data.get('pword').toString()
+        let newEmail = data.get('email').toString()
         let newPhone = data.get('phone').toString()
 
         let userVals: Partial<User> = {}
@@ -38,8 +40,15 @@ export const actions = {
             let ret = await editUser(userVals, userIDs);
         }
 
+        if (newEmail != "") {
+            coachVals.email = newEmail;
+        }
+
         if (newPhone != "" && newPhone != "###-###-####") {
             coachVals.phone = newPhone
+        }
+
+        if (coachVals.email || coachVals.phone) {
             let coachIDs: Partial<User> = {
                 coach_id: BigInt(locals.user.coach_id)
             }

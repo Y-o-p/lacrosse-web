@@ -10,7 +10,7 @@ interface Coach {
     last_name: string,
     first_name: string,
     team_id?: bigint,
-    birth_date: Date,
+    email: string,
     phone: string,
     date_created: Date
 };
@@ -113,23 +113,36 @@ interface TeamTable {
 interface PlayerTable {
     "Name": string,
     "Team": string,
-    "Jersey Number": number,
+    "#": number,
     "Position": string,
     "Height (inches)": number,
     "Weight (pounds)": number,
-    "Date of Birth": Date
+    "Class": string,
+    "Major": string,
+    "Home Town": string,
 }
 
 interface PlayerStatsTable {
+    "#": number,
     "Player": string,
-    "Team": string,
-    "Goals": number,
-    "Assists": number,
-    "Shots": number,
-    "Faceoffs Won": number,
-    "Faceoffs Lost": number,
-    "Saves": number,
-    "Clears Attempted": number,
-    "Clears Made": number,
-    "Penalties": number
+    "G": number,
+    "A": number,
+    "P": number,
+    "S": number,
+    "SOG": number,
+    "GB": number,
+    "TO": number,
+    "CT": number,
+    "CA": number,
+    "CM": number,
+    "FO Won": number,
+    "FO Lost": number,
+    "PEN": number
+}
+
+interface GoalieStatsTable {
+    "#": number,
+    "Player": string,
+    "GA": number,
+    "Saves": number
 }
