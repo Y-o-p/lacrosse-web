@@ -11,7 +11,7 @@ CREATE TABLE coaches (
 	last_name varchar,
 	first_name varchar,
 	team_ID bigint,
-	birth_date date,
+	email varchar,
 	phone varchar,
 	date_created date
 );
@@ -32,8 +32,10 @@ CREATE TABLE players (
 	pos char,
 	height float,
 	weight float,
-	birth_date date,
-	jersey_num
+	jersey_num int,
+	clg_class varchar,
+	major varchar,
+	home_town varchar
 );
 
 CREATE TABLE games (
@@ -42,7 +44,10 @@ CREATE TABLE games (
 	game_field varchar,
 	hometeam_id bigint,
 	awayteam_id bigint,
-	published boolean
+	published boolean,
+	refs varchar[],
+	scorekeepers varchar[],
+	timekeepers varchar[]
 );
 
 CREATE TABLE player_stats (
@@ -53,12 +58,17 @@ CREATE TABLE player_stats (
 	goals int,
 	assists int,
 	shots int,
-	faceoffs_won int,
-	faceoffs_lost int,
-	saves int,
+	shots_on_goal int,
+	ground_balls int,
+	turnovers int,
+	turnovers_caused int,
 	clears_attempted int,
 	clears_made int,
-	penalties int
+	faceoffs_won int,
+	faceoffs_lost int,
+	penalties int,
+	saves int,
+	goals_allowed int
 );
 
 CREATE TABLE sk_session (
