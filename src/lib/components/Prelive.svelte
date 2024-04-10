@@ -1,7 +1,7 @@
 <script lang="ts">
     import { apiCall, patchGame } from "$lib/api";
-    import { onMount } from "svelte";
-    
+    import { createEventDispatcher, onMount } from "svelte";
+    const dispatch = createEventDispatcher();
     export let game;
     export let homeLineup = new Array<Player>(10);
     export let awayLineup = new Array<Player>(10);
@@ -28,7 +28,7 @@
     const handleHomeTeamSelect = async (event) => {
         // Populate the home roster array
         selectedHomeTeam = event.target.value;
-        homeRoster = await apiCall<Array<Player>>("GET", `/api/players?team_id=${selectedHomeTeam}`);
+        homeRoster = await apiCall<Player>("GET", `/api/players?team_id=${selectedHomeTeam}`);
         homeLineup.forEach((player, i) => {
             homeLineup[i] = homeRoster[i];
         });
@@ -38,7 +38,7 @@
     let selectedAwayTeam;
     const handleAwayTeamSelect = async (event) => {
         selectedAwayTeam = event.target.value;
-        awayRoster = await apiCall<Array<Player>>("GET", `/api/players?team_id=${selectedAwayTeam}`);
+        awayRoster = await apiCall<Player>("GET", `/api/players?team_id=${selectedAwayTeam}`);
         awayLineup.forEach((player, i) => {
             awayLineup[i] = awayRoster[i];
         });
@@ -46,41 +46,12 @@
     };
 
     async function startGame() {
+        dispatch("start");
         homeTeam = selectedHomeTeam;
         awayTeam = selectedAwayTeam;
-
-        console.log(homeTeam);
-        console.log(awayTeam);
-        console.log(game);
-        let playerStats = await apiCall<PlayerStats>("GET", `/api/player-stats?game_id=${game.game_id}&team_id=${homeTeam}`);
-        console.log(playerStats);
-        playerStats = playerStats.concat(await apiCall<PlayerStats>("GET", `/api/player-stats?game_id=${game.game_id}&team_id=${awayTeam}`));
-
-        [...homeRoster, ...awayRoster].forEach(async (player) => {
-            const stats = playerStats.find((stats) => player.player_id == stats.player_id);
-            if (stats === undefined) {
-                const newStats = await apiCall<PlayerStats>("POST", `/api/player-stats`, {
-                    game_id: game.game_id,
-                    player_id: player.player_id,
-                    team_id: player.team_id,
-                    goals: 0,
-                    assists: 0,
-                    shots: 0,
-                    faceoffs_won: 0,
-                    faceoffs_lost: 0,
-                    saves: 0,
-                    penalties: 0,
-                    clears_attempted: 0,
-                    clears_made: 0
-                });
-                player.playerstat_id = newStats.playerstat_id;
-            }
-            else {
-                player.playerstat_id = stats.playerstat_id;
-            }
-        });
         game.hometeam_id = homeTeam;
         game.awayteam_id = awayTeam;
+        console.log(game);
         await patchGame(game);
     }
 
