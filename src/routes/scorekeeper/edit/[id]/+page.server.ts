@@ -21,24 +21,25 @@ export async function load({ locals, params }) {
         playerName += " ";
         playerName += playerRow[0]["last_name"].toString();
 
-        let stat: PlayerStatsTable = {
+        let stat: PlayerStats = {
             Player: playerName,
             playerstat_id: BigInt(homeTeamStats[i]["playerstat_id"]),
             player_id: BigInt(homeTeamStats[i]["player_id"]),
             goals: homeTeamStats[i]["goals"],
-            Assists: homeTeamStats[i]["assists"],
-            Shots: homeTeamStats[i]["shots"],
-            Shots_On_Goal: homeTeamStats[i]["shots_on_goal"],
-            Ground_Balls: homeTeamStats[i]["ground_balls"],
-            Turnovers: homeTeamStats[i]["turnovers"],
-            Turnovers_Caused: homeTeamStats[i]["turnovers_caused"],
-            Faceoffs_Won: homeTeamStats[i]["faceoffs_won"],
-            Faceoffs_Lost: homeTeamStats[i]["faceoffs_lost"],
-            Saves: homeTeamStats[i]["saves"],
-            Clears_Attempted : homeTeamStats[i]["clears_attempted"],
-            Clears_Made: homeTeamStats[i]["clears_made"],
-            Penalties: homeTeamStats[i]["penalties"],
-            Goals_Allowed: homeTeamStats[i]["goals_allowed"],
+            assists: homeTeamStats[i]["assists"],
+            shots: homeTeamStats[i]["shots"],
+            shots_on_goal: homeTeamStats[i]["shots_on_goal"],
+            ground_balls: homeTeamStats[i]["ground_balls"],
+            turnovers: homeTeamStats[i]["turnovers"],
+            turnovers_caused: homeTeamStats[i]["turnovers_caused"],
+            faceoffs_won: homeTeamStats[i]["faceoffs_won"],
+            faceoffs_lost: homeTeamStats[i]["faceoffs_lost"],
+            saves: homeTeamStats[i]["saves"],
+            clears_attempted : homeTeamStats[i]["clears_attempted"],
+            clears_made: homeTeamStats[i]["clears_made"],
+            penalties: homeTeamStats[i]["penalties"],
+            goals_allowed: homeTeamStats[i]["goals_allowed"],
+            team_id: BigInt(homeTeamStats[i]["team_id"]),
         }
         homePlayerStats.push(stat);
     }

@@ -34,8 +34,9 @@
     // Function to handle changes in home player stats
     async function handleHomeStatsChange(index, field, value) {
         let statToUpdate: Partial<PlayerStats> = {};
+        let updatedStats = [];
         homePlayerStats.update(stats => {
-            const updatedStats = [...stats];
+            updatedStats = [...stats];
             //console.log(updatedStats);
             console.log(field, value);
             statToUpdate = {
@@ -44,16 +45,26 @@
                 [field]: (value) // Include the changed field and its value
             };
             console.log(statToUpdate);
+            
             //Call patchPlayerStats to update the modified player stat
             return updatedStats;
         });
-        console.log("Stats to update: ", statToUpdate);
+        delete updatedStats[index].Player;
+        //console.log(updatedStats[index]);
+        console.log("Stats to update: ", updatedStats[index]);
 
-        console.log("Patching player...returned: ", await patchPlayerStats(statToUpdate));
-        //let new_patch = await patchPlayerStats(statToUpdate);
-        //console.log(new_patch);
+        //console.log("Patching player...returned: ", await patchPlayerStats(updatedStats[index]));
+        let new_patch = await patchPlayerStats(updatedStats[index]);
+        console.log(new_patch);
         console.log(statToUpdate.playerstat_id);
     }
+
+
+
+
+
+
+
 
     // Function to handle changes in away player stats
     async function handleAwayStatsChange(index, field, value) {
@@ -134,11 +145,11 @@
                 <tr>
                     <td>{stat.Player}</td>
                     <td><input type="number" bind:value={stat.goals} on:input={(e) => handleHomeStatsChange(index, 'goals', e.target.value)}></td>
-                    <td><input type="number" bind:value={stat.Assists} on:input={(e) => handleHomeStatsChange(index, 'Assists', e.target.value)}></td>
-                    <td><input type="number" bind:value={stat.Shots} on:input={(e) => handleHomeStatsChange(index, 'Shots', e.target.value)}></td>
-                    <td><input type="number" bind:value={stat.Shots_On_Goal} on:input={(e) => handleHomeStatsChange(index, 'Shots_On_Goal', e.target.value)}></td>
-                    <td><input type="number" bind:value={stat.Ground_Balls} on:input={(e) => handleHomeStatsChange(index, 'Ground_Balls', e.target.value)}></td>
-                    <td><input type="number" bind:value={stat.Turnovers} on:input={(e) => handleHomeStatsChange(index, 'Turnovers', e.target.value)}></td>
+                    <td><input type="number" bind:value={stat.assists} on:input={(e) => handleHomeStatsChange(index, 'Assists', e.target.value)}></td>
+                    <td><input type="number" bind:value={stat.shots} on:input={(e) => handleHomeStatsChange(index, 'Shots', e.target.value)}></td>
+                    <td><input type="number" bind:value={stat.shots_on_goal} on:input={(e) => handleHomeStatsChange(index, 'Shots_On_Goal', e.target.value)}></td>
+                    <td><input type="number" bind:value={stat.ground_balls} on:input={(e) => handleHomeStatsChange(index, 'Ground_Balls', e.target.value)}></td>
+                    <td><input type="number" bind:value={stat.turnovers} on:input={(e) => handleHomeStatsChange(index, 'Turnovers', e.target.value)}></td>
                 </tr>
             {/each}
         </tbody>
