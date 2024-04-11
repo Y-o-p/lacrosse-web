@@ -1,6 +1,6 @@
 <script lang="ts">
     import Modal from '$lib/modal.svelte';
-    import ActionHistory from './actionHistory.svelte';
+    import ActionHistory from './ActionHistory.svelte';
     import { onMount, onDestroy } from 'svelte';
 
     import type { Snapshot } from "./$types";

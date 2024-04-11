@@ -133,7 +133,11 @@
 		console.log("NEW GAME")
 		const newGame = await apiPost("/api/games", { 
 			game_date: new Date(),
-			published: false
+			game_field: '',
+			published: false,
+			refs: [],
+			scorekeepers: [],
+			timekeepers: []
 		});
 		console.log(newGame);
 		editScorebook(newGame.game_id);
