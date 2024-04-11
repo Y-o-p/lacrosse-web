@@ -23,7 +23,7 @@ export const actions = {
             clg_class: data.get('clg_class').toString(),
             jersey_num: Number(data.get('jerseyNumber').toString()),
             major: data.get('major').toString(),
-            //home_town: data.get('home_town').toString(),
+            home_town: data.get('home_town').toString(),
         };
 
         let coach = {
