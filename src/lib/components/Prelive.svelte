@@ -3,8 +3,8 @@
     import { createEventDispatcher, onMount } from "svelte";
     const dispatch = createEventDispatcher();
     export let game;
-    export let homeLineup = new Array<Player>(10);
-    export let awayLineup = new Array<Player>(10);
+    export let homeLineup = new Array<number>(10);
+    export let awayLineup = new Array<number>(10);
     let homeRoster = [];
     let awayRoster = [];
 
@@ -13,8 +13,8 @@
     
     onMount(async () => {
         if (homeLineup.length == 0) {
-            homeLineup = new Array<Player>(10);
-            awayLineup = new Array<Player>(10);
+            homeLineup = new Array<number>(10);
+            awayLineup = new Array<number>(10);
         }
         teams = await apiCall<Array<Team>>("GET", `/api/teams`);
     });
@@ -30,7 +30,7 @@
         selectedHomeTeam = event.target.value;
         homeRoster = await apiCall<Player>("GET", `/api/players?team_id=${selectedHomeTeam}`);
         homeLineup.forEach((player, i) => {
-            homeLineup[i] = homeRoster[i];
+            homeLineup[i] = homeRoster[i].player_id;
         });
         homeLineup = homeLineup;
     };
@@ -40,19 +40,19 @@
         selectedAwayTeam = event.target.value;
         awayRoster = await apiCall<Player>("GET", `/api/players?team_id=${selectedAwayTeam}`);
         awayLineup.forEach((player, i) => {
-            awayLineup[i] = awayRoster[i];
+            awayLineup[i] = awayRoster[i].player_id;
         });
         awayLineup = awayLineup;
     };
 
     async function startGame() {
-        dispatch("start");
         homeTeam = selectedHomeTeam;
         awayTeam = selectedAwayTeam;
         game.hometeam_id = homeTeam;
         game.awayteam_id = awayTeam;
         console.log(game);
         await patchGame(game);
+        dispatch("start");
     }
 
     const handleHomePlayerSelect = (event) => {
