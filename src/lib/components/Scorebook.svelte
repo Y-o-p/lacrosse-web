@@ -4,15 +4,17 @@
     import { onMount } from "svelte";
     import { apiCall } from "$lib/api";
     export let game: Game;
-    let homePlayers: Array<Player>;
-    let awayPlayers: Array<Player>;
-    let homeLineup: Array<Player> = homePlayers;
-    let awayLineup: Array<Player> = awayPlayers;
+    let homePlayers: Array<Player> = [];
+    let awayPlayers: Array<Player> = [];
+    let homeLineup: Array<number> = [];
+    let awayLineup: Array<number> = [];
 
     async function loadRosters() {
         if (game.hometeam_id !== null && game.awayteam_id !== null) {
-            homePlayers = await apiCall<Player>("GET", `/api/players?team_id=${game.hometeam_id}`);
-            awayPlayers = await apiCall<Player>("GET", `/api/players?team_id=${game.awayteam_id}`);
+            if (homePlayers.length == 0 && awayPlayers.length == 0) {
+                homePlayers = await apiCall<Player>("GET", `/api/players?team_id=${game.hometeam_id}`);
+                awayPlayers = await apiCall<Player>("GET", `/api/players?team_id=${game.awayteam_id}`);
+            }
             let playerStats = await apiCall<PlayerStats>("GET", `/api/player-stats?game_id=${game.game_id}&team_id=${game.hometeam_id}`);
             playerStats = playerStats.concat(await apiCall<PlayerStats>("GET", `/api/player-stats?game_id=${game.game_id}&team_id=${game.awayteam_id}`));
 
@@ -45,14 +47,13 @@
                 }
             });
         }
-        if (homeLineup === null && awayLineup === null) {
-            homeLineup = homePlayers;
-            awayLineup = awayPlayers;
-        }
+        console.log("LOADED ROSTERS");
+        console.log(homePlayers);
+        console.log(homeLineup);
     }
 
     onMount(async () => {
-        loadRosters();
+        await loadRosters();
     });
 </script>
 
@@ -65,7 +66,7 @@
             bind:homeLineup={homeLineup}    
             bind:awayLineup={awayLineup}
             bind:game={game}
-            on:start={() => {loadRosters()}}
+            on:start={() => {loadRosters();}}
         ></Prelive>
     {:else if game.published}
     <!-- Published -->
