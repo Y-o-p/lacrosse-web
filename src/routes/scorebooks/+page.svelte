@@ -26,8 +26,8 @@
 	let showEndSessionModal = false;
 
 	onMount( async () => {
-		await addNewScorebooks();
 		await addOldScorebooks();
+		await addNewScorebooks();
 		sortScorebooks();
 	});
 
@@ -67,23 +67,20 @@
 	}
 
 	/**
-	 * Queries sessions that have no `game_id` and populates the `scorebookPreviews` list
+	 * Queries sessions that have uninitialized games
 	 */ 
 	async function addNewScorebooks() {
-		// Get the sessions that don't have a related game.
-		const sessions = await (await fetch(`/api/sessions?game_id=null`)).json();
+		const sessions = await (await fetch(`/api/sessions?coach_id=${data.locals.coach.coach_id}`)).json();
 		for (let session of sessions) {
-			session = {
-				session_id: BigInt(session["session_id"]),
-				coach_id: BigInt(session["coach_id"]),
-				room_code: session["room_code"],
-				expire_time: BigInt(session["expire_time"])
-			};
-			let scorebookPreview: ScorebookPreview = {
-				date: new Date(),
-				session: session
-			};
-			scorebookPreviews = [...scorebookPreviews, scorebookPreview];
+			if (scorebookPreviews.find((preview) => preview.game_id == session.game_id) === undefined) {
+				session = session as ScorebookSession;
+				let scorebookPreview: ScorebookPreview = {
+					game_id: session.game_id,
+					date: new Date(),
+					session: session
+				};
+				scorebookPreviews = [...scorebookPreviews, scorebookPreview];
+			}
 		}
 	}
 
@@ -110,7 +107,9 @@
     }
 
 	async function newScorebookNewSession() {
+		let game = await newGame();
 		let scorebookPreview: ScorebookPreview = {
+			game_id: game.game_id,
 			date: new Date(),
 			home_score: 0,
 			away_score: 0
@@ -128,10 +127,8 @@
 		await goto(`/scorebooks/${id}`);
 	}
 	
-	async function newScorebookEdit() {
-		showNewScorebookModal = false;
-		console.log("NEW GAME")
-		const newGame = await apiPost("/api/games", { 
+	async function newGame() {
+		return apiPost("/api/games", { 
 			game_date: new Date(),
 			game_field: '',
 			published: false,
@@ -139,9 +136,11 @@
 			scorekeepers: [],
 			timekeepers: []
 		});
-		console.log(newGame);
-		editScorebook(newGame.game_id);
-		// TODO: redirect to a different page
+	}
+	
+	async function newScorebookEdit() {
+		showNewScorebookModal = false;
+		editScorebook((await newGame()).game_id);		
 	}
 
 	/**
@@ -200,7 +199,7 @@
 	<ul>
 		{#each scorebookPreviews as scorebook}
 			<li>
-				{#if scorebook.game_id === undefined}
+				{#if scorebook.home === undefined || scorebook.away === undefined}
 					New Game
 				{:else}
 					Date: {scorebook.date} Home: {scorebook.home} Away: {scorebook.away}
