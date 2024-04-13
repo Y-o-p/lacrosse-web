@@ -6,8 +6,8 @@
     export let game: Game;
     let homePlayers: Array<Player> = [];
     let awayPlayers: Array<Player> = [];
-    let homeLineup: Array<number> = [];
-    let awayLineup: Array<number> = [];
+    let homeLineup: Array<Player> = [];
+    let awayLineup: Array<Player> = [];
 
     async function loadRosters() {
         if (game.hometeam_id !== null && game.awayteam_id !== null) {
@@ -47,9 +47,10 @@
                 }
             });
         }
-        console.log("LOADED ROSTERS");
-        console.log(homePlayers);
-        console.log(homeLineup);
+        if (homeLineup.length === 0 || awayLineup.length === 0) {
+            homeLineup = homePlayers.slice(0, 10);
+            awayLineup = awayPlayers.slice(0, 10);
+        }
     }
 
     onMount(async () => {
@@ -61,8 +62,8 @@
     {#if game.hometeam_id === null || game.awayteam_id === null}
     <!-- Pre-live -->
         <Prelive
-            bind:homeTeam={game.hometeam_id}
-            bind:awayTeam={game.awayteam_id}
+            bind:homeRoster={homePlayers}
+            bind:awayRoster={awayPlayers}
             bind:homeLineup={homeLineup}    
             bind:awayLineup={awayLineup}
             bind:game={game}
@@ -74,7 +75,6 @@
     {:else}
     <!-- Live -->
         <Live 
-            on:onMount
             bind:homePlayers={homePlayers}
             bind:awayPlayers={awayPlayers}
             bind:homeLineup={homeLineup}

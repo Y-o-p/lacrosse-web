@@ -3,46 +3,40 @@
     import { createEventDispatcher, onMount } from "svelte";
     const dispatch = createEventDispatcher();
     export let game;
-    export let homeLineup = new Array<number>(10);
-    export let awayLineup = new Array<number>(10);
-    let homeRoster = [];
-    let awayRoster = [];
+    export let homeLineup = new Array<Player>(10);
+    export let awayLineup = new Array<Player>(10);
+    export let homeRoster = [];
+    export let awayRoster = [];
 
     // Team Names
     let teams = [];
     
     onMount(async () => {
         if (homeLineup.length == 0) {
-            homeLineup = new Array<number>(10);
-            awayLineup = new Array<number>(10);
+            homeLineup = new Array<Player>(10);
+            awayLineup = new Array<Player>(10);
         }
         teams = await apiCall<Array<Team>>("GET", `/api/teams`);
     });
 
 
     let quarterLength = ''; // Initialize quarter length variable
-    export let homeTeam = null; // Placeholder for home team data
-    export let awayTeam = null; // Placeholder for away team data
+    let homeTeam = null; // Team IDs
+    let awayTeam = null; // Team IDs
 
     let selectedHomeTeam;
     const handleHomeTeamSelect = async (event) => {
         // Populate the home roster array
         selectedHomeTeam = event.target.value;
         homeRoster = await apiCall<Player>("GET", `/api/players?team_id=${selectedHomeTeam}`);
-        homeLineup.forEach((player, i) => {
-            homeLineup[i] = homeRoster[i].player_id;
-        });
-        homeLineup = homeLineup;
+        homeLineup = homeRoster.slice(0, 10);
     };
 
     let selectedAwayTeam;
     const handleAwayTeamSelect = async (event) => {
         selectedAwayTeam = event.target.value;
         awayRoster = await apiCall<Player>("GET", `/api/players?team_id=${selectedAwayTeam}`);
-        awayLineup.forEach((player, i) => {
-            awayLineup[i] = awayRoster[i].player_id;
-        });
-        awayLineup = awayLineup;
+        awayLineup = awayRoster.slice(0, 10);
     };
 
     async function startGame() {
@@ -50,7 +44,6 @@
         awayTeam = selectedAwayTeam;
         game.hometeam_id = homeTeam;
         game.awayteam_id = awayTeam;
-        console.log(game);
         await patchGame(game);
         dispatch("start");
     }
