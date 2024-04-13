@@ -152,7 +152,6 @@
         on:edit={() => {
             modals[scorebookActions[selectedAction].actionType] = true;
             newAction = Object.assign({}, scorebookActions[selectedAction]); 
-            console.log(newAction);
         }}>
             <div slot="header">
                 <table>
