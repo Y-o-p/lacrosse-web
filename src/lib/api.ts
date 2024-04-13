@@ -83,6 +83,7 @@ export async function getGame(id): Promise<Game> {
     return player_stats;
 }
 
+
 ///////////////////////////////////////////////////////////////////////////////
 // PATCH Helper Functions
 ///////////////////////////////////////////////////////////////////////////////
@@ -92,6 +93,7 @@ export async function patchGame(stats: Partial<Game>) {
 }
 
 export async function patchPlayerStats(stats: Partial<PlayerStats>) {
+    console.log("PATCHING PLAYER STATS  Stats: ", stats);
     return apiCall<PlayerStats>("PATCH", `/api/player-stats/${stats.playerstat_id}`, stats);
 }
 

@@ -3,12 +3,17 @@
     export let data: PageServerData;
     import Modal from './addPlayerModal.svelte';
 
-    const positions = ['G', 'M', 'A', 'D'];
+    const positions = ['G', 'M', 'A', 'D', 'L'];
     let selectedPosition = '';
+    let selectedClgClass = '';
 
-    const handleSelection = (event) => {
+    const handlePosSelection = (event) => {
         selectedPosition = event.target.value;
     };
+
+    const handleClgClassSelect = (event) => {
+        selectedClgClass = event.target.value;
+    }
 </script>
 
 <html lang="en">
@@ -124,39 +129,66 @@
         <div class="container">
             <h1>Add Player to {data.team.team_name} </h1>
             <form id="rosterForm" method="POST" action="?/addPlayer">
-                <!-- Input fields -->
-                <label for="firstName">First Name:</label>
-                <input type="text" id="firstName" name="firstName" required>
+                <div>
+                    <!-- Input fields -->
+                    <label for="firstName">First Name:</label>
+                    <input type="text" id="firstName" name="firstName" required>
+                    
+                    <label for="lastName">Last Name:</label>
+                    <input type="text" id="lastName" name="lastName" required>
+                </div>
+
                 
-                <label for="lastName">Last Name:</label>
-                <input type="text" id="lastName" name="lastName" required>
+
+                <div>
+                <label for="major">Major:</label>
+                <input type="text" id="major" name="major">
+
+                <label for="clg_class">Classman (Fr., So., Jr., Sr., or Gr.):</label>
+                <select bind:value={selectedClgClass} on:change={handleClgClassSelect}>
+                    <option value="Fr.">Freshman</option>
+                    <option value="So.">Sophomore</option>
+                    <option value="Jr.">Junior</option>
+                    <option value="Sr.">Senior</option>
+                </select>
+
+                
+                </div>
 
                 <!-- Position selector -->
                 <div class="position-selector">
                     <div class="position-circles">
                         <label for="position">Position:</label>
-                        <select bind:value={selectedPosition} on:change={handleSelection} required>
+                        <select bind:value={selectedPosition} on:change={handlePosSelection} required>
                             {#each positions as position}
                                 <option value={position}>{position}</option>
                             {/each}
                         </select>
                     </div>
+
+                    <label for="jerseyNumber">Jersey Number:</label>
+                    <input type="number" id="jerseyNumber" name="jerseyNumber" min="0" max="99" required>
+
+                    <label for="home_town">Home Town:</label>
+                    <input type="text" id="home_town" name="home_town">
                 </div>
 
                 <!-- Hidden input for position -->
                 <input type="hidden" id="position" name="position" value={selectedPosition} required>
 
+                <input type="hidden" id="clg_class" name="clg_class" value={selectedClgClass} required>
+
+
                 <!-- Hidden input for team_id-->
                 <input type="hidden" id="team_id" name="team_id" required value={data.locals.coach.team_id}>
                 <!-- Additional input fields -->
                 <label for="height">Height (in inches):</label>
-                <input type="number" id="height" name="height" min="0" max="100" step="1" required>
+                <input type="number" id="height" name="height" min="0" max="100" step="1">
 
                 <label for="weight">Weight (in lbs):</label>
-                <input type="number" id="weight" name="weight" min="0" max="500" step="1" required>
+                <input type="number" id="weight" name="weight" min="0" max="500" step="1">
 
-                <label for="birthdate">Birthdate:</label>
-                <input type="date" id="birthdate" name="birthdate" required>
+
 
                 <!-- Submit button and error message -->
                 <input type="submit" value="Add Player">
