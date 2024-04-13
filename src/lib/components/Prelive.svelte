@@ -29,20 +29,14 @@
         // Populate the home roster array
         selectedHomeTeam = event.target.value;
         homeRoster = await apiCall<Player>("GET", `/api/players?team_id=${selectedHomeTeam}`);
-        homeLineup.forEach((player, i) => {
-            homeLineup[i] = homeRoster[i];
-        });
-        homeLineup = homeLineup;
+        homeLineup = homeRoster.slice(0, 10);
     };
 
     let selectedAwayTeam;
     const handleAwayTeamSelect = async (event) => {
         selectedAwayTeam = event.target.value;
         awayRoster = await apiCall<Player>("GET", `/api/players?team_id=${selectedAwayTeam}`);
-        awayLineup.forEach((player, i) => {
-            awayLineup[i] = awayRoster[i];
-        });
-        awayLineup = awayLineup;
+        awayLineup = awayRoster.slice(0, 10);
     };
 
     async function startGame() {
