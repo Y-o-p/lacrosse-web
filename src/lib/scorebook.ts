@@ -14,6 +14,7 @@ export enum ActionType {
 export interface ScorebookAction {
     readonly actionType: ActionType;
     time: String;
+    home: boolean;
 }
 
 export interface Shot extends ScorebookAction {

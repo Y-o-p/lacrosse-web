@@ -15,11 +15,10 @@
     export let awayLineup;
     let homeTeamScore = 0;
     let awayTeamScore = 0;
-    let homeSelected = true;
     let homeTeamName = ""; 
     let awayTeamName = ""; 
-    $: selectedPlayers = homeSelected ? homeLineup : awayLineup;
-    $: unselectedPlayers = homeSelected ? awayLineup : homeLineup;
+    $: selectedPlayers = newAction.home ? homeLineup : awayLineup;
+    $: unselectedPlayers = newAction.home ? awayLineup : homeLineup;
 
     let penaltyTimes = ["5", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55", "60"];
 
@@ -34,6 +33,7 @@
     let selectedAction = -1;
     let newAction = {
         actionType: null,
+        home: false,
         time: null,
         by: null,
         goal: false,
@@ -96,7 +96,7 @@
     };
 
     function handleNewAction(type: ActionType, home = true) {
-        homeSelected = home;
+        newAction.home = home;
         modals[type] = true;
         selectedAction = null;
     }
