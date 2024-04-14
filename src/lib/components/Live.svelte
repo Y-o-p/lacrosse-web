@@ -5,7 +5,7 @@
 
     import type { Snapshot } from "./$types";
     import { type ScorebookAction, ActionType, performAction } from '$lib/scorebook';
-    import { getGame, patchGame } from '$lib/api';
+    import { apiCall, getGame, patchGame } from '$lib/api';
 
     // ROSTER DATA
     export let game;
@@ -14,6 +14,8 @@
     export let homeLineup;
     export let awayLineup;
     let homeSelected = true;
+    let homeTeamName = ""; 
+    let awayTeamName = ""; 
     $: selectedPlayers = homeSelected ? homeLineup : awayLineup;
     $: unselectedPlayers = homeSelected ? awayLineup : homeLineup;
 
@@ -70,8 +72,10 @@
         }, 1000);
     };
 
-    onMount(() => {
+    onMount(async () => {
         startClock();
+        homeTeamName = (await apiCall<Team>("GET", `/api/teams/${game.hometeam_id}`)).team_name;
+        awayTeamName = (await apiCall<Team>("GET", `/api/teams/${game.awayteam_id}`)).team_name;
     });
 
     onDestroy(() => {
@@ -85,6 +89,7 @@
     };
 
     const handleSelection = (event) => {
+        console.log(homePlayers)
     };
 
     function handleNewAction(type: ActionType, home = true) {
@@ -132,7 +137,7 @@
 <main>
     <div>    
         <div class="team-container">
-            <h1>Home Team</h1>
+            <h1>Home Team: {homeTeamName}</h1>
             <button on:click={() => {handleNewAction(ActionType.Shot);}}>Shot</button>
             <button on:click={() => {handleNewAction(ActionType.Turnover);}}>Turnover Made</button>
             <button on:click={() => {handleNewAction(ActionType.ClearAttempted);}}>Clear Attempted</button>
@@ -171,7 +176,7 @@
         </ActionHistory>
 
         <div class="team-container">
-            <h1>Away Team</h1>
+            <h1>Away Team: {awayTeamName}</h1>
             <button on:click={() => {handleNewAction(ActionType.Shot, false);}}>Shot</button>
             <button on:click={() => {handleNewAction(ActionType.Turnover, false);}}>Turnover Made</button>
             <button on:click={() => {handleNewAction(ActionType.ClearAttempted, false);}}>Clear Attempted</button>
