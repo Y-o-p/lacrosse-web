@@ -34,7 +34,7 @@
     let selectedAction = -1;
     let newAction = {
         actionType: null,
-        date: null,
+        time: null,
         by: null,
         goal: false,
         assistedBy: null,
@@ -111,7 +111,7 @@
     async function handleSubmitAction() {
         if (selectedAction === null) {
             // New Action
-            newAction.date = new Date();
+            newAction.time = formatTime(currentTime);
             try {
                 await performAction(newAction); 
                 scorebookActions = [newAction, ...scorebookActions];

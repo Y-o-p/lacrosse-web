@@ -26,9 +26,9 @@
 <div class="game-history">
     <slot name="header" />
     <div class="actions-container">
-        {#each actions as action (action.date)}
+        {#each actions as action (action.time)}
             <div class="action" in:fade out:fly={{x: 50}} animate:flip={{ duration: 400 }}>
-                <span class="action-time">{action.date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
+                <span class="action-time">{action.time}</span>
                 <span class="action-details">{actionToString(action)}</span>
                 <button class="action-button edit" on:click={ () => { selectedAction = actions.indexOf(action); dispatch("edit"); }}>Edit</button>
                 <button class="action-button undo" on:click={ async () => undo(action) }><FaSolidUndoAlt /></button>
