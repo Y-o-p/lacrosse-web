@@ -18,6 +18,7 @@
 		actions.splice(i, 1);
 		actions = actions;
         selectedAction = null;
+        dispatch("undo");
     }
 
 </script>

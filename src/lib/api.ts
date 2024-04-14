@@ -83,6 +83,11 @@ export async function getGame(id): Promise<Game> {
     return player_stats;
 }
 
+export async function getTeamStatsFromGame(team_id, game_id) {
+    const stats = await apiCall<PlayerStats>("GET", `/api/player-stats?team_id=${team_id}&game_id=${game_id}`);
+    return stats;
+}
+
 
 ///////////////////////////////////////////////////////////////////////////////
 // PATCH Helper Functions

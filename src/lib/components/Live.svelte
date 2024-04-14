@@ -5,7 +5,7 @@
 
     import type { Snapshot } from "./$types";
     import { type ScorebookAction, ActionType, performAction } from '$lib/scorebook';
-    import { apiCall, getGame, patchGame } from '$lib/api';
+    import { apiCall, getGame, getTeamStatsFromGame, patchGame } from '$lib/api';
 
     // ROSTER DATA
     export let game;
@@ -13,6 +13,8 @@
     export let awayPlayers;
     export let homeLineup;
     export let awayLineup;
+    let homeTeamScore = 0;
+    let awayTeamScore = 0;
     let homeSelected = true;
     let homeTeamName = ""; 
     let awayTeamName = ""; 
@@ -76,6 +78,7 @@
         startClock();
         homeTeamName = (await apiCall<Team>("GET", `/api/teams/${game.hometeam_id}`)).team_name;
         awayTeamName = (await apiCall<Team>("GET", `/api/teams/${game.awayteam_id}`)).team_name;
+        getScores();
     });
 
     onDestroy(() => {
@@ -96,6 +99,13 @@
         homeSelected = home;
         modals[type] = true;
         selectedAction = null;
+    }
+
+    async function getScores() {
+        const homeTeamStats = await getTeamStatsFromGame(game.hometeam_id, game.game_id);
+        const awayTeamStats = await getTeamStatsFromGame(game.awayteam_id, game.game_id);
+        homeTeamScore = homeTeamStats.reduce((partialGoalsSum, stats) => partialGoalsSum + stats.goals, 0);
+        awayTeamScore = awayTeamStats.reduce((partialGoalsSum, stats) => partialGoalsSum + stats.goals, 0);
     }
 
     async function handleSubmitAction() {
@@ -122,6 +132,7 @@
             }
         }
         newAction = Object.assign({}, newAction);
+        getScores();
     }
 
     async function publish() {
@@ -157,12 +168,15 @@
         on:edit={() => {
             modals[scorebookActions[selectedAction].actionType] = true;
             newAction = Object.assign({}, scorebookActions[selectedAction]); 
+        }}
+        on:undo={() => {
+            getScores();
         }}>
             <div slot="header">
                 <table>
                     <tr>
                         <th class="action-list-header">{formatTime(currentTime)}</th> 
-                        <th class="action-list-header">0 - 0</th>
+                        <th class="action-list-header">{homeTeamScore} - {awayTeamScore}</th>
                     </tr>
                     <tr></tr>
                     <tr></tr>
