@@ -55,16 +55,18 @@ enum Position {
 }
 
 interface Player {
-    player_id?: bigint,
-    playerstat_id?: bigint,
-    team_id: bigint,
-    last_name: string,
-    first_name: string,
-    pos: string,
-    height: number,
-    weight: number,
-    birth_date: Date
-}
+    player_id?: bigint | number;
+    team_id: bigint;
+    last_name: string;
+    first_name: string;
+    pos: string;
+    height: number;
+    weight: number;
+    jersey_num: number;
+    clg_class: string;
+    major: string;
+    home_town: string;
+  }
 
 interface PlayerStats {
     playerstat_id?: bigint,

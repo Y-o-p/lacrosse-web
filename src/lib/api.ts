@@ -44,8 +44,8 @@ export async function getCoach(id: number): Promise<Coach> {
                 team_id: BigInt(row["team_id"]),
                 last_name: row["last_name"],
                 first_name: row["first_name"],
-                birth_date: new Date,
                 date_created: new Date,
+                email: row["email"],
                 phone: row["phone"],
             };
             resolve(coach);
