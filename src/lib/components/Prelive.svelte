@@ -3,6 +3,7 @@
     import { createEventDispatcher, onMount } from "svelte";
     const dispatch = createEventDispatcher();
     export let game;
+    export let requiredTeam;
     export let homeLineup = new Array<Player>(10);
     export let awayLineup = new Array<Player>(10);
     export let homeRoster = [];
@@ -45,18 +46,18 @@
     };
 
     async function startGame() {
-        homeTeam = selectedHomeTeam;
-        awayTeam = selectedAwayTeam;
-        scoreKeepers = scorebookKeepers.split(",");
-        console.log(scoreKeepers);
-        game.refs = refs;
-        game.game_field = gameField;
-        game.scorekeepers = scoreKeepers;
-       game.timekeepers = timeKeepers;
-        game.hometeam_id = homeTeam;
-        game.awayteam_id = awayTeam;
-        await patchGame(game);
-        dispatch("start");
+        if (requiredTeam != selectedHomeTeam && requiredTeam != selectedAwayTeam) {
+            const requiredTeamName = (await apiCall<Team>("GET", `/api/teams/${requiredTeam}`)).team_name;
+            alert(`${requiredTeamName} needs to be selected for either the home or away team.`)
+        }
+        else {
+            homeTeam = selectedHomeTeam;
+            awayTeam = selectedAwayTeam;
+            game.hometeam_id = homeTeam;
+            game.awayteam_id = awayTeam;
+            await patchGame(game);
+            dispatch("start");
+        }
     }
 
     let selectedPlayers = [];

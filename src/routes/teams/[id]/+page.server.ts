@@ -19,8 +19,7 @@ export async function load({locals, params}) {
     coachName += coachRow["last_name"].toString();
     let teamTable = [];
 
-    let team : TeamTable = {
-        Team: teamRow["team_name"].toString(),
+    let team : Partial<TeamTable> = {
         Coach: coachName,
         Wins: teamRow["wins"],
         Losses: teamRow["losses"],
@@ -34,6 +33,8 @@ export async function load({locals, params}) {
     let playerRows = await getRowsFromVals("players", player);
     let numPlayers = Object.keys(playerRows).length;
     let playersTable = [];
+    const plyrsRouteData: Array<Map<string, number>> = [];
+
     for (let i = 0; i < numPlayers; i++) {
 
         let playerName = "";
@@ -43,7 +44,6 @@ export async function load({locals, params}) {
 
         let player: Partial<PlayerTable> = {
             Name: playerName,
-            Team: checkEmpty(teamRow["team_name"]).toString(),
             '#': playerRows[i]["jersey_num"],
             Position: playerRows[i]["pos"],
             "Height (inches)": playerRows[i]["height"],
@@ -53,10 +53,16 @@ export async function load({locals, params}) {
             "Home Town": checkEmpty(playerRows[i]["home_town"]).toString()
         }
         playersTable.push(player);
+
+        let plyrsRouteMap = new Map<string, number>();
+        plyrsRouteMap.set(playerName, playerRows[i]["player_id"]);
+        plyrsRouteMap.set(teamRow["team_name"].toString(), playerRows[i]["team_id"]);
+        plyrsRouteData.push(plyrsRouteMap);
     }
 
     locals.teamData = teamRow;
     locals.teamTable = teamTable;
     locals.roster = playersTable;
+    locals.rosterRouteData = plyrsRouteData;
     return { locals: locals};
 }

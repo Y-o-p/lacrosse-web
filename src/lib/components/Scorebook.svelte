@@ -4,6 +4,7 @@
     import { onMount } from "svelte";
     import { apiCall } from "$lib/api";
     export let game: Game;
+    export let requiredTeam: BigInt;
     let homePlayers: Array<Player> = [];
     let awayPlayers: Array<Player> = [];
     let homeLineup: Array<Player> = [];
@@ -67,6 +68,7 @@
             bind:homeLineup={homeLineup}    
             bind:awayLineup={awayLineup}
             bind:game={game}
+            bind:requiredTeam={requiredTeam}
             on:start={() => {loadRosters();}}
         ></Prelive>
     {:else if game.published}

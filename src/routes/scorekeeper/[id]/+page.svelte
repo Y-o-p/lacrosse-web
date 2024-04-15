@@ -6,4 +6,5 @@
 
 <Scorebook
     bind:game={data.props.game}
+    bind:requiredTeam={data.props.requiredTeam}
 ></Scorebook>

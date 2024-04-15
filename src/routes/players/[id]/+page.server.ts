@@ -1,4 +1,4 @@
-import { getPlayer, getTeam, getRowsFromVals } from "$lib/db";
+import { getPlayer, getTeam, getGame, getRowsFromVals } from "$lib/db";
 
 function checkEmpty(element) {
     let ret = element;
@@ -17,11 +17,11 @@ export async function load({locals, params}) {
     playerName += " ";
     playerName += playerRow["last_name"].toString();
     let playerTable = [];
+    const plyrsRouteData: Array<Map<string, number>> = [];
     
-    let player: PlayerTable = {
-        Name: playerName,
+    let player: Partial<PlayerTable> = {
         Team: checkEmpty(teamRow["team_name"]).toString(),
-        Number: playerRow["jersey_num"],
+        '#': playerRow["jersey_num"],
         Position: playerRow["pos"],
         "Height (inches)": playerRow["height"],
         "Weight (pounds)": playerRow["weight"],
@@ -30,6 +30,9 @@ export async function load({locals, params}) {
         "Home Town": checkEmpty(playerRow["home_town"]).toString()
     }
     playerTable.push(player);
+    let plyrsRouteMap = new Map<string, number>();
+    plyrsRouteMap.set(teamRow["team_name"].toString(), playerRow["team_id"]);
+    plyrsRouteData.push(plyrsRouteMap);
 
     let vals: Partial<PlayerStats> = {
         player_id: BigInt(params.id)
@@ -58,11 +61,24 @@ export async function load({locals, params}) {
     let numPlayerStats = Object.keys(playerStatRows).length;
     let statsPerGameTable = [];
     let gkStatsPerGameTable = [];
+    const statsRouteData: Array<Map<string, number>> = [];
+
     if (numPlayerStats != 0) {
         for (let i = 0; i < numPlayerStats; i++) {
             let points = playerStatRows[i]["goals"] + playerStatRows[i]["assists"];
 
+            let gameRow = await getGame(playerStatRows[i]["game_id"]);
+            let opponent = "";
+            if (gameRow["hometeam_id"] == playerRow["team_id"]) {
+                let opTeamRow = await getTeam(gameRow["awayteam_id"]);
+                opponent += opTeamRow["team_name"];
+            } else {
+                let opTeamRow = await getTeam(gameRow["hometeam_id"]);
+                opponent += opTeamRow["team_name"];
+            }
+
             let stats: Partial<PlayerStatsTable> = {
+                Opponent: opponent,
                 G: playerStatRows[i]["goals"],
                 A: playerStatRows[i]["assists"],
                 P: points,
@@ -78,6 +94,10 @@ export async function load({locals, params}) {
                 PEN: playerStatRows[i]["penalties"]
             }
             statsPerGameTable.push(stats);
+
+            let statsRouteMap = new Map<string, number>();
+            statsRouteMap.set(opponent, playerStatRows[i]["game_id"]);
+            statsRouteData.push(statsRouteMap);
 
             plGoals += playerStatRows[i]["goals"];
             plPoints += points;
@@ -147,5 +167,8 @@ export async function load({locals, params}) {
     locals.playerStats = playerStatsTable;
     locals.gkGamesStats = gkStatsPerGameTable;
     locals.gkStats = gkStatsTable;
+
+    locals.plyrsRouteData = plyrsRouteData;
+    locals.statsRouteData = statsRouteData;
     return { locals: locals};
 }

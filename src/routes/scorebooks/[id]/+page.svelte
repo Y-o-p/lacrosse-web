@@ -6,6 +6,5 @@
 
 <Scorebook
     bind:game={data.props.game}
-    bind:homePlayers={data.props.homePlayers}
-    bind:awayPlayers={data.props.awayPlayers}
+    bind:requiredTeam={data.props.locals.coach.team_id}
 ></Scorebook>
