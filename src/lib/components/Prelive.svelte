@@ -21,6 +21,11 @@
 
 
     let quarterLength = ''; // Initialize quarter length variable
+    let refs = '';
+    let timeKeepers = '';
+    let scorebookKeepers = '';
+    let scoreKeepers = [];
+    let gameField = '';
     let homeTeam = null; // Team IDs
     let awayTeam = null; // Team IDs
 
@@ -42,6 +47,12 @@
     async function startGame() {
         homeTeam = selectedHomeTeam;
         awayTeam = selectedAwayTeam;
+        scoreKeepers = scorebookKeepers.split(",");
+        console.log(scoreKeepers);
+        game.refs = refs;
+        game.game_field = gameField;
+        game.scorekeepers = scoreKeepers;
+       game.timekeepers = timeKeepers;
         game.hometeam_id = homeTeam;
         game.awayteam_id = awayTeam;
         await patchGame(game);
@@ -116,6 +127,19 @@
         <div>
             <label>Quarter length (minutes):</label>
             <input type="text" id="quarterLength" name="quarterLength" bind:value={quarterLength} required>
+
+            <label>Game Field: </label>
+            <input type="text" id="gameField" name="gameField" bind:value={gameField} required>
+
+            <label>Refs (comma seperated):</label>
+            <input type="text" id="refs" name="refs" bind:value={refs} required>
+        </div>
+        <div>
+            <label> Scorebook Keepers (comma seperated):</label>
+            <input type="text" id="scorebookKeepers" name="scorebookKeepers" bind:value={scorebookKeepers} required>
+
+            <label>Time Keeper(s) (comma seperated):</label>
+            <input type="text" id="timeKeepers" name="timeKeepers" bind:value={timeKeepers} required>
             <button type="submit">Start Game</button>
         </div>
 
