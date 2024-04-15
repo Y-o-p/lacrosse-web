@@ -52,16 +52,18 @@ enum Position {
 }
 
 interface Player {
-    player_id?: bigint,
-    playerstat_id?: bigint,
-    team_id: bigint,
-    last_name: string,
-    first_name: string,
-    pos: string,
-    height: number,
-    weight: number,
-    birth_date: Date
-}
+    player_id?: bigint | number;
+    team_id: bigint;
+    last_name: string;
+    first_name: string;
+    pos: string;
+    height: number;
+    weight: number;
+    jersey_num: number;
+    clg_class: string;
+    major: string;
+    home_town: string;
+  }
 
 interface PlayerStats {
     playerstat_id?: bigint,
@@ -71,11 +73,16 @@ interface PlayerStats {
     goals: number,
     assists: number,
     shots: number,
+    shots_on_goal: number,
+    ground_balls: number,
+    turnovers: number,
+    turnovers_caused: number,
     faceoffs_won: number,
     faceoffs_lost: number,
     saves: number,
     penalties: number,
     clears_attempted: number,
+    goals_allowed: number,
     clears_made: number
 }
 
