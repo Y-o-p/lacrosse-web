@@ -1,11 +1,11 @@
 <script lang="ts">
     import Modal from '$lib/modal.svelte';
-    import ActionHistory from './actionHistory.svelte';
+    import ActionHistory from './ActionHistory.svelte';
     import { onMount, onDestroy } from 'svelte';
 
     import type { Snapshot } from "./$types";
     import { type ScorebookAction, ActionType, performAction } from '$lib/scorebook';
-    import { getGame, patchGame } from '$lib/api';
+    import { apiCall, getGame, getTeamStatsFromGame, patchGame } from '$lib/api';
 
     // ROSTER DATA
     export let game;
@@ -13,9 +13,12 @@
     export let awayPlayers;
     export let homeLineup;
     export let awayLineup;
-    let homeSelected = true;
-    $: selectedPlayers = homeSelected ? homeLineup : awayLineup;
-    $: unselectedPlayers = homeSelected ? awayLineup : homeLineup;
+    let homeTeamScore = 0;
+    let awayTeamScore = 0;
+    let homeTeamName = ""; 
+    let awayTeamName = ""; 
+    $: selectedPlayers = newAction.home ? homeLineup : awayLineup;
+    $: unselectedPlayers = newAction.home ? awayLineup : homeLineup;
 
     let penaltyTimes = ["5", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55", "60"];
 
@@ -30,7 +33,8 @@
     let selectedAction = -1;
     let newAction = {
         actionType: null,
-        date: null,
+        home: false,
+        time: null,
         by: null,
         goal: false,
         assistedBy: null,
@@ -70,8 +74,11 @@
         }, 1000);
     };
 
-    onMount(() => {
+    onMount(async () => {
         startClock();
+        homeTeamName = (await apiCall<Team>("GET", `/api/teams/${game.hometeam_id}`)).team_name;
+        awayTeamName = (await apiCall<Team>("GET", `/api/teams/${game.awayteam_id}`)).team_name;
+        getScores();
     });
 
     onDestroy(() => {
@@ -85,18 +92,26 @@
     };
 
     const handleSelection = (event) => {
+        console.log(homePlayers)
     };
 
     function handleNewAction(type: ActionType, home = true) {
-        homeSelected = home;
+        newAction.home = home;
         modals[type] = true;
         selectedAction = null;
+    }
+
+    async function getScores() {
+        const homeTeamStats = await getTeamStatsFromGame(game.hometeam_id, game.game_id);
+        const awayTeamStats = await getTeamStatsFromGame(game.awayteam_id, game.game_id);
+        homeTeamScore = homeTeamStats.reduce((partialGoalsSum, stats) => partialGoalsSum + stats.goals, 0);
+        awayTeamScore = awayTeamStats.reduce((partialGoalsSum, stats) => partialGoalsSum + stats.goals, 0);
     }
 
     async function handleSubmitAction() {
         if (selectedAction === null) {
             // New Action
-            newAction.date = new Date();
+            newAction.time = formatTime(currentTime);
             try {
                 await performAction(newAction); 
                 scorebookActions = [newAction, ...scorebookActions];
@@ -117,6 +132,7 @@
             }
         }
         newAction = Object.assign({}, newAction);
+        getScores();
     }
 
     async function publish() {
@@ -132,7 +148,7 @@
 <main>
     <div>    
         <div class="team-container">
-            <h1>Home Team</h1>
+            <h1>Home Team: {homeTeamName}</h1>
             <button on:click={() => {handleNewAction(ActionType.Shot);}}>Shot</button>
             <button on:click={() => {handleNewAction(ActionType.Turnover);}}>Turnover Made</button>
             <button on:click={() => {handleNewAction(ActionType.ClearAttempted);}}>Clear Attempted</button>
@@ -152,13 +168,15 @@
         on:edit={() => {
             modals[scorebookActions[selectedAction].actionType] = true;
             newAction = Object.assign({}, scorebookActions[selectedAction]); 
-            console.log(newAction);
+        }}
+        on:undo={() => {
+            getScores();
         }}>
             <div slot="header">
                 <table>
                     <tr>
                         <th class="action-list-header">{formatTime(currentTime)}</th> 
-                        <th class="action-list-header">0 - 0</th>
+                        <th class="action-list-header">{homeTeamScore} - {awayTeamScore}</th>
                     </tr>
                     <tr></tr>
                     <tr></tr>
@@ -172,7 +190,7 @@
         </ActionHistory>
 
         <div class="team-container">
-            <h1>Away Team</h1>
+            <h1>Away Team: {awayTeamName}</h1>
             <button on:click={() => {handleNewAction(ActionType.Shot, false);}}>Shot</button>
             <button on:click={() => {handleNewAction(ActionType.Turnover, false);}}>Turnover Made</button>
             <button on:click={() => {handleNewAction(ActionType.ClearAttempted, false);}}>Clear Attempted</button>

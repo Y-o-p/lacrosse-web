@@ -20,7 +20,10 @@ export const actions = {
             height: parseFloat(data.get('height').toString()),
             weight: parseFloat(data.get('weight').toString()),
             team_id: BigInt(data.get('team_id').toString()),
-            birth_date: new Date()
+            clg_class: data.get('clg_class').toString(),
+            jersey_num: Number(data.get('jerseyNumber').toString()),
+            major: data.get('major').toString(),
+            home_town: data.get('home_town').toString(),
         };
 
         let coach = {

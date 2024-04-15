@@ -12,7 +12,7 @@ export async function GET({ params }) {
 export async function PATCH({ params, request }) {
     return responseFromFunction(async () => {
         let j = await request.json();
-        return editPlayerStats(j as PlayerStats, {player_id: BigInt(params.id)});
+        return editPlayerStats(j as PlayerStats, {playerstat_id: BigInt(params.id)});
     });
 }
 

@@ -6,7 +6,8 @@
     const dispatch = createEventDispatcher();
     export var actions: Array<ScorebookAction> = new Array<ScorebookAction>();
     export var selectedAction: number;
-    import FaSolidUndoAlt from "virtual:icons/fa-solid/undo-alt";
+    import FaSolidTrash from "virtual:icons/fa-solid/trash";
+    import Fa6SolidPenToSquare from "virtual:icons/fa6-solid/pen-to-square";
     var game_id: bigint;
     onMount(() => {
         
@@ -18,6 +19,7 @@
 		actions.splice(i, 1);
 		actions = actions;
         selectedAction = null;
+        dispatch("undo");
     }
 
 </script>
@@ -25,12 +27,12 @@
 <div class="game-history">
     <slot name="header" />
     <div class="actions-container">
-        {#each actions as action (action.date)}
-            <div class="action" in:fade out:fly={{x: 50}} animate:flip={{ duration: 400 }}>
-                <span class="action-time">{action.date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
-                <span class="action-details">{actionToString(action)}</span>
-                <button class="action-button edit" on:click={ () => { selectedAction = actions.indexOf(action); dispatch("edit"); }}>Edit</button>
-                <button class="action-button undo" on:click={ async () => undo(action) }><FaSolidUndoAlt /></button>
+        {#each actions as action (action.time)}
+            <div class="action action-{action.home ? "home" : "away"}" in:fade out:fly={{x: 50}} animate:flip={{ duration: 400 }}>
+                <span class="action-time">{action.time}</span>
+                <span class="action-details">{action.home ? "HOME" : "AWAY"} {actionToString(action)}</span>
+                <button class="action-button edit" on:click={ () => { selectedAction = actions.indexOf(action); dispatch("edit"); }}><Fa6SolidPenToSquare /></button>
+                <button class="action-button undo" on:click={ async () => undo(action) }><FaSolidTrash /></button>
             </div>
         {/each}
     </div>
@@ -64,12 +66,19 @@
     .action {
         padding: 10px;
         margin-bottom: 5px;
-        background-color: #fff;
         border-radius: 5px;
         display: flex;
         align-items: center;
         justify-content: space-between;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .action-home {
+        background-color: #ffc75e;
+    }
+
+    .action-away {
+        background-color: #5e69ff;
     }
 
     /* Style for action time */

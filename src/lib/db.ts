@@ -5,11 +5,11 @@ import { error, json } from '@sveltejs/kit';
 import pg from 'pg';
 
 export const pool = new pg.Pool({
-    database: import.meta.env.VITE_PGDATABASE || "master",
+    database: import.meta.env.VITE_PGDATABASE || "postgres",
     user: import.meta.env.VITE_PGUSER || "postgres",
     host: import.meta.env.VITE_PGHOST || "localhost",
     port: (Number(import.meta.env.VITE_PGPORT || 5432 )),
-    password: import.meta.env.VITE_PGDATABASE || "25uPY996mWr#",
+    password: import.meta.env.VITE_PGDATABASE || "ident",
 })
 
 async function queryFromVals(action: string, tableName: string, object?: any) {
@@ -130,8 +130,11 @@ export async function editRow(tableName: string, vals: any, ids: any): Promise<a
     let query = `UPDATE ${tableName} SET`;
     let valColNames = Object.keys(vals);
     let valNames = Object.values(vals);
+    let paramId = 1;
+    let params = [];
     for (let i = 0; i < Object.keys(vals).length; i++) {
-        query += ` ${valColNames[i]} = '${valNames[i]}'`
+        query += ` ${valColNames[i]} = $${paramId++}`;
+        params.push(valNames[i]);
         if (i != Object.keys(vals).length - 1) {
             query += ','
         }
@@ -142,14 +145,15 @@ export async function editRow(tableName: string, vals: any, ids: any): Promise<a
     for (let i = 0; i < Object.keys(ids).length; i++) {
         query += ' ';
         if (i == 0) {
-            query += `WHERE ${idColNames[i]} = '${idNames[i]}'`;
+            query += ` WHERE ${idColNames[i]} = $${paramId++}`;
         } else {
-            query += `AND ${idColNames[i]} = '${idNames[i]}'`;
+            query += ` AND ${idColNames[i]} = ${paramId++}`;
         }
+        params.push(idNames[i]);
     }
     query += ' RETURNING *;';
-
-    const result = await pool.query(query);
+    console.log(query);
+    const result = await pool.query(query, params);
     return result.rows[0];
 }
 
@@ -221,6 +225,10 @@ export async function getPlayer(id: number): Promise<any> {
 
 export async function getScorebookSession(id: number): Promise<any> {
     return getRowFromId("scorebook_sessions", "session_id", id);
+}
+
+export async function getScorebookSessionFromRoomCode(room_code): Promise<any> {
+    return getRowFromId("sk_session", "room_code", room_code);
 }
 
 export async function getTeam(id: number): Promise<any> {

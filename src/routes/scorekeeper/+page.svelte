@@ -1,12 +1,12 @@
 <main>
     <h1>PLACEHOLDER</h1>
     <h1>Hello Scorebook Keeper</h1>
-    <form>
+    <form method="POST">
         <label>
             Scorebook Code
             <input name="code" type="code">
         </label>
-        <button>Edit</button>
+        <button type="submit">Edit</button>
     </form>
 </main>
 
