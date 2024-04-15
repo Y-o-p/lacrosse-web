@@ -5,6 +5,7 @@ export async function load({locals}) {
     let teamRows = await getRowsFromVals("teams", "");
     let numTeams = Object.keys(teamRows).length;
     let teams = [];
+    const teamsRouteData: Array<Map<string, number>> = [];
 
     for (let i = 0; i < numTeams; i++) {
 
@@ -21,7 +22,12 @@ export async function load({locals}) {
             Losses: teamRows[i]["losses"]
         }
         teams.push(team);
+
+        let teamsRouteMap = new Map<string, number>();
+        teamsRouteMap.set(teamRows[i]["team_name"].toString(), teamRows[i]["team_id"]);
+        teamsRouteData.push(teamsRouteMap);
     }
     locals.teams = teams;
+    locals.teamsRouteData = teamsRouteData;
     return { locals: locals};
 }

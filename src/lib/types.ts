@@ -95,12 +95,16 @@ interface User {
 // Page Table Data:
 ///////////////////////////////////////////////////////////////////////////////
 interface GameTable {
-    "Game Date": Date,
-    "Game Field": string,
+    "Game": string,
+    "Date": Date,
+    "Location": string,
     "Home Team": string,
     "Away Team": string,
     "Home Score": number,
-    "Away Score": number
+    "Away Score": number,
+    "REFS": string,
+    "TKS": string,
+    "SKS": string
 }
 
 interface TeamTable {
@@ -123,6 +127,7 @@ interface PlayerTable {
 }
 
 interface PlayerStatsTable {
+    'Opponent': string,
     "#": number,
     "Player": string,
     "G": number,

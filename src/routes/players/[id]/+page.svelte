@@ -10,6 +10,10 @@
     let playerStats = data.locals.playerStats;
     let gkGamesStats = data.locals.gkGamesStats;
     let gkStats = data.locals.gkStats;
+
+    let plyrsRouteData = data.locals.plyrsRouteData;
+    let statsRouteData = data.locals.statsRouteData;
+
     let blueStyle = "blueTable";
 </script>
 
@@ -17,16 +21,16 @@
     <h1>{playerData.first_name} {playerData.last_name}</h1>
     <h2>Player Information</h2>
     <div class="table-wrapper1">
-        <Table tableData={playerTable} style={blueStyle}/>
+        <Table tableData={playerTable} routeData={plyrsRouteData} style={blueStyle}/>
     </div>
-    <h2>Player Statistics</h2>
+    <h2>Overall Statistics</h2>
     <div class="table-wrapper1">
         <Table tableData={playerStats} style={blueStyle}/>
     </div>
     {#if gamesStats != null}
-        <h2>Player Statistics By Game</h2>
+        <h2>Statistics By Game</h2>
         <div class="table-wrapper2">
-            <Table tableData={gamesStats} style={blueStyle}/>
+            <Table tableData={gamesStats} routeData={statsRouteData} style={blueStyle}/>
         </div>
     {/if}
     {#if gkStats != null}
@@ -47,10 +51,23 @@
 
 <style>
     main {
-        margin-top: 130px;
+        margin-top: 135px;
         margin-bottom: 100px;
-        margin-left: 10px;
-        margin-right: 110px;
+        margin-left: 15px;
+        margin-right: 115px;
+    }
+
+    h1 {
+        box-sizing: border-box;
+        background-color: navy;
+        color: white;
+        font-size: 50px;
+        text-align: center;
+    }
+
+    h2 {
+        font-size: 25px;
+        text-align: center;
     }
 
     .table-wrapper1 {
