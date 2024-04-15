@@ -72,6 +72,7 @@ export async function getTeam(id: number): Promise<Team> {
 
 export async function getPlayerStats(id): Promise<PlayerStats> {
     const result = await (await fetch(`/api/player-stats/${id}`)).json();
+    console.log(result);
     const player_stats: PlayerStats = result as PlayerStats;
     return player_stats;
 }
@@ -82,6 +83,12 @@ export async function getGame(id): Promise<Game> {
     return player_stats;
 }
 
+export async function getTeamStatsFromGame(team_id, game_id) {
+    const stats = await apiCall<PlayerStats>("GET", `/api/player-stats?team_id=${team_id}&game_id=${game_id}`);
+    return stats;
+}
+
+
 ///////////////////////////////////////////////////////////////////////////////
 // PATCH Helper Functions
 ///////////////////////////////////////////////////////////////////////////////
@@ -91,6 +98,7 @@ export async function patchGame(stats: Partial<Game>) {
 }
 
 export async function patchPlayerStats(stats: Partial<PlayerStats>) {
+    console.log("PATCHING PLAYER STATS  Stats: ", stats);
     return apiCall<PlayerStats>("PATCH", `/api/player-stats/${stats.playerstat_id}`, stats);
 }
 

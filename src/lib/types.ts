@@ -28,6 +28,9 @@ interface Game {
     game_date: Date, 
     game_field: string,
     published: boolean,
+    refs: Array<string>,
+    scorekeepers: Array<string>,
+    timekeepers: Array<string>
 }
 
 interface ScorebookSession {
@@ -82,8 +85,8 @@ interface PlayerStats {
     saves: number,
     penalties: number,
     clears_attempted: number,
-    goals_allowed: number,
-    clears_made: number
+    clears_made: number,
+    goals_allowed: number
 }
 
 ///////////////////////////////////////////////////////////////////////////////

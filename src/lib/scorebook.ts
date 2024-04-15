@@ -13,7 +13,8 @@ export enum ActionType {
 
 export interface ScorebookAction {
     readonly actionType: ActionType;
-    date: Date;
+    time: String;
+    home: boolean;
 }
 
 export interface Shot extends ScorebookAction {
@@ -112,7 +113,7 @@ export function actionToString(action: ScorebookAction) {
             return `Faceoff won by ${wonBy.last_name}, lost by ${lostBy.last_name}`;
         }
     }
-    return action.date;
+    return action.time;
 }
 
 export async function performAction(action: ScorebookAction, undo = false) {
