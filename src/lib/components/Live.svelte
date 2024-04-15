@@ -2,7 +2,7 @@
     import Modal from '$lib/modal.svelte';
     import ActionHistory from './ActionHistory.svelte';
     import { onMount, onDestroy } from 'svelte';
-
+    import { goto } from '$app/navigation';
     import type { Snapshot } from "./$types";
     import { type ScorebookAction, ActionType, performAction } from '$lib/scorebook';
     import { apiCall, getGame, getTeamStatsFromGame, patchGame } from '$lib/api';
@@ -47,6 +47,10 @@
         successful: false
     };
     $: newAction.actionType = currentModal;
+         //used for the half time button to navigate to the review page
+    function goToHalftimeReview(gameId: number) {
+        window.open(`/halftime-review/${gameId}`, '_blank');
+  }
 
     export const snapshot: Snapshot<Array<ScorebookAction>> = {
         capture: () => scorebookActions,
@@ -184,7 +188,7 @@
             </div>
 
             <div slot="footer">
-                <button>Half Time</button>
+                <button on:click={() => goToHalftimeReview(game.game_id)}>Half Time</button>
                 <button on:click={() => { publish() }}>End Game</button>
             </div>
         </ActionHistory>
