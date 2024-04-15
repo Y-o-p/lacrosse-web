@@ -7,6 +7,7 @@ export async function load({ locals }) {
     let recentGameRows = await getGameByInterval(30);
     let numGames = Object.keys(recentGameRows).length;
     let recentGames = [];
+    const gameRouteData: Array<Map<string, number>> = [];
 
     for (let i = 0; i < numGames; i++){
         let homeTeamRow = await getTeam(recentGameRows[i]["hometeam_id"]);
@@ -27,18 +28,31 @@ export async function load({ locals }) {
             awayScore += awayStatsRow[j]["goals"];
         }
 
-        let game: GameTable = {
-            "Game Date": recentGameRows[i]["game_date"].toLocaleDateString(),
-            "Game Field": recentGameRows[i]["game_field"].toString(),
+        let gameStr = awayTeamRow["team_name"].toString();
+        gameStr += " vs. ";
+        gameStr += homeTeamRow["team_name"].toString();
+
+        let game: Partial<GameTable> = {
+            Game: gameStr,
+            "Date": recentGameRows[i]["game_date"].toLocaleDateString(),
+            "Location": recentGameRows[i]["game_field"].toString(),
             "Home Team": homeTeamRow["team_name"].toString(),
             "Away Team": awayTeamRow["team_name"].toString(),
             "Home Score": homeScore,
             "Away Score": awayScore
         }
         recentGames.push(game);
+
+        let gameRouteMap = new Map<string, number>();
+        gameRouteMap.set(gameStr, recentGameRows[i]["game_id"]);
+        gameRouteMap.set(homeTeamRow["team_name"].toString(), recentGameRows[i]["hometeam_id"]);
+        gameRouteMap.set(awayTeamRow["team_name"].toString(), recentGameRows[i]["awayteam_id"]);
+        gameRouteData.push(gameRouteMap);
     }
 
     locals.recentGames = recentGames;
+    locals.gameRouteData = gameRouteData;
+    //console.log(gameRouteData);
 	return { locals: locals};
 }
 

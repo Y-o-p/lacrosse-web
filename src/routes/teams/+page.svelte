@@ -5,6 +5,7 @@
     export let data: PageServerData;
 
     let teamsTable = data.locals.teams;
+    let teamsRouteData = data.locals.teamsRouteData;
     let blueStyle = "blueTable";
 
 </script>
@@ -12,21 +13,32 @@
 <main>
     <h1>Teams</h1>
     <div class="table-wrapper">
-        <Table tableData={teamsTable} style={blueStyle}/>
+        <Table tableData={teamsTable} routeData={teamsRouteData} style={blueStyle}/>
     </div>
 </main>
 
 <style>
     main {
-        margin-top: 130px;
-        margin-bottom: 80px;
-        margin-left: 10px;
-        margin-right: 110px;
-        height: 100%;
+        margin-top: 135px;
+        margin-bottom: 100px;
+        margin-left: 15px;
+        margin-right: 115px;
+    }
+
+    h1 {
+        box-sizing: border-box;
+        background-color: navy;
+        color: white;
+        font-size: 50px;
+        text-align: center;
+    }
+
+    h2 {
+        font-size: 25px;
+        text-align: center;
     }
 
     .table-wrapper {
-		/*max-height: 50%;*/
 		overflow-y: auto;
 		max-width: 100%;
 	}
