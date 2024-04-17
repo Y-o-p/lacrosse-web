@@ -20,7 +20,10 @@
     $: selectedPlayers = newAction.home ? homeLineup : awayLineup;
     $: unselectedPlayers = newAction.home ? awayLineup : homeLineup;
 
-    let penaltyTimes = ["5", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55", "60"];
+    let personalFouls = ["Cross-Check", "Body-Check", "Crosse", "Equipment", "Slashing", "Tripping", "Unsportsmanlike Conduct"];
+    let technicalFouls = ["Holding", "Illegal Procedure", "Interference", "Offsides", "Pushing", "Warding", "Withholding Ball"];
+    let foul = 0;
+    let penaltyTimes = ["0:30", "1:00", "1:30", "2:00", "2:30", "3:00"];
 
     // Update player_stats table to include new row for each 
     // in both rosters
@@ -237,7 +240,7 @@
 
 <!-- HOME SHOT MODAL -->
 <Modal bind:show={modals[ActionType.Shot]}>
-    <h1 slot="header">HOME TEAM SHOT ATTEMPT</h1>
+    <h1 slot="header">SHOT</h1>
     <form>
         <div class="shot-modal" style="display: table;">
             <label for={newAction.by}>Shot by:</label>
@@ -289,7 +292,7 @@
 </Modal>
 
 <Modal bind:show={modals[ActionType.Turnover]}>
-    <h1 slot="header">HOME TEAM TURNOVER</h1>
+    <h1 slot="header">TURNOVER</h1>
     <form>
         <div class="turnover-modal" style="display: table;">
             <label for={newAction.by}>Made by:</label>
@@ -314,7 +317,7 @@
 </Modal>
 
 <Modal bind:show={modals[ActionType.ClearAttempted]}>
-    <h1 slot="header">HOME TEAM TURNOVER</h1>
+    <h1 slot="header">CLEAR</h1>
     <form>
         <div class="clear-modal" style="display: table;">
             <label for={newAction.by}>Clear by:</label>
@@ -338,7 +341,7 @@
 </Modal>
 
 <Modal bind:show={modals[ActionType.Penalty]}>
-    <h1 slot="header">HOME TEAM PENALTY</h1>
+    <h1 slot="header">PENALTY</h1>
     <form>
         <div class="penalty-modal" style="display: table;">
             <label for={newAction.by}>Penalty by:</label>
@@ -349,9 +352,25 @@
                 {/each}
             </select>
             <hr />
-            <label for={newAction.duration}>Duration:</label>
+            <label>
+                <h2>Personal Foul</h2>
+                {#each personalFouls as personalFoul}
+                    <div>
+                        <input type="radio" value={personalFoul} bind:group={foul}/>
+                        {personalFoul}
+                    </div>
+                {/each}
+                <h2>Technical Foul</h2>
+                {#each technicalFouls as technicalFoul}
+                    <div>
+                        <input type="radio" value={technicalFoul} bind:group={foul}/>
+                        {technicalFoul}
+                    </div>
+                {/each}
+            </label>
+            <hr />
+            <label for={newAction.duration.toString()}>Duration:</label>
             <select bind:value={newAction.duration} on:change={handleSelection} required>
-                <option value={null}>Offensive Player</option>
                 {#each penaltyTimes as time}
                     <option value={time}>{time}</option>
                 {/each}
