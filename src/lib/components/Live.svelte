@@ -117,6 +117,7 @@
         newAction.home = home;
         modals[type] = true;
         selectedAction = null;
+        
     }
 
     async function getScores() {
@@ -158,6 +159,27 @@
         newGame.published = true;
         await patchGame(newGame);
         game = newGame;
+    }
+
+    // Reactive declaration to reset options when no modal is open
+    $: {
+        if (!modals[ActionType.Shot] &&
+            !modals[ActionType.Turnover] &&
+            !modals[ActionType.ClearAttempted] &&
+            !modals[ActionType.Penalty] &&
+            !modals[ActionType.GroundBall]) {
+            resetOptions();
+        }
+    }
+
+    function resetOptions() {
+        newAction.by = null;
+        newAction.assistedBy = null;
+        newAction.savedBy = null;
+        newAction.causedBy = null;
+        newAction.homePlayer = null;
+        newAction.awayPlayer = null;
+        newAction.duration = null;
     }
 </script>
 
@@ -220,11 +242,11 @@
     </div>
 </main>
 
-<Modal bind:show={modals[ActionType.Faceoff]} >
+<Modal bind:show={modals[ActionType.Faceoff]} on:close={() => resetOptions()}>
     <h1 slot="header">FACEOFF</h1>
     <form>
         <div class="turnover-modal" style="display: table;">
-            <label for={newAction.awayPlayer}>Home Player:</label>
+            <label for={newAction.homePlayer}>Home Player:</label>
             <select bind:value={newAction.homePlayer} on:change={handleSelection} required>
                 <option value={null}>Offensive Player</option>
                 {#each selectedPlayers as player}
@@ -253,7 +275,7 @@
 </Modal>
 
 <!-- HOME SHOT MODAL -->
-<Modal bind:show={modals[ActionType.Shot]}>
+<Modal bind:show={modals[ActionType.Shot]} on:close={() => resetOptions()}>
     <h1 slot="header">HOME TEAM SHOT ATTEMPT</h1>
     <form>
         <div class="shot-modal" style="display: table;">
@@ -293,6 +315,12 @@
                 {/each}
             </select>
 
+            {#if newAction.savedBy != null}
+                <script>
+                    newAction.savedBy = null;
+                </script>
+            {/if}
+
             <!-- If savee selected, show Shot Saved button
                 prevents button be pressed without a savee -->
             {#if newAction.savedBy != null}
@@ -303,9 +331,10 @@
             {/if}
         </div>
     </form>
+    
 </Modal>
 
-<Modal bind:show={modals[ActionType.Turnover]}>
+<Modal bind:show={modals[ActionType.Turnover]} on:close={() => resetOptions()}>
     <h1 slot="header">HOME TEAM TURNOVER</h1>
     <form>
         <div class="turnover-modal" style="display: table;">
@@ -330,7 +359,7 @@
     </form>
 </Modal>
 
-<Modal bind:show={modals[ActionType.ClearAttempted]}>
+<Modal bind:show={modals[ActionType.ClearAttempted]} on:close={() => resetOptions()}>
     <h1 slot="header">HOME TEAM TURNOVER</h1>
     <form>
         <div class="clear-modal" style="display: table;">
@@ -354,7 +383,7 @@
     </form>
 </Modal>
 
-<Modal bind:show={modals[ActionType.Penalty]}>
+<Modal bind:show={modals[ActionType.Penalty]} on:close={() => resetOptions()}>
     <h1 slot="header">HOME TEAM PENALTY</h1>
     <form>
         <div class="penalty-modal" style="display: table;">
@@ -379,7 +408,7 @@
     </form>
 </Modal>
 
-<Modal bind:show={modals[ActionType.GroundBall]}>
+<Modal bind:show={modals[ActionType.GroundBall]} on:close={() => resetOptions()}>
     <h1 slot="header">GROUNDBALL RECOVERED</h1>
     <form>
         <div class="turnover-modal" style="display: table;">
