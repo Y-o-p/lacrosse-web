@@ -92,7 +92,7 @@
     };
 
     const handleSelection = (event) => {
-        console.log(homePlayers)
+        
     };
 
     function handleNewAction(type: ActionType, home = true) {

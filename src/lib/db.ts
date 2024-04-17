@@ -147,12 +147,11 @@ export async function editRow(tableName: string, vals: any, ids: any): Promise<a
         if (i == 0) {
             query += ` WHERE ${idColNames[i]} = $${paramId++}`;
         } else {
-            query += ` AND ${idColNames[i]} = ${paramId++}`;
+            query += ` AND ${idColNames[i]} = $${paramId++}`;
         }
         params.push(idNames[i]);
     }
     query += ' RETURNING *;';
-    console.log(query);
     const result = await pool.query(query, params);
     return result.rows[0];
 }
