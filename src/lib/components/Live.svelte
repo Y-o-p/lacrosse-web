@@ -17,8 +17,10 @@
     let awayTeamScore = 0;
     let homeTeamName = ""; 
     let awayTeamName = ""; 
-    $: selectedPlayers = newAction.home ? homeLineup : awayLineup;
-    $: unselectedPlayers = newAction.home ? awayLineup : homeLineup;
+    $: selectedPlayers = newAction.home ? homePlayers : awayPlayers;
+    $: unselectedPlayers = newAction.home ? awayPlayers : homePlayers;
+    $: selectedLineup = newAction.home ? homeLineup : awayLineup;
+    $: unselectedLineup = newAction.home ? awayLineup : homeLineup;
 
     let personalFouls = ["Cross-Check", "Body-Check", "Crosse", "Equipment", "Slashing", "Tripping", "Unsportsmanlike Conduct"];
     let technicalFouls = ["Holding", "Illegal Procedure", "Interference", "Offsides", "Pushing", "Warding", "Withholding Ball"];
@@ -213,7 +215,7 @@
             <label for={newAction.awayPlayer}>Home Player:</label>
             <select bind:value={newAction.homePlayer} on:change={handleSelection} required>
                 <option value={null}>Offensive Player</option>
-                {#each selectedPlayers as player}
+                {#each selectedLineup as player}
                     <option value={player}>{player.last_name}</option>
                 {/each}
             </select>
@@ -226,7 +228,7 @@
             <label for={newAction.awayPlayer}>Away Player:</label>
             <select bind:value={newAction.awayPlayer} on:change={handleSelection} required>
                 <option value={null}>Defensive Player</option>
-                {#each unselectedPlayers as player}
+                {#each unselectedLineup as player}
                     <option value={player}>{player.last_name}</option>
                 {/each}
             </select>
@@ -246,14 +248,14 @@
             <label for={newAction.by}>Shot by:</label>
             <select bind:value={newAction.by} on:change={handleSelection} required>
                 <option value={null}>Select Player</option>
-                {#each selectedPlayers as player}
+                {#each selectedLineup as player}
                     <option value={player}>{player.last_name}</option>
                 {/each}
             </select>
             <label for={newAction.assistedBy}>Assisted By:</label>
             <select bind:value={newAction.assistedBy} on:change={handleSelection}>
                 <option value={null}>Select Assist</option>
-                {#each selectedPlayers as player}
+                {#each selectedLineup as player}
                     <option value={player}>{player.last_name}</option>
                 {/each}
             </select>
@@ -274,7 +276,7 @@
             <label for={newAction.savedBy}>Saved By:</label>
             <select bind:value={newAction.savedBy} on:change={handleSelection}>
                 <option value={null}>Select Save</option>
-                {#each unselectedPlayers as player}
+                {#each unselectedLineup as player}
                     <option value={player}>{player.last_name}</option>
                 {/each}
             </select>
@@ -298,7 +300,7 @@
             <label for={newAction.by}>Made by:</label>
             <select bind:value={newAction.by} on:change={handleSelection} required>
                 <option value={null}>Offensive Player</option>
-                {#each selectedPlayers as player}
+                {#each selectedLineup as player}
                     <option value={player}>{player.last_name}</option>
                 {/each}
             </select>
@@ -307,7 +309,7 @@
             <label for={newAction.causedBy}>Caused By:</label>
             <select bind:value={newAction.causedBy} on:change={handleSelection}>
                 <option value={null}>Defensive Player</option>
-                {#each unselectedPlayers as player}
+                {#each unselectedLineup as player}
                     <option value={player}>{player.last_name}</option>
                 {/each}
             </select>
@@ -323,7 +325,7 @@
             <label for={newAction.by}>Clear by:</label>
             <select bind:value={newAction.by} on:change={handleSelection}>
                 <option value={null}>Offensive Player</option>
-                {#each selectedPlayers as player}
+                {#each selectedLineup as player}
                     <option value={player}>{player.last_name}</option>
                 {/each}
             </select>
@@ -347,7 +349,7 @@
             <label for={newAction.by}>Penalty by:</label>
             <select bind:value={newAction.by} on:change={handleSelection} required>
                 <option value={null}>Offensive Player</option>
-                {#each selectedPlayers as player}
+                {#each selectedLineup as player}
                     <option value={player}>{player.last_name}</option>
                 {/each}
             </select>
@@ -388,7 +390,7 @@
             <label for={newAction.by}>Offensive Player:</label>
             <select bind:value={newAction.by} on:change={handleSelection} required>
                 <option value={null}>Offensive Player</option>
-                {#each selectedPlayers as player}
+                {#each selectedLineup as player}
                     <option value={player}>{player.last_name}</option>
                 {/each}
             </select>
@@ -396,6 +398,24 @@
                 handleSubmitAction(); 
             }}>Submit</button>
         </div>
+    </form>
+</Modal>
+
+<Modal bind:show={modals[ActionType.Sub]}>
+    <h1 slot="header">SUBTITUTION</h1>
+    <form>
+        <label>
+            {#each selectedLineup as player}
+                <div>
+                    <select bind:value={player} on:change={handleSelection} required>
+                        {#each selectedPlayers.filter(n => n==player ? player : !selectedLineup.includes(n)) as sub}
+                            <option value={sub}>#{sub.jersey_num} {sub.last_name}</option>
+                            
+                        {/each}
+                    </select>
+                </div>
+            {/each}
+        </label>
     </form>
 </Modal>
 
