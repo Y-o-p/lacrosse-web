@@ -242,7 +242,7 @@
     </div>
 </main>
 
-<Modal bind:show={modals[ActionType.Faceoff]} on:close={() => resetOptions()}>
+<Modal bind:show={modals[ActionType.Faceoff]}>
     <h1 slot="header">FACEOFF</h1>
     <form>
         <div class="turnover-modal" style="display: table;">
@@ -275,7 +275,7 @@
 </Modal>
 
 <!-- HOME SHOT MODAL -->
-<Modal bind:show={modals[ActionType.Shot]} on:close={() => resetOptions()}>
+<Modal bind:show={modals[ActionType.Shot]}>
     <h1 slot="header">HOME TEAM SHOT ATTEMPT</h1>
     <form>
         <div class="shot-modal" style="display: table;">
@@ -334,7 +334,7 @@
     
 </Modal>
 
-<Modal bind:show={modals[ActionType.Turnover]} on:close={() => resetOptions()}>
+<Modal bind:show={modals[ActionType.Turnover]}>
     <h1 slot="header">HOME TEAM TURNOVER</h1>
     <form>
         <div class="turnover-modal" style="display: table;">
@@ -359,7 +359,7 @@
     </form>
 </Modal>
 
-<Modal bind:show={modals[ActionType.ClearAttempted]} on:close={() => resetOptions()}>
+<Modal bind:show={modals[ActionType.ClearAttempted]}>
     <h1 slot="header">HOME TEAM TURNOVER</h1>
     <form>
         <div class="clear-modal" style="display: table;">
@@ -383,7 +383,7 @@
     </form>
 </Modal>
 
-<Modal bind:show={modals[ActionType.Penalty]} on:close={() => resetOptions()}>
+<Modal bind:show={modals[ActionType.Penalty]}>
     <h1 slot="header">HOME TEAM PENALTY</h1>
     <form>
         <div class="penalty-modal" style="display: table;">
@@ -408,7 +408,7 @@
     </form>
 </Modal>
 
-<Modal bind:show={modals[ActionType.GroundBall]} on:close={() => resetOptions()}>
+<Modal bind:show={modals[ActionType.GroundBall]}>
     <h1 slot="header">GROUNDBALL RECOVERED</h1>
     <form>
         <div class="turnover-modal" style="display: table;">
