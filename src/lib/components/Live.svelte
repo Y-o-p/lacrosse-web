@@ -48,9 +48,9 @@
     };
     $: newAction.actionType = currentModal;
          //used for the half time button to navigate to the review page
-    function goToHalftimeReview(gameId: number) {
-        window.open(`/halftime-review/${gameId}`, '_blank');
-  }
+         function goToHalftimeReview(gameId: number) {
+  window.open(`/my-team/halftime-review/${gameId}`, '_blank');
+}
 
     export const snapshot: Snapshot<Array<ScorebookAction>> = {
         capture: () => scorebookActions,

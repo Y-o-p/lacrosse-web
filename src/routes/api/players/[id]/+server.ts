@@ -1,13 +1,21 @@
 import { responseFromFunction } from '$lib/api_util.js';
-import { deletePlayer, getPlayer } from '$lib/db.js';
+import { deletePlayer, getPlayer,getPlayersByTeamId } from '$lib/db.js';
 import { json } from '@sveltejs/kit';
 import { editRow } from '$lib/db'; 
 
 /** @type {import('./$types').RequestHandler} */
-export async function GET({ params }) {
-    return responseFromFunction(async () => {
-        return getPlayer(Number(params.id));
-    })
+export async function GET({ url }) {
+    const teamId = url.searchParams.get('team_id');
+
+    if (teamId) {
+        return responseFromFunction(async () => {
+            return getPlayersByTeamId(BigInt(teamId));
+        });
+    } else {
+        return responseFromFunction(async () => {
+            return getPlayer(Number(url.searchParams.get('id')));
+        });
+    }
 }
 
 /** @type {import('./$types').RequestHandler} */
