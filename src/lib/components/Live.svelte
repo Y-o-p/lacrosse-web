@@ -71,11 +71,14 @@
     let quarterLength = 15;
     let currentTime = 0;
     let interval;
+    let timeoutActive = false; // Track if timeout is active
 
     const startClock = () => {
-        interval = setInterval(() => {
-            currentTime++;
-        }, 1000);
+        if (!interval) { // Check if interval is not already running
+            interval = setInterval(() => {
+                currentTime++;
+            }, 1000);
+        }
     };
 
     onMount(async () => {
@@ -98,6 +101,17 @@
     const handleSelection = (event) => {
         console.log(homePlayers)
     };
+
+    // Function to toggle timeout
+    const toggleTimeout = () => {
+        if (interval) {
+            clearInterval(interval); // If interval is running, stop the clock
+            interval = null; // Reset interval variable
+        } else {
+            startClock(); // If interval is not running, start the clock
+        }
+    };
+
 
     function handleNewAction(type: ActionType, home = true) {
         newAction.home = home;
@@ -159,7 +173,6 @@
             <button on:click={() => {handleNewAction(ActionType.Penalty);}}>Penalty</button>
             <button on:click={() => {handleNewAction(ActionType.GroundBall);}}>Ground Ball</button>
             <button on:click={() => {handleNewAction(ActionType.Sub);}}>Sub</button>
-            <button on:click={() => {handleNewAction(ActionType.Timeout);}}>Timeout</button>
         </div>
 
         <div class="faceoff">            
@@ -188,6 +201,7 @@
             </div>
 
             <div slot="footer">
+                <button on:click={toggleTimeout}>Timeout Toggle</button>
                 <button on:click={() => goToHalftimeReview(game.game_id)}>Half Time</button>
                 <button on:click={() => { publish() }}>End Game</button>
             </div>
@@ -201,7 +215,6 @@
             <button on:click={() => {handleNewAction(ActionType.Penalty, false);}}>Penalty</button>
             <button on:click={() => {handleNewAction(ActionType.GroundBall, false);}}>Ground Ball</button>
             <button on:click={() => {handleNewAction(ActionType.Sub, false);}}>Sub</button>
-            <button on:click={() => {handleNewAction(ActionType.Timeout, false);}}>Timeout</button>
         </div>
 
     </div>
