@@ -5,11 +5,11 @@ import { error, json } from '@sveltejs/kit';
 import pg from 'pg';
 
 export const pool = new pg.Pool({
-    database: import.meta.env.VITE_PGDATABASE || "Lacrosse_database",
+    database: import.meta.env.VITE_PGDATABASE || "postgres",
     user: import.meta.env.VITE_PGUSER || "postgres",
     host: import.meta.env.VITE_PGHOST || "localhost",
     port: (Number(import.meta.env.VITE_PGPORT || 5432 )),
-    password: import.meta.env.VITE_PGDATABASE || "S9388420",
+    password: import.meta.env.VITE_PGDATABASE || "ident",
 })
 
 async function queryFromVals(action: string, tableName: string, object?: any) {

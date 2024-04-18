@@ -1,6 +1,7 @@
 <script lang="ts">
     import Prelive from "./Prelive.svelte";
     import Live from "./Live.svelte";
+    import Postlive from "./Postlive.svelte";
     import { onMount } from "svelte";
     import { apiCall } from "$lib/api";
     export let game: Game;
@@ -73,7 +74,10 @@
         ></Prelive>
     {:else if game.published}
     <!-- Published -->
-        <h1>This scorebook is published</h1>
+        <Postlive
+            bind:game={game}>
+
+        </Postlive>
     {:else}
     <!-- Live -->
         <Live 

@@ -1,81 +1,31 @@
 <script lang="ts">
-    import type { PageServerData } from "./$types";
     import { onMount } from 'svelte';
     import { writable } from 'svelte/store';
-    import { patchPlayerStats } from "$lib/api";
+    import { apiCall, patchPlayerStats } from "$lib/api";
 
     // Define writable stores for home and away player stats
-    const homePlayerStats = writable([]);
-    const awayPlayerStats = writable([]);
+    export let game: Game;
+    let homePlayerStats = [];
+    let awayPlayerStats = [];
     const game_field = writable("");
     const refs = writable([]);
     const scorekeepers = writable([]);
     const timekeepers = writable([]);
 
-    export let data: PageServerData;
-
     // Update the writable stores with initial data from the server
-    onMount(() => {
-        homePlayerStats.set(data.homeTeamStats);
-        awayPlayerStats.set(data.awayTeamStats);
-        game_field.set(data.game.game_field);
-        refs.set(data.game.refs);
-        timekeepers.set(data.game.timekeepers);
-        scorekeepers.set(data.game.scorekeepers);
+    onMount(async () => {
+        homePlayerStats = await apiCall<PlayerStats>("GET", `/api/player-stats?game_id=${game.game_id}&team_id=${game.hometeam_id}`);
+        awayPlayerStats = await apiCall<PlayerStats>("GET", `/api/player-stats?game_id=${game.game_id}&team_id=${game.awayteam_id}`);
+        game_field.set(game.game_field);
+        refs.set(game.refs);
+        timekeepers.set(game.timekeepers);
+        scorekeepers.set(game.scorekeepers);
         
     });
 
     // Function to handle changes in home player stats
-    async function handleHomeStatsChange(index, field, value) {
-        let statToUpdate: Partial<PlayerStats> = {};
-        let updatedStats = [];
-        homePlayerStats.update(stats => {
-            updatedStats = [...stats];
-            //console.log(updatedStats);
-            console.log(field, value);
-            statToUpdate = {
-                playerstat_id: (updatedStats[index].playerstat_id), // Include playerstat_id
-                player_id: (updatedStats[index].player_id), // Include player_id
-            };
-            console.log(statToUpdate);
-            
-            //Call patchPlayerStats to update the modified player stat
-            return updatedStats;
-        });
-        delete updatedStats[index].Player;
-        //console.log(updatedStats[index]);
-        console.log("Stats to update: ", updatedStats[index]);
-
-        //console.log("Patching player...returned: ", await patchPlayerStats(updatedStats[index]));
-        let new_patch = await patchPlayerStats(updatedStats[index]);
-        console.log(new_patch);
-        console.log(statToUpdate.playerstat_id);
-    }
-
-    // Function to handle changes in away player stats
-    async function handleAwayStatsChange(index, field, value) {
-        let statsToUpdate: Partial<PlayerStats> = {};
-        let updatedStats = [];
-        awayPlayerStats.update(stats => {
-            updatedStats = [...stats];
-            //console.log(updatedStats);
-            console.log(field, value);
-            statsToUpdate = {
-                playerstat_id: (updatedStats[index].playerstat_id), // Include playerstat_id
-                player_id: (updatedStats[index].player_id), // Include player_id
-            };
-            console.log(statsToUpdate);
-            //Call patchPlayerStats to update the modified player stat
-            return updatedStats;
-        });
-        delete updatedStats[index].Player;
-        //console.log(updatedStats[index]);
-        console.log("Stats to update: ", updatedStats[index]);
-
-        //console.log("Patching player...returned: ", await patchPlayerStats(updatedStats[index]));
-        let new_patch = await patchPlayerStats(updatedStats[index]);
-        console.log(new_patch);
-        console.log(statsToUpdate.playerstat_id);
+    async function handleHomeStatsChange(index) {
+        let result = await patchPlayerStats(homePlayerStats[index]);
     }
 
     // function to handles changes in game field
@@ -155,7 +105,7 @@
             </tr>
         </thead>
         <tbody>
-            {#each $homePlayerStats as stat, index}
+            {#each homePlayerStats as stat, index}
                 <tr>
                     <td>{stat.Player}</td>
                     <td><input type="number" bind:value={stat.goals} on:input={(e) => handleHomeStatsChange(index, 'goals', e.target.value)}></td>
@@ -197,7 +147,7 @@
             </tr>
         </thead>
         <tbody>
-            {#each $awayPlayerStats as stat, index}
+            {#each awayPlayerStats as stat, index}
                 <tr>
                     <td>{stat.Player}</td>
                     <td><input type="number" bind:value={stat.Goals} on:input={(e) => handleAwayStatsChange(index, 'Goals', e.target.value)}></td>

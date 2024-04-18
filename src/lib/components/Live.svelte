@@ -414,7 +414,7 @@
                 {/each}
             </label>
             <hr />
-            <label for={newAction.duration.toString()}>Duration:</label>
+            <label for={newAction.duration}>Duration:</label>
             <select bind:value={newAction.duration} on:change={handleSelection} required>
                 {#each penaltyTimes as time}
                     <option value={time}>{time}</option>
