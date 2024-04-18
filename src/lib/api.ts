@@ -1,5 +1,5 @@
 // These are API helper functions. They are provided to avoid fetch calls.
-// You can use these in server and client side content.
+// You can use these in server and client side content. 
 
 import { toJson } from "./util";
 
@@ -69,6 +69,11 @@ export async function getTeam(id: number): Promise<Team> {
         return err;
     }
 }
+export async function getPlayersByTeamId(teamId: bigint): Promise<Player[]> {
+    const players = await apiCall<Player>("GET", `/api/players?team_id=${teamId}`);
+    console.log('Players for team', teamId, ':', players);
+    return players;
+}
 
 export async function getPlayerStats(id): Promise<PlayerStats> {
     const result = await (await fetch(`/api/player-stats/${id}`)).json();
@@ -86,6 +91,12 @@ export async function getGame(id): Promise<Game> {
 export async function getTeamStatsFromGame(team_id, game_id) {
     const stats = await apiCall<PlayerStats>("GET", `/api/player-stats?team_id=${team_id}&game_id=${game_id}`);
     return stats;
+}
+
+export async function getGameForHalftime(id, fetch): Promise<Game> {
+    const result = await fetch(`/api/games/${id}`);
+    const game: Game = await result.json() as Game;
+    return game;
 }
 
 

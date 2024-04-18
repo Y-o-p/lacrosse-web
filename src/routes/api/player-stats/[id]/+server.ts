@@ -1,3 +1,4 @@
+
 import { responseFromFunction } from '$lib/api_util.js';
 import { deletePlayerStats, editPlayerStats, getPlayerStats } from '$lib/db.js';
 
