@@ -7,6 +7,7 @@
     let teamData = data.locals.teamData;
     let teamTable = data.locals.teamTable;
     let roster = data.locals.roster;
+    let rosterRouteData = data.locals.rosterRouteData;
     let blueStyle = "blueTable";
 </script>
 
@@ -18,16 +19,29 @@
     </div>
     <h2>Roster</h2>
     <div class="table-wrapper2">
-        <Table tableData={roster} style={blueStyle}/>
+        <Table tableData={roster} routeData={rosterRouteData} style={blueStyle}/>
     </div>
 </main>
 
 <style> 
     main {
-        margin-top: 130px;
+        margin-top: 135px;
         margin-bottom: 100px;
-        margin-left: 10px;
-        margin-right: 110px;
+        margin-left: 15px;
+        margin-right: 115px;
+    }
+
+    h1 {
+        box-sizing: border-box;
+        background-color: navy;
+        color: white;
+        font-size: 50px;
+        text-align: center;
+    }
+
+    h2 {
+        font-size: 25px;
+        text-align: center;
     }
 
     .table-wrapper1 {

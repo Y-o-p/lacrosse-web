@@ -55,16 +55,18 @@ enum Position {
 }
 
 interface Player {
-    player_id?: bigint,
-    playerstat_id?: bigint,
-    team_id: bigint,
-    last_name: string,
-    first_name: string,
-    pos: string,
-    height: number,
-    weight: number,
-    birth_date: Date
-}
+    player_id?: bigint | number;
+    team_id: bigint;
+    last_name: string;
+    first_name: string;
+    pos: string;
+    height: number;
+    weight: number;
+    jersey_num: number;
+    clg_class: string;
+    major: string;
+    home_town: string;
+  }
 
 interface PlayerStats {
     playerstat_id?: bigint,
@@ -103,12 +105,16 @@ interface User {
 // Page Table Data:
 ///////////////////////////////////////////////////////////////////////////////
 interface GameTable {
-    "Game Date": Date,
-    "Game Field": string,
+    "Game": string,
+    "Date": Date,
+    "Location": string,
     "Home Team": string,
     "Away Team": string,
     "Home Score": number,
-    "Away Score": number
+    "Away Score": number,
+    "REFS": string,
+    "TKS": string,
+    "SKS": string
 }
 
 interface TeamTable {
@@ -131,6 +137,7 @@ interface PlayerTable {
 }
 
 interface PlayerStatsTable {
+    'Opponent': string,
     "#": number,
     "Player": string,
     "G": number,

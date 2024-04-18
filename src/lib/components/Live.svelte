@@ -2,7 +2,7 @@
     import Modal from '$lib/modal.svelte';
     import ActionHistory from './ActionHistory.svelte';
     import { onMount, onDestroy } from 'svelte';
-
+    import { goto } from '$app/navigation';
     import type { Snapshot } from "./$types";
     import { type ScorebookAction, ActionType, performAction } from '$lib/scorebook';
     import { apiCall, getGame, getTeamStatsFromGame, patchGame } from '$lib/api';
@@ -52,6 +52,10 @@
         successful: false
     };
     $: newAction.actionType = currentModal;
+         //used for the half time button to navigate to the review page
+         function goToHalftimeReview(gameId: number) {
+  window.open(`/my-team/halftime-review/${gameId}`, '_blank');
+}
 
     export const snapshot: Snapshot<Array<ScorebookAction>> = {
         capture: () => scorebookActions,
@@ -72,11 +76,14 @@
     let quarterLength = 15;
     let currentTime = 0;
     let interval;
+    let timeoutActive = false; // Track if timeout is active
 
     const startClock = () => {
-        interval = setInterval(() => {
-            currentTime++;
-        }, 1000);
+        if (!interval) { // Check if interval is not already running
+            interval = setInterval(() => {
+                currentTime++;
+            }, 1000);
+        }
     };
 
     onMount(async () => {
@@ -100,10 +107,22 @@
         
     };
 
+    // Function to toggle timeout
+    const toggleTimeout = () => {
+        if (interval) {
+            clearInterval(interval); // If interval is running, stop the clock
+            interval = null; // Reset interval variable
+        } else {
+            startClock(); // If interval is not running, start the clock
+        }
+    };
+
+
     function handleNewAction(type: ActionType, home = true) {
         newAction.home = home;
         modals[type] = true;
         selectedAction = null;
+        
     }
 
     async function getScores() {
@@ -146,6 +165,27 @@
         await patchGame(newGame);
         game = newGame;
     }
+
+    // Reactive declaration to reset options when no modal is open
+    $: {
+        if (!modals[ActionType.Shot] &&
+            !modals[ActionType.Turnover] &&
+            !modals[ActionType.ClearAttempted] &&
+            !modals[ActionType.Penalty] &&
+            !modals[ActionType.GroundBall]) {
+            resetOptions();
+        }
+    }
+
+    function resetOptions() {
+        newAction.by = null;
+        newAction.assistedBy = null;
+        newAction.savedBy = null;
+        newAction.causedBy = null;
+        newAction.homePlayer = null;
+        newAction.awayPlayer = null;
+        newAction.duration = null;
+    }
 </script>
 
 <svelte:window on:beforeunload={beforeUnload}/>
@@ -160,7 +200,6 @@
             <button on:click={() => {handleNewAction(ActionType.Penalty);}}>Penalty</button>
             <button on:click={() => {handleNewAction(ActionType.GroundBall);}}>Ground Ball</button>
             <button on:click={() => {handleNewAction(ActionType.Sub);}}>Sub</button>
-            <button on:click={() => {handleNewAction(ActionType.Timeout);}}>Timeout</button>
         </div>
     
         <ActionHistory 
@@ -186,7 +225,8 @@
 
             <div slot="footer">
                 <button on:click={() => {handleNewAction(ActionType.Faceoff);}}>Faceoff</button>
-                <button>Half Time</button>
+                <button on:click={toggleTimeout}>Timeout Toggle</button>
+                <button on:click={() => goToHalftimeReview(game.game_id)}>Half Time</button>
                 <button on:click={() => { publish() }}>End Game</button>
             </div>
         </ActionHistory>
@@ -199,17 +239,16 @@
             <button on:click={() => {handleNewAction(ActionType.Penalty, false);}}>Penalty</button>
             <button on:click={() => {handleNewAction(ActionType.GroundBall, false);}}>Ground Ball</button>
             <button on:click={() => {handleNewAction(ActionType.Sub, false);}}>Sub</button>
-            <button on:click={() => {handleNewAction(ActionType.Timeout, false);}}>Timeout</button>
         </div>
 
     </div>
 </main>
 
-<Modal bind:show={modals[ActionType.Faceoff]} >
+<Modal bind:show={modals[ActionType.Faceoff]}>
     <h1 slot="header">FACEOFF</h1>
     <form>
         <div class="turnover-modal" style="display: table;">
-            <label for={newAction.awayPlayer}>Home Player:</label>
+            <label for={newAction.homePlayer}>Home Player:</label>
             <select bind:value={newAction.homePlayer} on:change={handleSelection} required>
                 <option value={null}>Offensive Player</option>
                 {#each selectedLineup as player}
@@ -278,6 +317,12 @@
                 {/each}
             </select>
 
+            {#if newAction.savedBy != null}
+                <script>
+                    newAction.savedBy = null;
+                </script>
+            {/if}
+
             <!-- If savee selected, show Shot Saved button
                 prevents button be pressed without a savee -->
             {#if newAction.savedBy != null}
@@ -288,6 +333,7 @@
             {/if}
         </div>
     </form>
+    
 </Modal>
 
 <Modal bind:show={modals[ActionType.Turnover]}>
