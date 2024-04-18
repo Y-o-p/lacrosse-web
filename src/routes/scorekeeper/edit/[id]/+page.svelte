@@ -60,12 +60,6 @@
     }
 
 
-
-
-
-
-
-
     // Function to handle changes in away player stats
     async function handleAwayStatsChange(index, field, value) {
         awayPlayerStats.update(stats => {
@@ -181,3 +175,22 @@
         </tbody>
     </table>
 </main>
+
+
+<style>
+    main {
+        margin-top: 135px;
+        margin-bottom: 100px;
+        margin-left: 15px;
+        margin-right: 115px;
+		
+    }
+
+	h1 {
+        box-sizing: border-box;
+        background-color: #081820;
+        color: white;
+        font-size: 50px;
+        text-align: center;
+    }
+</style>

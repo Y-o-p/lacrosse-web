@@ -22,7 +22,6 @@
                     <i class="fa fa-caret-down"></i>
                 </button>
                 <div class="dropdown-content">
-                    <a href="/my-team">My Team</a>
                     <a href="/my-team/player">My Players</a>
                     <a href="/my-team/roster">My Roster</a>
                     <a href="/scorebooks">Scorebooks</a>
@@ -41,27 +40,29 @@
 
         <Modal bind:loginModal>
             <h1 slot="header">Please Enter Login Information</h1>
+            <form method="POST" action="/?/login">
                 <div class="login-info" style="display: table;">
-                    <form method="POST" action="/?/login">
-                        <div class="login-row" style="display: table-row;">
-                            <label id="10" for=check style="display: table-cell;">Username:</label>
-                            <input name="uname" type="text">
-                        </div>
-                        <div class="login-row" style="display: table-row;">
-                            <label id="11" for=check style="display: table-cell;">Password:</label>
-                            <input name="pword" type="text">
-                        </div>
-                        <div class="login-row" style="display: table-row;">
-                            <button style="display: table-cell;">Login</button>
-                        </div>
-                    </form>
+                    <div class="login-row" style="display: table-row;">
+                        <label id="10" for=check style="display: table-cell;">Username:</label>
+                        <input name="uname" type="text">
+                    </div>
+                    <div class="login-row" style="display: table-row;">
+                        <label id="11" for=check style="display: table-cell;">Password:</label>
+                        <input name="pword" type="text">
+                    </div>
                 </div>
+                <div class="btnContainer">
+                    <div class="buttons">
+                        <button class="btnModal" style="display: table-cell;">Login</button>
+                    </div>
+                </div>
+            </form>
         </Modal>
 
         <Modal bind:signupModal>
             <h1 slot="header">Please Enter Account Information</h1>
-            <div class="sinup-info" style="display: table;">
-                <form method="POST" action="/?/register">
+            <form method="POST" action="/?/register">
+                <div class="sinup-info" style="display: table;">
                     <div class="signup-row" style="display: table-row;">
                         <label for=12 style="display: table-cell;">Username:</label>
                         <input name="uname" id=12 type="text">
@@ -86,11 +87,13 @@
                         <label for=18 style="display: table-cell;">Phone Number:</label>
                         <input name="phone" id=18 type="text" value="xxx-xxx-xxxx">
                     </div>
-                    <div class="signup-row" style="display: table-row;">
-                        <button style="display: table-cell;">Sign Up</button>
+                </div>
+                <div class="btnContainer">
+                    <div class="buttons">
+                        <button class="btnModal" style="display: table-cell;">Sign Up</button>
                     </div>
-                </form>
-            </div>
+                </div>
+            </form>
         </Modal>
     </body>
 </html>
@@ -99,7 +102,9 @@
     html {
         width: auto;
         height: auto;
-        font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        font-weight: 500;
+        text-transform: uppercase;
     }
     
     body {
@@ -107,6 +112,17 @@
         margin-bottom: 0px;
         margin-left: 0px;
         margin-right: 0px;
+    }
+
+    h1 {
+        margin-top: 0;
+        box-sizing: border-box;
+        background-color: #081820;
+        color: white;
+        font-size: 50px;
+        text-align: center;
+        padding-left: 10px;
+        padding-right: 10px;
     }
 
     .topAdSpace {
@@ -123,11 +139,12 @@
         width: 100px;
         height: 100%;
         position: fixed;
-        top: 128px;
+        top: 129px;
         right: 0px;
         background: orange;
         text-align: center;
         z-index: 99999;
+        margin-top: 1px;
     }
 
     .bottomAdSpace {
@@ -143,7 +160,7 @@
 
     /* Add a black background color to the top navigation */
     .topnav {
-        background-color: #333;
+        background-color: #346856;
         overflow: hidden;
         width: 100%;
         position: fixed;
@@ -170,6 +187,7 @@
         text-decoration: none;
         font-size: 17px;
         z-index: 99999;
+        cursor: pointer;
     }
 
     /* Change the color of links on hover */
@@ -187,13 +205,7 @@
 
     /* Add a color to the active/current link */
     .topnav a.active {
-        background-color: #2c2fe2;
-        color: white;
-        z-index: 99999;
-    }
-
-    .topnav b.active {
-        background-color: #2c2fe2;
+        background-color: #88c070;
         color: white;
         z-index: 99999;
     }
@@ -214,6 +226,9 @@
         font-family: inherit;
         margin: 0;
         z-index: 99999;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        font-weight: 500;
+        text-transform: uppercase;
     }
 
     .dropdown-content {
@@ -243,5 +258,54 @@
     .dropdown:hover .dropdown-content {
         display: block;
         z-index: 99999;
+    }
+
+    label {
+        padding: 3px;
+        text-align: left;
+    }
+
+    input {
+        margin-left: 150px;
+        font-size: 25px;
+    }
+         
+    .login-info, .sinup-info {
+        margin-left: auto;
+        margin-right: auto;
+        font-size: 25px;
+    }
+
+    .btnContainer {
+        padding-top: 10px;
+        height: 75px;
+        position: relative;
+    }
+
+    .buttons {
+        margin: 0;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        -ms-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
+    }
+
+    button.btnModal {
+        font-size: 35px;
+        font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+        text-shadow: 1px 1px 0 #000, 2px 2px 0 #000;
+        font-style: italic;
+        color: white;
+        background-color: #88c070;
+        border: none;
+        transform: skew(-12deg);
+        padding-right:12px;
+        box-shadow: 2px 2px 0 #081820;
+    }
+
+    button.btnModal:hover {
+        background-color: #346856;
+        cursor: pointer;
     }
 </style>

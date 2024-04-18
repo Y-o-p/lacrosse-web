@@ -74,7 +74,7 @@
 <main>
     <h1>Choose the Lineups</h1>
     <form on:submit={() => {startGame()}}>
-        <div>
+        <div class="hTeam">
             <label for="homeTeamSelect">Home Team:</label>
             <select bind:value={selectedHomeTeam} on:change={handleHomeTeamSelect} required>
                 <option value="">Select Team</option>
@@ -95,11 +95,9 @@
                     </select>
                 </div>
             {/each}
-            <hr />
         </div>
 
-        <div>
-        
+        <div class="aTeam">
             <label for="awayTeamSelect">Away Team:</label>
             <select bind:value={selectedAwayTeam} on:change={handleAwayTeamSelect} required>
                 <option value="">Select Team</option>
@@ -118,14 +116,12 @@
                         {/each}
                     </select>
                 </div>
-            {/each}
-
-            <hr />
+            {/each}            
         </div>
 
+        <hr />
 
-
-        <div>
+        <div class="info">
             <label>Quarter length (minutes):</label>
             <input type="text" id="quarterLength" name="quarterLength" bind:value={quarterLength} required>
 
@@ -135,13 +131,18 @@
             <label>Refs (comma seperated):</label>
             <input type="text" id="refs" name="refs" bind:value={refs} required>
         </div>
-        <div>
+        <div class="info">
             <label> Scorebook Keepers (comma seperated):</label>
             <input type="text" id="scorebookKeepers" name="scorebookKeepers" bind:value={scorebookKeepers} required>
 
             <label>Time Keeper(s) (comma seperated):</label>
             <input type="text" id="timeKeepers" name="timeKeepers" bind:value={timeKeepers} required>
-            <button type="submit">Start Game</button>
+        </div>
+
+        <div class="btnContainer">
+            <div class="buttons">
+                <button type="submit">Start Game</button>
+            </div>
         </div>
 
         <input type="hidden" name="homeTeamId" value={selectedHomeTeam}>
@@ -151,3 +152,85 @@
         <input type="hidden" name="awayPlayersIds" value={awayLineup} required>
     </form>
 </main>
+
+<style>
+    main {
+        margin-top: 135px;
+        margin-bottom: 100px;
+        margin-left: 0px;
+        margin-right: 115px;
+        width: 100%;
+    }
+
+	h1 {
+        box-sizing: border-box;
+        background-color: #081820;
+        color: white;
+        font-size: 50px;
+        text-align: center;
+    }
+
+    .hTeam {
+        width: 50%;
+    }
+
+    .aTeam {
+        width: 49%;
+    }
+
+    .hTeam, .aTeam {
+        display: inline-block;
+        text-align: center;
+    }
+
+    .info {
+        text-align: center;
+        margin-top: 25px;
+        margin-bottom: 25px;
+    }
+
+    label {
+        padding-left: 10px;
+    }
+
+    hr {
+        background-color: #346856;
+        margin-top: 25px;
+        margin-bottom: 15px;
+        height: 10px;
+    }
+
+    .btnContainer {
+        padding-top: 10px;
+        height: 75px;
+        position: relative;
+    }
+
+    .buttons {
+        margin: 0;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        -ms-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
+    }
+
+    button {
+        font-size: 35px;
+        font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+        text-shadow: 1px 1px 0 #000, 2px 2px 0 #000;
+        font-style: italic;
+        color: white;
+        background-color: #88c070;
+        border: none;
+        transform: skew(-12deg);
+        padding-right:12px;
+        box-shadow: 2px 2px 0 #081820;
+    }
+
+    button:hover {
+        background-color: #346856;
+        cursor: pointer;
+    }
+
+</style>

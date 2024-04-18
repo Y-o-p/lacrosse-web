@@ -73,7 +73,7 @@
         ></Prelive>
     {:else if game.published}
     <!-- Published -->
-        <h1>This scorebook is published</h1>
+        <h2>This scorebook is already published</h2>
     {:else}
     <!-- Live -->
         <Live 
@@ -85,3 +85,11 @@
         ></Live>
     {/if}
 </main>
+
+<style>
+    h2 {
+        padding-top: 100px;
+        color: #081820;
+        text-align: center;
+    }
+</style>
