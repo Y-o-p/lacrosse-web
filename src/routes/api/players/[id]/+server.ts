@@ -4,7 +4,7 @@ import { json } from '@sveltejs/kit';
 import { editRow } from '$lib/db'; 
 
 /** @type {import('./$types').RequestHandler} */
-export async function GET({ url }) {
+export async function GET({ params, url }) {
     const teamId = url.searchParams.get('team_id');
 
     if (teamId) {
@@ -13,7 +13,7 @@ export async function GET({ url }) {
         });
     } else {
         return responseFromFunction(async () => {
-            return getPlayer(Number(url.searchParams.get('id')));
+            return getPlayer(Number(params.id));
         });
     }
 }
