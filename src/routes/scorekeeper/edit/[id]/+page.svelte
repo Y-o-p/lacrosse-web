@@ -36,7 +36,6 @@
             statToUpdate = {
                 playerstat_id: (updatedStats[index].playerstat_id), // Include playerstat_id
                 player_id: (updatedStats[index].player_id), // Include player_id
-                [field]: (value) // Include the changed field and its value
             };
             console.log(statToUpdate);
             
@@ -64,10 +63,8 @@
             statsToUpdate = {
                 playerstat_id: (updatedStats[index].playerstat_id), // Include playerstat_id
                 player_id: (updatedStats[index].player_id), // Include player_id
-                [field]: (value) // Include the changed field and its value
             };
             console.log(statsToUpdate);
-            
             //Call patchPlayerStats to update the modified player stat
             return updatedStats;
         });
@@ -86,6 +83,7 @@
         game_field.update(value);
 
         // Call patchGame to update the modified game field
+        //let new_patch = await
     }
 
     // function to handle changes in refs
