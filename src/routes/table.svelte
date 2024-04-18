@@ -175,12 +175,12 @@
 	}
 
 	table.blueTable tr:nth-child(even) {
-		background: #cddeec;
+		background: #e0f8d0;
 	}
 
 	table.blueTable thead {
-		background: navy;
-		border-bottom: 2px solid navy;
+		background: #346856;
+		border-bottom: 2px solid #346856;
 		position: sticky;
 		top: -1px;
 		z-index: 9;

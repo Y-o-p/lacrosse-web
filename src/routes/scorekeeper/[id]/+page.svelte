@@ -4,7 +4,12 @@
     export let data: PageServerData;
 </script>
 
-<Scorebook
-    bind:game={data.props.game}
-    bind:requiredTeam={data.props.requiredTeam}
-></Scorebook>
+<main>
+    <Scorebook
+        bind:game={data.props.game}
+        bind:requiredTeam={data.props.requiredTeam}
+    ></Scorebook>
+</main>
+
+<style>
+</style>
