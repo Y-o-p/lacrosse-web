@@ -314,11 +314,15 @@
                     <button type="submit" on:click={() => { 
                         newAction.goal = true;
                         handleSubmitAction(); 
-                    }}>Shot Made</button>
+                    }}>Goal</button>
                     <button type="submit" on:click={() => { 
                         newAction.goal = false;
                         handleSubmitAction(); 
-                    }}>Shot Missed/Wide</button>
+                    }}>Shot on Goal</button>
+                    <button type="submit" on:click={() => { 
+                        newAction.goal = false;
+                        handleSubmitAction(); 
+                    }}>Shot Missed</button>
                 </div>
             </div>
             <hr class="modalHr" />
