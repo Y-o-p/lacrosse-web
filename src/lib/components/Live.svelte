@@ -193,14 +193,20 @@
 <main>
     <div>    
         <div class="team-container">
-            <h1>Home Team: {homeTeamName}</h1>
-            <button on:click={() => {handleNewAction(ActionType.Shot);}}>Shot</button>
-            <button on:click={() => {handleNewAction(ActionType.Turnover);}}>Turnover Made</button>
-            <button on:click={() => {handleNewAction(ActionType.ClearAttempted);}}>Clear Attempted</button>
-            <button on:click={() => {handleNewAction(ActionType.Penalty);}}>Penalty</button>
-            <button on:click={() => {handleNewAction(ActionType.GroundBall);}}>Ground Ball</button>
-            <button on:click={() => {handleNewAction(ActionType.Sub);}}>Sub</button>
+            <h2 class="hName">Home Team: {homeTeamName}</h2>
+            <div class="teamBtn-container">
+                <div class="teamButtons">
+                    <button class="shotBtn" on:click={() => {handleNewAction(ActionType.Shot);}}>Shot</button>
+                    <button class="toBtn" on:click={() => {handleNewAction(ActionType.Turnover);}}>Turnover</button>
+                    <button class="clearBtn" on:click={() => {handleNewAction(ActionType.ClearAttempted);}}>Clear</button>
+                    <button class="penBtn" on:click={() => {handleNewAction(ActionType.Penalty);}}>Penalty</button>
+                    <button class="gbBtn" on:click={() => {handleNewAction(ActionType.GroundBall);}}>Ground Ball</button>
+                    <button class="subBtn" on:click={() => {handleNewAction(ActionType.Sub);}}>Sub</button>
+                </div>
+            </div>
         </div>
+
+        <hr class="homehr"/>
     
         <ActionHistory 
         bind:actions={scorebookActions} 
@@ -224,28 +230,32 @@
             </div>
 
             <div slot="footer">
-                <button on:click={() => {handleNewAction(ActionType.Faceoff);}}>Faceoff</button>
-                <button on:click={toggleTimeout}>Timeout Toggle</button>
-                <button on:click={() => goToHalftimeReview(game.game_id)}>Half Time</button>
-                <button on:click={() => { publish() }}>End Game</button>
+                <button class="footerBtn" on:click={() => {handleNewAction(ActionType.Faceoff);}}>Faceoff</button>
+                <button class="footerBtn" on:click={toggleTimeout}>Timeout Toggle</button>
+                <button class="footerBtn" on:click={() => goToHalftimeReview(game.game_id)}>Half Time</button>
+                <button class="footerBtn" on:click={() => { publish() }}>End Game</button>
             </div>
         </ActionHistory>
 
         <div class="team-container">
-            <h1>Away Team: {awayTeamName}</h1>
-            <button on:click={() => {handleNewAction(ActionType.Shot, false);}}>Shot</button>
-            <button on:click={() => {handleNewAction(ActionType.Turnover, false);}}>Turnover Made</button>
-            <button on:click={() => {handleNewAction(ActionType.ClearAttempted, false);}}>Clear Attempted</button>
-            <button on:click={() => {handleNewAction(ActionType.Penalty, false);}}>Penalty</button>
-            <button on:click={() => {handleNewAction(ActionType.GroundBall, false);}}>Ground Ball</button>
-            <button on:click={() => {handleNewAction(ActionType.Sub, false);}}>Sub</button>
+            <h2 class="aName">Away Team: {awayTeamName}</h2>
+            <div class="teamBtn-container">
+                <div class="teamButtons">
+                    <button class="shotBtn" on:click={() => {handleNewAction(ActionType.Shot, false);}}>Shot</button>
+                    <button class="toBtn" on:click={() => {handleNewAction(ActionType.Turnover, false);}}>Turnover</button>
+                    <button class="clearBtn" on:click={() => {handleNewAction(ActionType.ClearAttempted, false);}}>Clear</button>
+                    <button class="penBtn" on:click={() => {handleNewAction(ActionType.Penalty, false);}}>Penalty</button>
+                    <button class="gbBtn" on:click={() => {handleNewAction(ActionType.GroundBall, false);}}>Ground Ball</button>
+                    <button class="subBtn" on:click={() => {handleNewAction(ActionType.Sub, false);}}>Sub</button>
+                </div>
+            </div>
         </div>
-
+        <hr class="awayhr"/>
     </div>
 </main>
 
 <Modal bind:show={modals[ActionType.Faceoff]}>
-    <h1 slot="header">FACEOFF</h1>
+    <h1 class="mHeader" slot="header">FACEOFF</h1>
     <form>
         <div class="turnover-modal" style="display: table;">
             <label for={newAction.homePlayer}>Home Player:</label>
@@ -259,7 +269,7 @@
                 newAction.homeWon = true; 
                 handleSubmitAction();
             } }>Won</button>
-            <hr />
+            <hr class="modalHr" />
             
             <label for={newAction.awayPlayer}>Away Player:</label>
             <select bind:value={newAction.awayPlayer} on:change={handleSelection} required>
@@ -278,7 +288,7 @@
 
 <!-- HOME SHOT MODAL -->
 <Modal bind:show={modals[ActionType.Shot]}>
-    <h1 slot="header">SHOT</h1>
+    <h1 class="mHeader" slot="header">SHOT ATTEMPT</h1>
     <form>
         <div class="shot-modal" style="display: table;">
             <label for={newAction.by}>Shot by:</label>
@@ -295,20 +305,26 @@
                     <option value={player}>{player.last_name}</option>
                 {/each}
             </select>
-            <hr />
+            <hr class="modalHr" />
+        </div>
 
-            {#if newAction.savedBy == null}
-                <button type="submit" on:click={() => { 
-                    newAction.goal = true;
-                    handleSubmitAction(); 
-                }}>Shot Made</button>
-                <button type="submit" on:click={() => { 
-                    newAction.goal = false;
-                    handleSubmitAction(); 
-                }}>Shot Missed/Wide</button>
-                <hr />
-            {/if}
+        {#if newAction.savedBy == null}
+            <div class="mBtnContainer">
+                <div class="mButtons">
+                    <button type="submit" on:click={() => { 
+                        newAction.goal = true;
+                        handleSubmitAction(); 
+                    }}>Shot Made</button>
+                    <button type="submit" on:click={() => { 
+                        newAction.goal = false;
+                        handleSubmitAction(); 
+                    }}>Shot Missed/Wide</button>
+                </div>
+            </div>
+            <hr class="modalHr" />
+        {/if}
 
+        <div class="shot-modal" style="display: table;">
             <label for={newAction.savedBy}>Saved By:</label>
             <select bind:value={newAction.savedBy} on:change={handleSelection}>
                 <option value={null}>Select Save</option>
@@ -326,7 +342,7 @@
             <!-- If savee selected, show Shot Saved button
                 prevents button be pressed without a savee -->
             {#if newAction.savedBy != null}
-                <button type="submit" on:click={() => { 
+                <button class="savedbyButton" type="submit" on:click={() => { 
                     newAction.goal = false;
                     handleSubmitAction(); 
                 }}>Shot Saved</button>
@@ -337,32 +353,36 @@
 </Modal>
 
 <Modal bind:show={modals[ActionType.Turnover]}>
-    <h1 slot="header">TURNOVER</h1>
+    <h1 class="mHeader" slot="header">TURNOVER</h1>
     <form>
         <div class="turnover-modal" style="display: table;">
-            <label for={newAction.by}>Made by:</label>
-            <select bind:value={newAction.by} on:change={handleSelection} required>
-                <option value={null}>Offensive Player</option>
-                {#each selectedLineup as player}
-                    <option value={player}>{player.last_name}</option>
-                {/each}
-            </select>
-            <hr />
-            
-            <label for={newAction.causedBy}>Caused By:</label>
-            <select bind:value={newAction.causedBy} on:change={handleSelection}>
-                <option value={null}>Defensive Player</option>
-                {#each unselectedLineup as player}
-                    <option value={player}>{player.last_name}</option>
-                {/each}
-            </select>
+            <div class="modalElement">
+                <label for={newAction.by}>Made by:</label>
+                <select bind:value={newAction.by} on:change={handleSelection} required>
+                    <option value={null}>Offensive Player</option>
+                    {#each selectedPlayers as player}
+                        <option value={player}>{player.last_name}</option>
+                    {/each}
+                </select>
+            </div>
+            <hr class="modalHr" />
+            <div class="modalElement">
+                <label for={newAction.causedBy}>Caused By:</label>
+                <select bind:value={newAction.causedBy} on:change={handleSelection}>
+                    <option value={null}>Defensive Player</option>
+                    {#each unselectedPlayers as player}
+                        <option value={player}>{player.last_name}</option>
+                    {/each}
+                </select>
+            </div>
+            <hr class="modalHr" />
             <button type="submit" on:click={() => {handleSubmitAction()}}>Complete Turnover</button>
         </div>
     </form>
 </Modal>
 
 <Modal bind:show={modals[ActionType.ClearAttempted]}>
-    <h1 slot="header">CLEAR</h1>
+    <h1 class="mHeader" slot="header">CLEAR</h1>
     <form>
         <div class="clear-modal" style="display: table;">
             <label for={newAction.by}>Clear by:</label>
@@ -372,12 +392,12 @@
                     <option value={player}>{player.last_name}</option>
                 {/each}
             </select>
-            <hr />
-            <button type="submit" on:click={() => { 
+            <hr class="modalHr" />
+            <button class="mBtn" type="submit" on:click={() => { 
                 newAction.successful = false;
                 handleSubmitAction(); 
             }}>Unsuccessful</button>
-            <button type="submit" on:click={() => { 
+            <button class="mBtn" type="submit" on:click={() => { 
                 newAction.successful = true;
                 handleSubmitAction(); 
             }}>Successful</button>
@@ -386,7 +406,7 @@
 </Modal>
 
 <Modal bind:show={modals[ActionType.Penalty]}>
-    <h1 slot="header">PENALTY</h1>
+    <h1 class="mHeader" slot="header">PENALTY</h1>
     <form>
         <div class="penalty-modal" style="display: table;">
             <label for={newAction.by}>Penalty by:</label>
@@ -396,16 +416,15 @@
                     <option value={player}>{player.last_name}</option>
                 {/each}
             </select>
-            <hr />
             <label>
-                <h2>Personal Foul</h2>
+                <h3>Personal Foul</h3>
                 {#each personalFouls as personalFoul}
                     <div>
                         <input type="radio" value={personalFoul} bind:group={foul}/>
                         {personalFoul}
                     </div>
                 {/each}
-                <h2>Technical Foul</h2>
+                <h3>Technical Foul</h3>
                 {#each technicalFouls as technicalFoul}
                     <div>
                         <input type="radio" value={technicalFoul} bind:group={foul}/>
@@ -413,21 +432,22 @@
                     </div>
                 {/each}
             </label>
-            <hr />
-            <label for={newAction.duration}>Duration:</label>
-            <select bind:value={newAction.duration} on:change={handleSelection} required>
-                {#each penaltyTimes as time}
-                    <option value={time}>{time}</option>
-                {/each}
-            </select>
+            <div class="modalElement">
+                <label for={newAction.duration}>Duration:</label>
+                <select bind:value={newAction.duration} on:change={handleSelection} required>
+                    {#each penaltyTimes as time}
+                        <option value={time}>{time}</option>
+                    {/each}
+                </select>
 
-            <button type="submit" on:click={() => {handleSubmitAction()}}>Submit</button>
+                <button class="mBtn" type="submit" on:click={() => {handleSubmitAction()}}>Submit</button>
+            </div>
         </div>
     </form>
 </Modal>
 
 <Modal bind:show={modals[ActionType.GroundBall]}>
-    <h1 slot="header">GROUNDBALL RECOVERED</h1>
+    <h1 class="mHeader" slot="header">GROUNDBALL RECOVERED</h1>
     <form>
         <div class="turnover-modal" style="display: table;">
             <label for={newAction.by}>Offensive Player:</label>
@@ -437,7 +457,7 @@
                     <option value={player}>{player.last_name}</option>
                 {/each}
             </select>
-            <button type="submit" on:click={() => { 
+            <button class="mBtn" type="submit" on:click={() => { 
                 handleSubmitAction(); 
             }}>Submit</button>
         </div>
@@ -447,30 +467,185 @@
 <Modal bind:show={modals[ActionType.Sub]}>
     <h1 slot="header">SUBTITUTION</h1>
     <form>
-        <label>
-            {#each selectedLineup as player}
-                <div>
-                    <select bind:value={player} on:change={handleSelection} required>
-                        {#each selectedPlayers.filter(n => n == player || !selectedLineup.includes(n)) as sub}
-                            <option value={sub}>#{sub.jersey_num} {sub.last_name}</option>
-                        {/each}
-                    </select>
-                </div>
-            {/each}
-        </label>
+        <div class="sub-modal">
+            <label>
+                {#each selectedLineup as player}
+                    <div>
+                        <select bind:value={player} on:change={handleSelection} required>
+                            {#each selectedPlayers.filter(n => n == player || !selectedLineup.includes(n)) as sub}
+                                <option value={sub}>#{sub.jersey_num} {sub.last_name}</option>
+                            {/each}
+                        </select>
+                    </div>
+                {/each}
+            </label>
+        </div>
     </form>
 </Modal>
 
 <style>
+    main {
+        margin-top: 135px;
+        margin-bottom: 100px;
+        margin-left: 0px;
+        margin-right: 115px;
+        width: 100%;
+    }
+
+    h1 {
+        box-sizing: border-box;
+        background-color: #081820;
+        color: white;
+        font-size: 50px;
+        text-align: center;
+    }
+
+    h1.mHeader {
+        margin-top: 0;
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+    h2 {
+        background-color: #081820;
+        position: relative;
+        color: white;
+        width: 75%;
+        font-size: 40px;
+        text-align: center;
+        top: 30px;
+        left: 50%;
+        -ms-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
+        text-shadow: 1px 1px 0 #000, 2px 2px 0 #000;
+    }
+
+    h2.hName, hr.homehr {
+        background-color: #ffc75e;
+        box-shadow: none;
+    }
+
+    h2.aName, hr.awayhr {
+        background-color: #5e69ff;
+        box-shadow: none;
+    }
+
+    h3 {
+        background-color: #346856;
+        position: relative;
+        color: white;
+        width: 105%;
+        font-size: 35px;
+        
+    }
+
+    hr {
+        margin-top: 25px;
+        height: 10px;
+        width: 75%;
+    }
+
+    hr.modalHr {
+        visibility: hidden;
+    }
+
+    label {
+        margin-right: 5px;
+        margin-left: 10px;
+    }
+
     .team-container {
         margin-left: auto;
         margin-right: auto;
+        margin-top: 10px;
         text-align: center;
+    }
+
+    .teamBtn-container, .mBtnContainer {
+        padding-top: 0px;
+        height: 20px;
+        position: relative;
+    }
+
+	.teamButtons, .mButtons {
+        margin: 0;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        -ms-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
+        max-width: 100%;
     }
 
     .faceoff {
         margin-left: auto;
         margin-right: auto;
+        margin-top: 10px;
+        margin-bottom: 10px;
         text-align: center;
+    }
+
+    .shotBtn {
+        background-color: red;
+        font-size: 35px;
+    }
+    .toBtn {
+        background-color: green;
+        font-size: 35px;
+    }
+    .clearBtn {
+        background-color: navy;
+        font-size: 35px;
+    }
+    .penBtn {
+        background-color: peru;
+        font-size: 35px;
+    }
+    .gbBtn {
+        background-color: #6C3B1C;
+        font-size: 35px;
+    }
+    .subBtn {
+        background-color: blueviolet;
+        font-size: 35px;
+    }
+
+    .shotBtn, .toBtn, .clearBtn, .penBtn, .gbBtn, .subBtn, .footerBtn{
+        margin-left: 10px;
+        margin-right: 10px;
+    }
+
+    button {
+        font-size: 25px;
+        font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+        text-shadow: 1px 1px 0 #000, 2px 2px 0 #000;
+        font-style: italic;
+        color: white;
+        background-color: #88c070;
+        border: none;
+        transform: skew(-12deg);
+        padding-right:12px;
+        box-shadow: 2px 2px 0 #081820;
+        max-width: 200px;
+    }
+
+    button:hover {
+        background-color: #346856;
+        cursor: pointer;
+    }
+
+    .mBtn {
+        margin-left: 10px;
+        margin-right: 10px;
+    }
+
+    .turnover-modal, .shot-modal, .clear-modal, .penalty-modal, .sub-modal {
+        margin-left: auto;
+        margin-right: auto;
+        text-align: center;
+    }
+
+    .savedbyButton {
+        margin-left: 20px;
     }
 </style>

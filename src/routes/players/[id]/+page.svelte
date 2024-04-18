@@ -59,7 +59,7 @@
 
     h1 {
         box-sizing: border-box;
-        background-color: navy;
+        background-color: #081820;
         color: white;
         font-size: 50px;
         text-align: center;

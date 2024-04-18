@@ -46,14 +46,15 @@
         background-color: #f2f2f2;
         padding: 5px;
         border-radius: 10px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        max-width: 600px;
+        box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.315), -1px -1px 0 rgba(0, 0, 0, 0.116);
+        width: 75%;
         height: 300px;
         margin-left: auto;
         margin-right: auto;
         text-align: center;
         display: flex;
         flex-direction: column;
+        margin-top: 40px;
     }
 
     /* Style for action container */

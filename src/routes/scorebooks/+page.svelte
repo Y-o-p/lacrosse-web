@@ -2,7 +2,7 @@
 	import { apiPost, deleteScorebookSession, postScorebookSession } from "$lib/api";	
 	import { onMount } from "svelte";
 	import type { PageServerData } from "../$types";
-	import { goto } from "$app/navigation";
+	import { disableScrollHandling, goto } from "$app/navigation";
 	import { getTeam } from "$lib/api";
 	import Modal from "./modal.svelte";
 	import Confirm from "./confirm.svelte";
@@ -117,6 +117,7 @@
 		scorebookPreviews = [...scorebookPreviews, scorebookPreview];
 		newSession(scorebookPreview);
 		sortScorebooks();
+		showNewScorebookModal = false;
 	}
 
 	/**
@@ -195,54 +196,206 @@
 <!--Scorebook List-->
 <main>
 	<h1>Scorebooks</h1>
-	<button on:click={ () => { showNewScorebookModal = true }}>New Scorebook</button>
-	<ul>
-		{#each scorebookPreviews as scorebook}
-			<li>
+	<div class="btnContainer">
+		<div class="buttons">
+			<button on:click={ () => { showNewScorebookModal = true }}>New Scorebook</button>
+		</div>
+	</div>
+	{#each scorebookPreviews as scorebook}
+		<div class="scorebookContainer">
+			<div class="scorebook">
 				{#if scorebook.home === undefined || scorebook.away === undefined}
-					New Game
+					<div class="scDate">
+						<div class="scText">
+							New Game
+						</div>
+					</div>
+					<div class="scHome">
+						<div class="scText">
+							Home Team: None
+						</div>
+					</div>
+					<div class="scAway">
+						<div class="scText">
+							Away Team: None
+						</div>
+					</div>
 				{:else}
-					Date: {scorebook.date} Home: {scorebook.home} Away: {scorebook.away}
+					<div class="scDate">
+						<div class="scText">
+							Date: {scorebook.date.toLocaleDateString()}
+						</div>
+					</div> 
+					<div class="scHome">
+						<div class="scText">
+							Home: {scorebook.home}
+						</div>
+					</div>
+					<div class="scAway">
+						<div class="scText">
+							Away: {scorebook.away}
+						</div>
+					</div>
 				{/if}
-				<div>
-					<button on:click={ () => editScorebook(scorebook.game_id) }>Edit</button>
-					{#if scorebook.session === undefined}
-						<button on:click={ () => newSession(scorebook) }>New Session</button>
-					{:else}
-						{scorebook.session.room_code}
-						<button on:click={ () => copyToClipboard(scorebook.session.room_code) }>Copy Code</button>
-						<button on:click={ () => endSessionButton(scorebook) }>End Session</button>
-					{/if}
-					<button on:click={ () => deletionButton(scorebook) }>Delete</button>
+				<div class="scBtnContainer">
+					<div class="scButtons">
+						<button on:click={ () => editScorebook(scorebook.game_id) }>Edit</button>
+						{#if scorebook.session === undefined}
+							<button on:click={ () => newSession(scorebook) }>New Session</button>
+						{:else}
+							{scorebook.session.room_code}
+							<button on:click={ () => copyToClipboard(scorebook.session.room_code) }>Copy Code</button>
+							<button on:click={ () => endSessionButton(scorebook) }>End Session</button>
+						{/if}
+						<button on:click={ () => deletionButton(scorebook) }>Delete</button>
+					</div>
 				</div>
-			</li>
-		{/each}
-	</ul>
+			</div>
+		</div>
+	{/each}
 </main>
 
 <!--Modal for making a new scoreboook-->
 <Modal bind:show={showNewScorebookModal}>
-	<h2 slot="header">New Scorebook</h2>
-	<button on:click={ () => { newScorebookNewSession() } }>New Session</button>
-	<br>
-	<button on:click={ () => { newScorebookEdit() } }>Edit</button>
+	<div class="newSK">
+		<div class="btnContainer">
+			<div class="buttons">
+				<button class="modal" on:click={ () => { newScorebookNewSession() } }>New Session</button>
+			</div>
+		</div>
+		<div class="btnContainer">
+			<div class="buttons">
+				<button class="modal" on:click={ () => { newScorebookEdit() } }>Edit</button>
+			</div>
+		</div>
+	</div>
 </Modal>
 
 <!--Modal for end session confirmation-->
 <Confirm bind:show={showEndSessionModal} on:confirm={ () => { endSession(selectedScorebook) } }>
-	<p>Are you sure you want to end the session? It will kick out anyone working on the scorebook.</p>
+	<h1></h1>
+	<p>Ending the session will kick out anyone working on the scorebook.</p>
 </Confirm>
 
 <!--Modal for delete scorebook confirmation-->
 <Confirm bind:show={showDeletionModal} on:confirm={ () => { deleteScorebook(selectedScorebook) } }>
-	<p>Are you sure you want to delete this scorebook? This action is irreversible.</p>
+	<p>Doing so will delete the scorebook. This action is irreversible.</p>
 </Confirm>
 
 <style>
     main {
-        margin-top: 130px;
+        margin-top: 135px;
         margin-bottom: 100px;
-        margin-left: 10px;
-        margin-right: 110px;
+        margin-left: 15px;
+        margin-right: 115px;
+		
     }
+
+	h1 {
+        box-sizing: border-box;
+        background-color: #081820;
+        color: white;
+        font-size: 50px;
+        text-align: center;
+    }
+
+	.scorebook {
+		height: 35px;
+		width: 98%;
+		margin-top: 15px;
+		margin-left: 1%;
+		margin-bottom: 15px;
+	}
+
+	.scDate {
+		background-color: #88c070;
+		background-position: center;
+		color: white;
+		text-align: center;
+		height: inherit;
+		line-height: 35px;
+		width: 15%;
+		transform: skew(-12deg);
+	}
+
+	.scHome, .scAway {
+		background-color: #346856;
+		background-position: center;
+		color: white;
+		text-align: center;
+		height: inherit;
+		line-height: 35px;
+		width: 25%;
+		transform: skew(-12deg);
+	}
+
+	.scBtnContainer {
+		background-color: #081820;
+		background-position: center;
+		color: white;
+		text-align: center;
+		height: inherit;
+		line-height: 35px;
+		width: 33%;
+		transform: skew(-12deg);
+	}
+
+	.scDate, .scHome, .scAway, .scBtnContainer {
+		display: inline-block;
+		font-size: 20px;
+		font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+		text-shadow: 1px 1px 0 #000, 2px 2px 0 #000;
+	}
+
+	.scText, .scButtons {
+		transform: skew(12deg);
+		font-kerning: normal;
+		font-weight: 1;
+	}
+
+	.btnContainer {
+        padding-top: 10px;
+        height: 75px;
+        position: relative;
+    }
+
+	.buttons {
+        margin: 0;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        -ms-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
+    }
+
+	button {
+        font-size: 20px;
+        font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+		text-shadow: 1px 1px 0 #000, 2px 2px 0 #000;
+        font-style: italic;
+        color: white;
+        background-color: #88c070;
+        border: none;
+        transform: skew(-12deg);
+        padding-right:12px;
+        box-shadow: 2px 2px 0 #081820;
+    }
+
+	button.modal {
+		font-size: 35px;
+	}
+
+	button:hover {
+        background-color: #346856;
+        cursor: pointer;
+    }
+
+	.newSK{
+		width: 350px;
+		height: 160px;
+	}
+
+	p {
+		text-align: center;
+	}
 </style>

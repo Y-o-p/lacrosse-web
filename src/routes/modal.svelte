@@ -25,9 +25,7 @@
 	<!-- svelte-ignore a11y-no-static-element-interactions -->
 	<div on:click|stopPropagation>
 		<slot name="header" />
-		<hr />
 		<slot />
-		<hr />
 	</div>
 </dialog>
 
@@ -39,9 +37,7 @@
 	<!-- svelte-ignore a11y-no-static-element-interactions -->
 	<div on:click|stopPropagation>
 		<slot name="header" />
-		<hr />
 		<slot />
-		<hr />
 	</div>
 </dialog>
 
@@ -53,7 +49,7 @@
 		padding: 0;
 	}
 	dialog::backdrop {
-		background: rgba(0, 0, 0, 0.3);
+		background: rgba(0, 0, 0, 0.5);
 	}
 	dialog > div {
 		padding: 1em;

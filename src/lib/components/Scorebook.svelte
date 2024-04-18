@@ -89,3 +89,11 @@
         ></Live>
     {/if}
 </main>
+
+<style>
+    h2 {
+        padding-top: 100px;
+        color: #081820;
+        text-align: center;
+    }
+</style>
