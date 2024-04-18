@@ -162,10 +162,6 @@
             <button on:click={() => {handleNewAction(ActionType.Sub);}}>Sub</button>
             <button on:click={() => {handleNewAction(ActionType.Timeout);}}>Timeout</button>
         </div>
-
-        <div class="faceoff">            
-            <button on:click={() => {handleNewAction(ActionType.Faceoff);}}>Faceoff</button>
-        </div>
     
         <ActionHistory 
         bind:actions={scorebookActions} 
@@ -189,6 +185,7 @@
             </div>
 
             <div slot="footer">
+                <button on:click={() => {handleNewAction(ActionType.Faceoff);}}>Faceoff</button>
                 <button>Half Time</button>
                 <button on:click={() => { publish() }}>End Game</button>
             </div>
@@ -248,14 +245,14 @@
             <label for={newAction.by}>Shot by:</label>
             <select bind:value={newAction.by} on:change={handleSelection} required>
                 <option value={null}>Select Player</option>
-                {#each selectedLineup as player}
+                {#each selectedLineup.filter(e => e != newAction.assistedBy) as player}
                     <option value={player}>{player.last_name}</option>
                 {/each}
             </select>
             <label for={newAction.assistedBy}>Assisted By:</label>
             <select bind:value={newAction.assistedBy} on:change={handleSelection}>
                 <option value={null}>Select Assist</option>
-                {#each selectedLineup as player}
+                {#each selectedLineup.filter(e => e != newAction.by) as player}
                     <option value={player}>{player.last_name}</option>
                 {/each}
             </select>
@@ -408,9 +405,8 @@
             {#each selectedLineup as player}
                 <div>
                     <select bind:value={player} on:change={handleSelection} required>
-                        {#each selectedPlayers.filter(n => n==player ? player : !selectedLineup.includes(n)) as sub}
+                        {#each selectedPlayers.filter(n => n == player || !selectedLineup.includes(n)) as sub}
                             <option value={sub}>#{sub.jersey_num} {sub.last_name}</option>
-                            
                         {/each}
                     </select>
                 </div>

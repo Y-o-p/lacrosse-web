@@ -28,16 +28,28 @@
     let selectedHomeTeam;
     const handleHomeTeamSelect = async (event) => {
         // Populate the home roster array
-        selectedHomeTeam = event.target.value;
-        homeRoster = await apiCall<Player>("GET", `/api/players?team_id=${selectedHomeTeam}`);
-        homeLineup = homeRoster.slice(0, 10);
+        try {
+            selectedHomeTeam = event.target.value;
+            homeRoster = await apiCall<Player>("GET", `/api/players?team_id=${selectedHomeTeam}`);
+            homeLineup = homeRoster.slice(0, 10);
+        }
+        catch {
+            homeRoster = [];
+            homeLineup = new Array<Player>(10);
+        }
     };
 
     let selectedAwayTeam;
     const handleAwayTeamSelect = async (event) => {
-        selectedAwayTeam = event.target.value;
-        awayRoster = await apiCall<Player>("GET", `/api/players?team_id=${selectedAwayTeam}`);
-        awayLineup = awayRoster.slice(0, 10);
+        try {
+            selectedAwayTeam = event.target.value;
+            awayRoster = await apiCall<Player>("GET", `/api/players?team_id=${selectedAwayTeam}`);
+            awayLineup = awayRoster.slice(0, 10);
+        }
+        catch {
+            awayRoster = [];
+            awayLineup = new Array<Player>(10);
+        }
     };
 
     async function startGame() {
@@ -72,8 +84,8 @@
         <div>
             <label for="homeTeamSelect">Home Team:</label>
             <select bind:value={selectedHomeTeam} on:change={handleHomeTeamSelect} required>
-                <option value="">Select Team</option>
-                {#each teams as team}
+                <option value="" selected disabled hidden>Select Team</option>
+                {#each teams.filter(n => n.team_id != selectedAwayTeam) as team}
                     <option value={team.team_id}>{team.team_name}</option>
                 {/each}
             </select>
@@ -83,9 +95,9 @@
                 <div>
                     <label for="homePlayerSelect">Player {i+1}:</label>
                     <select bind:value={player} on:change={handleHomePlayerSelect} required>
-                        <option value="">Select Player</option>
-                        {#each homeRoster as playerFromRoster}
-                            <option value={playerFromRoster}>{playerFromRoster.last_name}</option>
+                        <option value="" selected disabled hidden>Select Player</option>
+                        {#each homeRoster.filter(n => n == player || !homeLineup.includes(n)) as playerFromRoster}
+                            <option value={playerFromRoster}>#{playerFromRoster.jersey_num} {playerFromRoster.last_name}</option>
                         {/each}
                     </select>
                 </div>
@@ -97,8 +109,8 @@
         
             <label for="awayTeamSelect">Away Team:</label>
             <select bind:value={selectedAwayTeam} on:change={handleAwayTeamSelect} required>
-                <option value="">Select Team</option>
-                {#each teams as team}
+                <option value="" selected disabled hidden>Select Team</option>
+                {#each teams.filter(n => n.team_id != selectedHomeTeam) as team}
                         <option value={team.team_id}>{team.team_name}</option>
                 {/each}
             </select>
@@ -107,9 +119,9 @@
                 <div>
                     <label for="homePlayerSelect">Player {i+1}:</label>
                     <select bind:value={player} on:change={handleAwayPlayerSelect} required>
-                        <option value="">Select Player</option>
-                        {#each awayRoster as playerFromRoster}
-                            <option value={playerFromRoster}>{playerFromRoster.last_name}</option>
+                        <option value="" selected disabled hidden>Select Player</option>
+                        {#each awayRoster.filter(n => n == player || !awayLineup.includes(n)) as playerFromRoster}
+                            <option value={playerFromRoster}>#{playerFromRoster.jersey_num} {playerFromRoster.last_name}</option>
                         {/each}
                     </select>
                 </div>

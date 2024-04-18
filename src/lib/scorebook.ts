@@ -93,7 +93,7 @@ export function actionToString(action: ScorebookAction) {
             const penalty = action as Penalty;
             var message = `Penalty on ${penalty.by.last_name}`;
             if (penalty.duration !== null) {
-                message += `, out for ${penalty.duration} minutes`;
+                message += `, out for ${penalty.duration}`;
             }
             return message;
         }
