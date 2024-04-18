@@ -9,6 +9,8 @@
     const awayPlayerStats = writable([]);
     const game_field = writable("");
     const refs = writable([]);
+    const scorekeepers = writable([]);
+    const timekeepers = writable([]);
 
     export let data: PageServerData;
 
@@ -18,18 +20,10 @@
         awayPlayerStats.set(data.awayTeamStats);
         game_field.set(data.game.game_field);
         refs.set(data.game.refs);
-        
-        /*refs.set(null);
-        console.log(data.game.refs.length);
-        for (let i = 0; i < data.game.refs.length; i++) {
-            refs[i].set(data.game.refs.splice(i));
-            console.log(refs[i]);
-        }*/
+        timekeepers.set(data.game.timekeepers);
+        scorekeepers.set(data.game.scorekeepers);
         
     });
-
-
-
 
     // Function to handle changes in home player stats
     async function handleHomeStatsChange(index, field, value) {
@@ -59,25 +53,32 @@
         console.log(statToUpdate.playerstat_id);
     }
 
-
-
-
-
-
-
-
     // Function to handle changes in away player stats
     async function handleAwayStatsChange(index, field, value) {
+        let statsToUpdate: Partial<PlayerStats> = {};
+        let updatedStats = [];
         awayPlayerStats.update(stats => {
-            const updatedStats = [...stats];
-            const statToUpdate = {
-                playerstat_id: BigInt(updatedStats[index].playerstat_id), // Include playerstat_id
-                [field]: value // Include the changed field and its value
+            updatedStats = [...stats];
+            //console.log(updatedStats);
+            console.log(field, value);
+            statsToUpdate = {
+                playerstat_id: (updatedStats[index].playerstat_id), // Include playerstat_id
+                player_id: (updatedStats[index].player_id), // Include player_id
+                [field]: (value) // Include the changed field and its value
             };
-            // Call patchPlayerStats to update the modified player stat
-            //await patchPlayerStats(statToUpdate);
+            console.log(statsToUpdate);
+            
+            //Call patchPlayerStats to update the modified player stat
             return updatedStats;
         });
+        delete updatedStats[index].Player;
+        //console.log(updatedStats[index]);
+        console.log("Stats to update: ", updatedStats[index]);
+
+        //console.log("Patching player...returned: ", await patchPlayerStats(updatedStats[index]));
+        let new_patch = await patchPlayerStats(updatedStats[index]);
+        console.log(new_patch);
+        console.log(statsToUpdate.playerstat_id);
     }
 
     // function to handles changes in game field
@@ -94,17 +95,19 @@
         // Call patchGame to update the modified refs
     }
 
-    /* Function to handle changes in away player stats
-    function handleAwayStatsChange(index, field, value) {
-        homePlayerStats.update(stats => {
-            const updatedStats = [...stats];
-            if (updatedStats[index]) {
-                updatedStats[index][field] = value;
-                // Call patchPlayerStats to update the modified player stat
-            }
-            return updatedStats;
-        });
-    }*/
+    //function to handle changes in scorekeepers
+    function handleScorekeepersChange(value) {
+        scorekeepers.update(value);
+        return scorekeepers;
+        // Call patchGame to update the modified scorekeepers
+    }
+
+    //function to handle changes in timekeepers
+    function handleTimekeepersChange(value) {
+        timekeepers.update(value);
+        return timekeepers;
+        // Call patchGame to update the modified timekeepers
+    }
 </script>
 
 <main>
@@ -114,6 +117,8 @@
             <tr>
                 <th>Game Field</th>
                 <th>Referees</th>
+                <th>Scorekeepers</th>
+                <th>Timekeepers</th>
             </tr>
         </thead>
 
@@ -121,6 +126,8 @@
             <tr>
                 <td><input type="text" bind:value={$game_field} on:input={(e) => handleGameFieldChange(e.target.value)}></td>
                 <td><input type="text" bind:value={$refs} on:input={(e) => handleRefsChange(e.target.value)} size={$refs.join('').length}></td>
+                <td><input type="text" bind:value={$scorekeepers} on:input={(e) => handleScorekeepersChange(e.target.value)} size={$scorekeepers.join('').length}></td>
+                <td><input type="text" bind:value={$timekeepers} on:input={(e) => handleTimekeepersChange(e.target.value)} size={$timekeepers.join('').length}></td>
             </tr>
         </tbody>
     </table>
@@ -138,6 +145,15 @@
                 <th>Shots On Goal</th>
                 <th>Ground Balls</th>
                 <th>Turnovers</th>
+                <th>Turnovers Caused</th>
+                <th>Clears Made</th>
+                <th>Clears Attempted</th>
+                <th>Faceoffs Won</th>
+                <th>Faceoffs Lost</th>
+                <th>Penalites</th>
+                <th>saves</th>
+                <th>Goals Allowed</th>
+
             </tr>
         </thead>
         <tbody>
@@ -150,6 +166,12 @@
                     <td><input type="number" bind:value={stat.shots_on_goal} on:input={(e) => handleHomeStatsChange(index, 'Shots_On_Goal', e.target.value)}></td>
                     <td><input type="number" bind:value={stat.ground_balls} on:input={(e) => handleHomeStatsChange(index, 'Ground_Balls', e.target.value)}></td>
                     <td><input type="number" bind:value={stat.turnovers} on:input={(e) => handleHomeStatsChange(index, 'Turnovers', e.target.value)}></td>
+                    <td><input type="number" bind:value={stat.turnovers_caused} on:input={(e) => handleHomeStatsChange(index, 'Turnovers_Caused', e.target.value)}></td>
+                    <td><input type="number" bind:value={stat.clears_made} on:input={(e) => handleHomeStatsChange(index, 'Clears_Made', e.target.value)}></td>
+                    <td><input type="number" bind:value={stat.clears_attempted} on:input={(e) => handleHomeStatsChange(index, 'Clears_Attempted', e.target.value)}></td>
+                    <td><input type="number" bind:value={stat.faceoffs_won} on:input={(e) => handleHomeStatsChange(index, 'Faceoffs_Won', e.target.value)}></td>
+                    <td><input type="number" bind:value={stat.faceoffs_lost} on:input={(e) => handleHomeStatsChange(index, 'Faceoffs_Lost', e.target.value)}></td>
+                    <td><input type="number" bind:value={stat.penalities} on:input={(e) => handleHomeStatsChange(index, 'Penalities', e.target.value)}></td>
                 </tr>
             {/each}
         </tbody>
@@ -165,6 +187,15 @@
                 <th>Shots</th>
                 <th>Shots On Goal</th>
                 <th>Ground Balls</th>
+                <th>Turnovers</th>
+                <th>Turnovers Caused</th>
+                <th>Clears Made</th>
+                <th>Clears Attempted</th>
+                <th>Faceoffs Won</th>
+                <th>Faceoffs Lost</th>
+                <th>Penalites</th>
+                <th>Saves</th>
+                <th>Goals Allowed</th>
             </tr>
         </thead>
         <tbody>
@@ -176,6 +207,13 @@
                     <td><input type="number" bind:value={stat.Shots} on:input={(e) => handleAwayStatsChange(index, 'Shots', e.target.value)}></td>
                     <td><input type="number" bind:value={stat.Shots_On_Goal} on:input={(e) => handleAwayStatsChange(index, 'Shots_On_Goal', e.target.value)}></td>
                     <td><input type="number" bind:value={stat.Ground_Balls} on:input={(e) => handleAwayStatsChange(index, 'Ground_Balls', e.target.value)}></td>
+                    <td><input type="number" bind:value={stat.Turnovers} on:input={(e) => handleAwayStatsChange(index, 'Turnovers', e.target.value)}></td>
+                    <td><input type="number" bind:value={stat.Turnovers_Caused} on:input={(e) => handleAwayStatsChange(index, 'Turnovers_Caused', e.target.value)}></td>
+                    <td><input type="number" bind:value={stat.Clears_Made} on:input={(e) => handleAwayStatsChange(index, 'Clears_Made', e.target.value)}></td>
+                    <td><input type="number" bind:value={stat.Clears_Attempted} on:input={(e) => handleAwayStatsChange(index, 'Clears_Attempted', e.target.value)}></td>
+                    <td><input type="number" bind:value={stat.Faceoffs_Won} on:input={(e) => handleAwayStatsChange(index, 'Faceoffs_Won', e.target.value)}></td>
+                    <td><input type="number" bind:value={stat.Faceoffs_Lost} on:input={(e) => handleAwayStatsChange(index, 'Faceoffs_Lost', e.target.value)}></td>
+                    <td><input type="number" bind:value={stat.Penalities} on:input={(e) => handleAwayStatsChange(index, 'Penalities', e.target.value)}></td>
                 </tr>
             {/each}
         </tbody>
