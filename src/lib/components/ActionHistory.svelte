@@ -13,8 +13,8 @@
         
     });
 
-    function undo(action: ScorebookAction) {
-        performAction(action, true);
+    async function undo(action: ScorebookAction) {
+        await performAction(action, true);
         const i = actions.indexOf(action);
 		actions.splice(i, 1);
 		actions = actions;
@@ -27,7 +27,7 @@
 <div class="game-history">
     <slot name="header" />
     <div class="actions-container">
-        {#each actions as action (action.time)}
+        {#each actions as action (action)}
             <div class="action action-{action.home ? "home" : "away"}" in:fade out:fly={{x: 50}} animate:flip={{ duration: 400 }}>
                 <span class="action-time">{action.time}</span>
                 <span class="action-details">{action.home ? "HOME" : "AWAY"} {actionToString(action)}</span>

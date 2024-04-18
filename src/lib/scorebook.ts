@@ -56,7 +56,6 @@ export function actionToString(action: ScorebookAction) {
     switch (action.actionType) {
         case ActionType.Shot: {
             const shot = action as Shot;
-            //console.log(shot);
             var message = "";
             if (shot.savedBy !== null) {
                 message = `Save by ${shot.savedBy.last_name}, shot by ${shot.by.last_name}`
@@ -94,7 +93,7 @@ export function actionToString(action: ScorebookAction) {
             const penalty = action as Penalty;
             var message = `Penalty on ${penalty.by.last_name}`;
             if (penalty.duration !== null) {
-                message += `, out for ${penalty.duration} minutes`;
+                message += `, out for ${penalty.duration}`;
             }
             return message;
         }
@@ -118,7 +117,6 @@ export function actionToString(action: ScorebookAction) {
 
 export async function performAction(action: ScorebookAction, undo = false) {
     const polarity = undo ? -1 : 1;
-    console.log(action);
     switch (action.actionType) {
         case ActionType.Shot: {
             const shot = action as Shot;
@@ -126,7 +124,6 @@ export async function performAction(action: ScorebookAction, undo = false) {
                 throw new Error("Missing parameters");
             }
             var shotBy: PlayerStats = await getPlayerStats(shot.by.playerstat_id);
-            console.log(shotBy);
             shotBy.shots += polarity;
             if (shot.goal) {
                 shotBy.goals += polarity;
@@ -150,11 +147,14 @@ export async function performAction(action: ScorebookAction, undo = false) {
                 throw new Error("Missing parameters");
             }
             var turnoverBy: PlayerStats = await getPlayerStats(turnover.by.playerstat_id);
+            turnoverBy.turnovers += polarity;
+            await patchPlayerStats(turnoverBy);
             if (turnover.causedBy !== null) {
                 var turnoverCausedBy: PlayerStats = await getPlayerStats(turnover.causedBy.playerstat_id);
+                turnoverCausedBy.turnovers_caused += polarity;
+                await patchPlayerStats(turnoverCausedBy);
             }
             break;
-            // NOTE: there is no turnover stat
         }
         case ActionType.ClearAttempted: {
             const clear = action as ClearAttempted;
@@ -184,10 +184,9 @@ export async function performAction(action: ScorebookAction, undo = false) {
             if (ground.by === null) {
                 throw new Error("Missing parameters");
             }
-            // NOTE: there is no ground ball stat
             var groundBy: PlayerStats = await getPlayerStats(ground.by.playerstat_id);
-            //groundBy. += polarity;
-            //await patchPlayerStats(penaltyBy);
+            groundBy.ground_balls += polarity;
+            await patchPlayerStats(groundBy);
             break;
         }
         case ActionType.Timeout: {
