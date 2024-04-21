@@ -17,18 +17,17 @@
             <a href="/games" class:active={routeId == "/games"}>Games</a>
             <a href="/teams" class:active={routeId == "/teams"}>Teams</a>
             <a href="/players" class:active={routeId == "/players"}>Players</a>
+            <a href="/scorekeeper" class:active={routeId == "/scorekeeper"} >Scorekeeper</a>
             <div class="dropdown">
                 <button class="dropbtn">Coach
                     <i class="fa fa-caret-down"></i>
                 </button>
                 <div class="dropdown-content">
-                    <a href="/my-team/player">My Players</a>
+                    <a href="/account">Account</a>
                     <a href="/my-team/roster">My Roster</a>
                     <a href="/scorebooks">Scorebooks</a>
-                    <a href="/scorekeeper">Scorekeeper</a>
                 </div>
             </div>
-            <a href="/account" class:active={routeId == "/account"}>Account</a>
             
             <b on:click={() => (signupModal = true)}>Sign Up</b>
             <b on:click={() => (loginModal = true)}>Login</b>
@@ -217,7 +216,7 @@
     }
 
     .dropdown .dropbtn {
-        font-size: 16px;  
+        font-size: 17px;  
         border: none;
         outline: none;
         color: white;
