@@ -106,7 +106,6 @@
 
 		route += page + "/";
 		route += slug;
-		console.log(route);
 		return route;
 	}
 

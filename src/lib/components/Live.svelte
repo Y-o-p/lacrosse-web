@@ -104,7 +104,7 @@
     };
 
     const handleSelection = (event) => {
-        console.log(newAction.homePlayer);
+    
     };
 
     // Function to toggle timeout
