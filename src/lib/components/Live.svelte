@@ -104,7 +104,7 @@
     };
 
     const handleSelection = (event) => {
-        
+        console.log(newAction.homePlayer);
     };
 
     // Function to toggle timeout
@@ -172,7 +172,8 @@
             !modals[ActionType.Turnover] &&
             !modals[ActionType.ClearAttempted] &&
             !modals[ActionType.Penalty] &&
-            !modals[ActionType.GroundBall]) {
+            !modals[ActionType.GroundBall] &&
+            !modals[ActionType.Faceoff]) {
             resetOptions();
         }
     }
@@ -257,7 +258,7 @@
 <Modal bind:show={modals[ActionType.Faceoff]}>
     <h1 class="mHeader" slot="header">FACEOFF</h1>
     <form>
-        <div class="turnover-modal" style="display: table;">
+        <div class="faceoff-modal" style="display: table;">
             <label for={newAction.homePlayer}>Home Player:</label>
             <select bind:value={newAction.homePlayer} on:change={handleSelection} required>
                 <option value={null}>Offensive Player</option>
@@ -643,7 +644,7 @@
         margin-right: 10px;
     }
 
-    .turnover-modal, .shot-modal, .clear-modal, .penalty-modal, .sub-modal {
+    .turnover-modal, .shot-modal, .clear-modal, .penalty-modal, .sub-modal, .faceoff-modal {
         margin-left: auto;
         margin-right: auto;
         text-align: center;
