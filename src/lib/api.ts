@@ -71,7 +71,6 @@ export async function getTeam(id: number): Promise<Team> {
 }
 export async function getPlayersByTeamId(teamId: bigint): Promise<Player[]> {
     const players = await apiCall<Player>("GET", `/api/players?team_id=${teamId}`);
-    console.log('Players for team', teamId, ':', players);
     return players;
 }
 

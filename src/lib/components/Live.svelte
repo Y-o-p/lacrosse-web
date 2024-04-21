@@ -42,13 +42,14 @@
         time: null,
         by: null,
         goal: false,
+        goalie: null,
         assistedBy: null,
         savedBy: null,
         causedBy: null,
         duration: 0,
         homePlayer: null,
         awayPlayer: null,
-        homeWon: false,
+        homeWon: null,
         successful: false
     };
     $: newAction.actionType = currentModal;
@@ -104,7 +105,7 @@
     };
 
     const handleSelection = (event) => {
-        
+    
     };
 
     // Function to toggle timeout
@@ -122,7 +123,7 @@
         newAction.home = home;
         modals[type] = true;
         selectedAction = null;
-        
+        resetOptions();
     }
 
     async function getScores() {
@@ -133,6 +134,12 @@
     }
 
     async function handleSubmitAction() {
+        if (newAction.actionType == ActionType.Shot) {
+            newAction.goalie = unselectedLineup.find((e) => e.pos == 'G');
+        }
+        if (newAction.homeWon !== null) {
+            newAction.home = newAction.homeWon;
+        }
         if (selectedAction === null) {
             // New Action
             newAction.time = formatTime(currentTime);
@@ -166,17 +173,6 @@
         game = newGame;
     }
 
-    // Reactive declaration to reset options when no modal is open
-    $: {
-        if (!modals[ActionType.Shot] &&
-            !modals[ActionType.Turnover] &&
-            !modals[ActionType.ClearAttempted] &&
-            !modals[ActionType.Penalty] &&
-            !modals[ActionType.GroundBall]) {
-            resetOptions();
-        }
-    }
-
     function resetOptions() {
         newAction.by = null;
         newAction.assistedBy = null;
@@ -185,6 +181,7 @@
         newAction.homePlayer = null;
         newAction.awayPlayer = null;
         newAction.duration = null;
+        newAction.homeWon = null;
     }
 </script>
 
@@ -257,11 +254,11 @@
 <Modal bind:show={modals[ActionType.Faceoff]}>
     <h1 class="mHeader" slot="header">FACEOFF</h1>
     <form>
-        <div class="turnover-modal" style="display: table;">
+        <div class="faceoff-modal" style="display: table;">
             <label for={newAction.homePlayer}>Home Player:</label>
             <select bind:value={newAction.homePlayer} on:change={handleSelection} required>
                 <option value={null}>Offensive Player</option>
-                {#each selectedLineup as player}
+                {#each homeLineup as player}
                     <option value={player}>{player.last_name}</option>
                 {/each}
             </select>
@@ -274,7 +271,7 @@
             <label for={newAction.awayPlayer}>Away Player:</label>
             <select bind:value={newAction.awayPlayer} on:change={handleSelection} required>
                 <option value={null}>Defensive Player</option>
-                {#each unselectedLineup as player}
+                {#each awayLineup as player}
                     <option value={player}>{player.last_name}</option>
                 {/each}
             </select>
@@ -314,11 +311,15 @@
                     <button type="submit" on:click={() => { 
                         newAction.goal = true;
                         handleSubmitAction(); 
-                    }}>Shot Made</button>
+                    }}>Goal</button>
                     <button type="submit" on:click={() => { 
                         newAction.goal = false;
                         handleSubmitAction(); 
-                    }}>Shot Missed/Wide</button>
+                    }}>Shot on Goal</button>
+                    <button type="submit" on:click={() => { 
+                        newAction.goal = false;
+                        handleSubmitAction(); 
+                    }}>Shot Missed</button>
                 </div>
             </div>
             <hr class="modalHr" />
@@ -640,7 +641,7 @@
         margin-right: 10px;
     }
 
-    .turnover-modal, .shot-modal, .clear-modal, .penalty-modal, .sub-modal {
+    .turnover-modal, .shot-modal, .clear-modal, .penalty-modal, .sub-modal, .faceoff-modal {
         margin-left: auto;
         margin-right: auto;
         text-align: center;

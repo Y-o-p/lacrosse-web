@@ -59,22 +59,25 @@
         }
     };
     async function startGame() {
-        homeTeam = selectedHomeTeam;
-        awayTeam = selectedAwayTeam;
-        scoreKeepers = scorebookKeepers.split(",");
-        console.log(scoreKeepers);
-        timeKeepersArr = timeKeepers.split(",");
-        //console.log(timeKeepersArr);
-        refsArr = refs.split(",");
-        //console.log(refsArr);
-        game.timekeepers = timeKeepersArr;
-        game.scorekeepers = scoreKeepers;
-        game.refs = refsArr;
-        game.game_field = gameField;
-        game.hometeam_id = homeTeam;
-        game.awayteam_id = awayTeam;
-        await patchGame(game);
-        dispatch("start");
+        if (requiredTeam != selectedHomeTeam && requiredTeam != selectedAwayTeam) {
+            const requiredTeamName = (await apiCall<Team>("GET", `/api/teams/${requiredTeam}`)).team_name;
+            alert(`${requiredTeamName} needs to be selected for either the home or away team.`)
+        }
+        else {
+            homeTeam = selectedHomeTeam;
+            awayTeam = selectedAwayTeam;
+            scoreKeepers = scorebookKeepers.split(",");
+            timeKeepersArr = timeKeepers.split(",");
+            refsArr = refs.split(",");
+            game.timekeepers = timeKeepersArr;
+            game.scorekeepers = scoreKeepers;
+            game.refs = refsArr;
+            game.game_field = gameField;
+            game.hometeam_id = homeTeam;
+            game.awayteam_id = awayTeam;
+            await patchGame(game);
+            dispatch("start");
+        }
     }
     
     let selectedPlayers = [];
