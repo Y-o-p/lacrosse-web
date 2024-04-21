@@ -19,8 +19,6 @@
         awayTeamStats = await getTeamStatsFromGame(awayTeamId, gameId);
         homePlayers = await getPlayersByTeamId(homeTeamId);
         awayPlayers = await getPlayersByTeamId(awayTeamId);
-        console.log('Home Players:', homePlayers);
-        console.log('Away Players:', awayPlayers);
       }
     }
   

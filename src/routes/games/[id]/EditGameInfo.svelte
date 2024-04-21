@@ -39,7 +39,6 @@
       });
       
       if (response.ok) {
-        console.log('Game info updated successfully');
         navigate('/'); 
       } else {
         console.error('Failed to update game info');

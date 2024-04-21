@@ -20,6 +20,7 @@ export interface ScorebookAction {
 export interface Shot extends ScorebookAction {
     by: Player;
     goal: Boolean;
+    goalie: Player;
     assistedBy?: Player;
     savedBy?: Player;
 }
@@ -57,18 +58,17 @@ export function actionToString(action: ScorebookAction) {
         case ActionType.Shot: {
             const shot = action as Shot;
             var message = "";
-            if (shot.savedBy !== null) {
-                message = `Save by ${shot.savedBy.last_name}, shot by ${shot.by.last_name}`
-            }
-            else if (shot.goal) {
+            if (shot.goal) {
                 message = `Goal by ${shot.by.last_name}`
             }
             else {
                 message = `Shot by ${shot.by.last_name}`
             }
-
             if (shot.assistedBy !== null) {
                 message += `, assist by ${shot.assistedBy.last_name}`
+            }
+            if (shot.savedBy !== null) {
+                message += `, save by ${shot.savedBy.last_name}`
             }
             return message;
         }
@@ -127,6 +127,13 @@ export async function performAction(action: ScorebookAction, undo = false) {
             shotBy.shots += polarity;
             if (shot.goal) {
                 shotBy.goals += polarity;
+                
+                if (shot.goalie !== undefined) {
+                    var goalie: PlayerStats = await getPlayerStats(shot.goalie.playerstat_id);
+                    goalie.goals_allowed += polarity;
+                    let test = await patchPlayerStats(goalie);
+                    console.log(test);
+                }
             }
             if (shot.assistedBy !== null) {
                 var assistedBy: PlayerStats = await getPlayerStats(shot.assistedBy.playerstat_id);

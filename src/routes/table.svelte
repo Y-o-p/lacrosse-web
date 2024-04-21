@@ -1,8 +1,4 @@
 <script lang='ts'>
-    import { pushState } from "$app/navigation";
-    import Modal from "$lib/modal.svelte";
-    import Page from "./+page.svelte";
-
 	export let tableData = [
 		{
 			"Heading 1" : "data11",
@@ -43,9 +39,7 @@
 	function getCol(data) {
 		let column = null;
 		for (let row in tableData) {
-			//console.log(tableData[row]);
 			for (let col in tableData[row])	{
-				//console.log(tableData[row][col]);
 				if (tableData[row][col] == data) {
 					column = col;
 				}
@@ -91,12 +85,8 @@
 				page = "players"
 		}
 
-		//console.log(routeData);
 		for (let map in routeData) {
-			//console.log("-----");
 			for (let key of routeData[map].keys()) {
-				//console.log(key);
-				//console.log(data);
 				if (data == key) {
 					let id = routeData[map].get(key);
 					slug = id;
