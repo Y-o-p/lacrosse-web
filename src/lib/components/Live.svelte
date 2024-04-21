@@ -566,6 +566,7 @@
         padding-top: 0px;
         height: 20px;
         position: relative;
+        width: 100%;
     }
 
 	.teamButtons, .mButtons {

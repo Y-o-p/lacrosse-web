@@ -31,6 +31,8 @@ export const actions = {
         };
 
         let playerId = await insertPlayer(player);
+
+        throw redirect(303, "/my-team/roster");
     },
 
     createTeam: async ({ request }) => {

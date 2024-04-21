@@ -140,6 +140,7 @@ interface PlayerStatsTable {
     'Opponent': string,
     "#": number,
     "Player": string,
+    "Position": string,
     "G": number,
     "A": number,
     "P": number,
