@@ -228,7 +228,11 @@
 
             <div slot="footer">
                 <button class="footerBtn" on:click={() => {handleNewAction(ActionType.Faceoff);}}>Faceoff</button>
-                <button class="footerBtn" on:click={toggleTimeout}>Timeout Toggle</button>
+                {#if interval}
+                    <button class="footerBtn" on:click={toggleTimeout}>Pause Clock</button>
+                {:else}
+                    <button class="footerBtn" on:click={toggleTimeout}>Resume Clock</button>
+                {/if}
                 <button class="footerBtn" on:click={() => goToHalftimeReview(game.game_id)}>Half Time</button>
                 <button class="footerBtn" on:click={() => { publish() }}>End Game</button>
             </div>
@@ -330,7 +334,9 @@
             <select bind:value={newAction.savedBy} on:change={handleSelection}>
                 <option value={null}>Select Save</option>
                 {#each unselectedLineup as player}
-                    <option value={player}>{player.last_name}</option>
+                    {#if player.pos == 'G'}
+                        <option value={player}>{player.last_name}</option>
+                    {/if}
                 {/each}
             </select>
 

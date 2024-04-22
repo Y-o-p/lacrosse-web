@@ -1,16 +1,16 @@
 <script lang="ts">
-    import { goto } from '$app/navigation';
-    import type { PageData, ActionData } from './$types';
-    
-    export let data: PageData;
-    export let form: ActionData;
-    
-    $: player = data.player;
-    
-    function goToRoster() {
-      goto('/my-team/roster');
-    }
-  </script>
+  import { goto } from '$app/navigation';
+  import type { PageData, ActionData } from './$types';
+  
+  export let data: PageData;
+  export let form: ActionData;
+  
+  $: player = data.player;
+  
+  function goToRoster() {
+    goto('/my-team/roster');
+  }
+</script>
   
   <main>
     <h1>Edit Player</h1>

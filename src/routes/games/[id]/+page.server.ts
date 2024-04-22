@@ -48,19 +48,19 @@ export async function load({locals, params}) {
         let teamRow = await getTeam(playerStats[i]["team_id"]);
 
         let stat: Partial<PlayerStatsTable> = {
-            '#': playerRow["jersey_num"],
+            '#': checkNull(playerRow["jersey_num"]),
             Player: playerName,
-            G: playerStats[i]["goals"],
-            A: playerStats[i]["assists"],
-            P: points,
-            S: playerStats[i]["shots"],
-            SOG: playerStats[i]["shots_on_goal"],
-            GB: playerStats[i]["ground_balls"],
-            TO: playerStats[i]["turnovers"],
-            CT: playerStats[i]["turnovers_caused"],
-            "FO Won": playerStats[i]["faceoffs_won"],
-            "FO Lost": playerStats[i]["faceoffs_lost"],
-            PEN: playerStats[i]["penalties"]
+            G: checkNull(playerStats[i]["goals"]),
+            A: checkNull(playerStats[i]["assists"]),
+            P: checkNull(points),
+            S: checkNull(playerStats[i]["shots"]),
+            SOG: checkNull(playerStats[i]["shots_on_goal"]),
+            GB: checkNull(playerStats[i]["ground_balls"]),
+            TO: checkNull(playerStats[i]["turnovers"]),
+            CT: checkNull(playerStats[i]["turnovers_caused"]),
+            "FO Won": checkNull(playerStats[i]["faceoffs_won"]),
+            "FO Lost": checkNull(playerStats[i]["faceoffs_lost"]),
+            PEN: checkNull(playerStats[i]["penalties"])
         }
 
         
@@ -76,10 +76,10 @@ export async function load({locals, params}) {
             if (playerRow["pos"] == 'G') {
                 if (playerStats[i]["saves"] > 0 || playerStats[i]["goals_allowed"] > 0) {
                     let gkStats: GoalieStatsTable = {
-                        "#": playerRow["jersey_num"],
-                        Player: playerName,
-                        GA: playerStats[i]["goals_allowed"],
-                        Saves: playerStats[i]["saves"]
+                        "#": checkNull(playerRow["jersey_num"]),
+                        Player: checkNull(playerName),
+                        GA: checkNull(playerStats[i]["goals_allowed"]),
+                        Saves: checkNull(playerStats[i]["saves"])
                     }
                     homeGkStatsTable.push(gkStats);
 
@@ -100,10 +100,10 @@ export async function load({locals, params}) {
             if (playerRow["pos"] == 'G') {
                 if (playerStats[i]["saves"] > 0 || playerStats[i]["goals_allowed"] > 0) {
                     let gkStats: GoalieStatsTable = {
-                        "#": playerRow["jersey_num"],
-                        Player: playerName,
-                        GA: playerStats[i]["goals_allowed"],
-                        Saves: playerStats[i]["saves"]
+                        "#": checkNull(playerRow["jersey_num"]),
+                        Player: checkNull(playerName),
+                        GA: checkNull(playerStats[i]["goals_allowed"]),
+                        Saves: checkNull(playerStats[i]["saves"])
                     }
                     awayGkStatsTable.push(gkStats);
 
@@ -116,12 +116,12 @@ export async function load({locals, params}) {
     }
     
     let game: Partial<GameTable> = {
-        "Date": gameRow["game_date"].toLocaleDateString(),
+        "Date": checkNull(gameRow["game_date"]).toLocaleDateString(),
         "Location": checkNull(gameRow["game_field"]).toString(),
         "Home Team": checkNull(homeTeamRow["team_name"]).toString(),
         "Away Team": checkNull(awayTeamRow["team_name"]).toString(),
-        "Home Score": homeScore,
-        "Away Score": awayScore,
+        "Home Score": checkNull(homeScore),
+        "Away Score": checkNull(awayScore),
         REFS: checkNull(gameRow["refs"]),
         TKS: checkNull(gameRow["timekeepers"]).toString(),
         SKS: checkNull(gameRow["scorekeepers"]).toString(),
@@ -139,10 +139,12 @@ export async function load({locals, params}) {
 
     // Local Table Data
     locals.gameTable = gameTable
+    //console.log(gameTable);
     locals.homeStatsTable = homePlayerStatsTable;
     locals.awayStatsTable = awayPlayerStatsTable;
     locals.homeGkStatsTable = homeGkStatsTable;
     locals.awayGkStatsTable = awayGkStatsTable;
+    console.log(awayGkStatsTable);
 
     //Local Route Data
     locals.gameRouteData = gameRouteData;
