@@ -1,4 +1,5 @@
 <script lang='ts'>
+
 	export let tableData = [
 		{
 			"Heading 1" : "data11",
@@ -14,6 +15,8 @@
 	export let style;
 
 	export let routeData = null;
+
+	let dupeIDs = []
 
 	function isDate(value) {
 		let str = value.toString();
