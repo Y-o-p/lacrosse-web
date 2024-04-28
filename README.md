@@ -3,7 +3,7 @@
 ## Setup
 
 1. First, install [nodejs](https://nodejs.org/en/download/). Use LTS 20.11.0 which uses `npm` version 10.2.4.
-2. Also install [PostgreSQL](https://sbp.enterprisedb.com/getfile.jsp?fileid=1258893) and add pgAdmin in the installation process
+2. Also install [PostgreSQL](https://sbp.enterprisedb.com/getfile.jsp?fileid=1258893) and add pgAdmin in the installation process. Make sure to set your password as `ident` or you'll have to update the password set in `src/lib/db.ts`.
 3. `cd` into the project directory
 4. Run `$ npm install`
 5. Run `$ npm i -D unplugin-icons`
