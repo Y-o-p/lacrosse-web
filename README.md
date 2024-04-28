@@ -25,11 +25,6 @@
 3. Click the browse file icon to change the `Filename` to the file path of `lacrosse_schema.sql` included in the repo.
 4. Click the `Restore` button on the bottom of the window.
 
-### VSCode
-
-1. Run `$ code .` while still inside `lacrosse-web` to open it in VSCode.
-2. Install the `Svelte` VSCode extension which it will prompt you for and enable the TypeScript plugin.
-
 ## Developing
 
 Once you've installed the dependencies with `npm install`, start a development server:
